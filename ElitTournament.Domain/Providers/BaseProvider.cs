@@ -1,9 +1,9 @@
-﻿using AngleSharp;
-using AngleSharp.Dom;
+﻿using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using ElitTournament.Domain.Helpers.Interfaces;
 using ElitTournament.Domain.Providers.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers
@@ -24,7 +24,7 @@ namespace ElitTournament.Domain.Providers
 
 		public string ScheduleUrl { get; set; }
 
-		public string TableUrl { get; set; }
+		public string ScoreUrl { get; set; }
 
 		public async Task<IDocument> GetPage(string url)
 		{
