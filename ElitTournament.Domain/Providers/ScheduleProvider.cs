@@ -4,6 +4,7 @@ using ElitTournament.Domain.Helpers.Interfaces;
 using ElitTournament.Domain.Providers.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers
@@ -22,12 +23,27 @@ namespace ElitTournament.Domain.Providers
 
 		public async Task<List<Schedule>> GetSchedule()
 		{
-			IDocument document = await GetPage(ScheduleUrl);
-			List<Schedule> result = _schedule.Parse(document);
+			IEnumerable<string> links = await GetLinks();
+
+			List<Schedule> result = new List<Schedule>();
+			//foreach (var link in links)
+			//{
+			//	IDocument document = await GetPage(link);
+			//	result = _schedule.Parse(document);
+			//}
+			var test = links.ToList()[0];
+			IDocument document = await GetPage(test);
+			result = _schedule.Parse(document);
+
 			return result;
 		}
 
-
+		private async Task<IEnumerable<string>> GetLinks()
+		{
+			IDocument document = await GetPage(ScheduleUrl);
+			IEnumerable<string> links = _schedule.GetLinks(document);
+			return links;
+		}
 
 
 	}

@@ -7,5 +7,8 @@ namespace ElitTournament.Domain.Helpers.Interfaces
 	public interface IScheduleHelper : IBaseHelper
 	{
 		List<Schedule> Parse(IDocument document);
+
+		IEnumerable<string> GetLinks(IDocument document);
+
 	}
 }
