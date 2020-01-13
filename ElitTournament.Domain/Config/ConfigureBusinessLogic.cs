@@ -36,6 +36,8 @@ namespace ElitTournament.Domain.Config
 			services.AddScoped<IScheduleHelper, ScheduleHelper>();
 			services.AddScoped<IScoreHelper, ScoreHelper>();
 
+			services.AddScoped<ICacheHelper, CacheHelper>();
+
 
 		}
 
