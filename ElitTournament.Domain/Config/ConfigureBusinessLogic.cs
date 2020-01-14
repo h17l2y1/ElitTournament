@@ -29,6 +29,7 @@ namespace ElitTournament.Domain.Config
 			// Providers;
 			services.AddScoped<IScheduleProvider, ScheduleProvider>();
 			services.AddScoped<IScoreProvider, ScoreProvider>();
+			services.AddSingleton<IBotProvider, BotProvider>();
 
 
 			// Helpers;
