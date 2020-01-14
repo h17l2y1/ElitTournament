@@ -1,4 +1,5 @@
 ﻿using ElitTournament.Domain.Config;
+using ElitTournament.Domain.Providers.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,10 @@ namespace ElitTournament.Api
 			{
 				app.UseHsts();
 			}
+
+			var serviceProvider = app.ApplicationServices;
+			var bot = serviceProvider.GetService<IBotProvider>();
+			bot.InitializeClient().Wait();
 
 			app.UseHttpsRedirection();
 			app.UseMvc();
