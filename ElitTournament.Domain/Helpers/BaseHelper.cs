@@ -3,7 +3,7 @@ using ElitTournament.Domain.Helpers.Interfaces;
 
 namespace ElitTournament.Domain.Helpers
 {
-	public class BaseHelper : IBaseHelper
+	public class BaseGrabberHelper : IBaseHelper
 	{
 		public string GetData(IElement iElement, string selector)
 		{

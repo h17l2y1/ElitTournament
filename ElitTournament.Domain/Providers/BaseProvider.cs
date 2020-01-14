@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers
 {
-	public class BaseProvider : IBaseProvider
+	public class BaseGrabberProvider : IBaseProvider
 	{
 		protected readonly IHtmlLoaderHelper _htmlLoaderHelper;
 		protected readonly IConfiguration _сonfiguration;
 
 		protected readonly HtmlParser domParser;
 
-		public BaseProvider(IHtmlLoaderHelper htmlLoaderHelper, IConfiguration сonfiguration)
+		public BaseGrabberProvider(IHtmlLoaderHelper htmlLoaderHelper, IConfiguration сonfiguration)
 		{
 			_htmlLoaderHelper = htmlLoaderHelper;
 			_сonfiguration = сonfiguration;

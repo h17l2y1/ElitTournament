@@ -13,28 +13,20 @@ namespace ElitTournament.Domain.Config
 	{
 		public static void InjectBusinessLogicDependency(this IServiceCollection services)
 		{
-			//Automapper setup
-			//var config = new AutoMapper.MapperConfiguration(c =>
-			//{
-			//	c.AddProfile(new MapperProfile());
-			//});
-			//var mapper = config.CreateMapper();
-			//services.AddSingleton(mapper);
-
-
 			// Services;
+			services.AddScoped<IGrabberService, GrabberService>();
 			services.AddScoped<IScheduleService, ScheduleService>();
 
 
 			// Providers;
-			services.AddScoped<IScheduleProvider, ScheduleProvider>();
+			services.AddScoped<IGrabbScheduleProvider, GrabbScheduleProvider>();
 			services.AddScoped<IScoreProvider, ScoreProvider>();
 			services.AddSingleton<IBotProvider, BotProvider>();
 
 
 			// Helpers;
 			services.AddScoped<IHtmlLoaderHelper, HtmlLoaderHelper>();
-			services.AddScoped<IScheduleHelper, ScheduleHelper>();
+			services.AddScoped<IGrabbScheduleHelper, GrabbScheduleHelper>();
 			services.AddScoped<IScoreHelper, ScoreHelper>();
 
 			services.AddScoped<ICacheHelper, CacheHelper>();

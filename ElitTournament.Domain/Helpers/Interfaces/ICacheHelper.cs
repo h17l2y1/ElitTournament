@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ElitTournament.Domain.Entities;
+using System.Collections.Generic;
 
 namespace ElitTournament.Domain.Helpers.Interfaces
 {
@@ -6,8 +7,10 @@ namespace ElitTournament.Domain.Helpers.Interfaces
 	{
 		void Clear();
 
-		void Save(Object data);
+		void SaveSchedule(List<Schedule> data);
 
-		Object Get();
+		List<Schedule> Get();
+
+		void Update(List<Schedule> data);
 	}
 }

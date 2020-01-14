@@ -16,10 +16,12 @@ namespace ElitTournament.Api.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetSchedule()
+		public async Task<IActionResult> FindGame(string teamName)
 		{
-			await _service.GetSchedule();
-			return Ok();
+			var result = _service.FindGame(teamName);
+			return Ok(result);
 		}
+
+
 	}
 }

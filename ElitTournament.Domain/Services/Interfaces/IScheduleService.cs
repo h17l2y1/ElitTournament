@@ -4,6 +4,6 @@ namespace ElitTournament.Domain.Services.Interfaces
 {
 	public interface IScheduleService
 	{
-		Task GetSchedule();
+		string FindGame(string teamName);
 	}
 }

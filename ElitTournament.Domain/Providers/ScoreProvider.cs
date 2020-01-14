@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers
 {
-	public class ScoreProvider : BaseProvider, IScoreProvider
+	public class ScoreProvider : BaseGrabberProvider, IScoreProvider
 	{
 		protected readonly IScoreHelper _score;
 
