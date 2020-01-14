@@ -28,7 +28,7 @@ namespace ElitTournament.Domain.Providers
             if (_client == null)
             {
                 _commands = new List<Command>();
-                _commands.Add(new StartCommand(_botName));
+                _commands.Add(new StartCommand());
 
                 _client = new TelegramBotClient(_key);
                 try
