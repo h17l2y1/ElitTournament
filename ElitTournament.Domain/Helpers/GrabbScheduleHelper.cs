@@ -1,18 +1,16 @@
 ﻿using AngleSharp.Dom;
 using ElitTournament.Domain.Entities;
 using ElitTournament.Domain.Helpers.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Helpers
 {
-	public class ScheduleHelper : BaseHelper, IScheduleHelper
+	public class GrabbScheduleHelper : BaseGrabberHelper, IGrabbScheduleHelper
 	{
 		public List<Schedule> ListSchedule { get; set; }
 
-		public ScheduleHelper()
+		public GrabbScheduleHelper()
 		{
 			ListSchedule = new List<Schedule>();
 		}

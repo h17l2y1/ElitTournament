@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers.Interfaces
 {
-	public interface IScheduleProvider
+	public interface IGrabbScheduleProvider
 	{
 		Task<List<Schedule>> GetSchedule();
 	}

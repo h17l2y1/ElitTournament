@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ElitTournament.Domain.Helpers.Interfaces
 {
-	public interface IScheduleHelper : IBaseHelper
+	public interface IGrabbScheduleHelper : IBaseHelper
 	{
 		List<Schedule> Parse(IDocument document);
 

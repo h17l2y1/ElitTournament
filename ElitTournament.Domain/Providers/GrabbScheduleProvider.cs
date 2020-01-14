@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers
 {
-	public class ScheduleProvider : BaseProvider, IScheduleProvider
+	public class GrabbScheduleProvider : BaseGrabberProvider, IGrabbScheduleProvider
 	{
-		protected readonly IScheduleHelper _schedule;
+		protected readonly IGrabbScheduleHelper _schedule;
 
-		public ScheduleProvider(IHtmlLoaderHelper htmlLoaderHelper, IConfiguration сonfiguration, IScheduleHelper schedule)
+		public GrabbScheduleProvider(IHtmlLoaderHelper htmlLoaderHelper, IConfiguration сonfiguration, IGrabbScheduleHelper schedule)
 			: base(htmlLoaderHelper, сonfiguration)
 		{
 			ScheduleUrl = _сonfiguration.GetSection("ElitTournament:Schedule").Value;

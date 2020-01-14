@@ -1,8 +1,8 @@
-﻿using ElitTournament.Domain.Helpers.Interfaces;
+﻿using ElitTournament.Domain.Entities;
+using ElitTournament.Domain.Helpers.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ElitTournament.Domain.Helpers
 {
@@ -21,11 +21,15 @@ namespace ElitTournament.Domain.Helpers
 			_cache.Remove(_key);
 		}
 
-		// Object it's temporary
-		// have not time to implement it
-		public void Save(Object data)
+		public void Update(List<Schedule> data)
 		{
-			Object deck = data;
+			Clear();
+			SaveSchedule(data);
+		}
+
+		public void SaveSchedule(List<Schedule> data)
+		{
+			List<Schedule> deck = data;
 			if (!_cache.TryGetValue(_key, out data))
 			{
 				data = deck;
@@ -34,9 +38,9 @@ namespace ElitTournament.Domain.Helpers
 			}
 		}
 
-		public Object Get()
+		public List<Schedule> Get()
 		{
-			Object data = _cache.Get<Object>(_key);
+			List<Schedule> data = _cache.Get<List<Schedule>>(_key);
 			if (data == null)
 			{
 				//throw new NotFoundException();
