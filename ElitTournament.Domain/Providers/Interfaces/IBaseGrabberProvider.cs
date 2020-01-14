@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers.Interfaces
 {
-	public interface IBaseProvider
+	public interface IBaseGrabberProvider
 	{
 		Task<IDocument> GetPage(string url);
 	}

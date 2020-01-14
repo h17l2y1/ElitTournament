@@ -21,16 +21,15 @@ namespace ElitTournament.Domain.Helpers
 
 			IHtmlCollection<IElement> listP = iElementList[0].Children;
 
-			int count = listP.Count();
-
-			Enumerable.Range(0, count)
-					  .Select(i => CreateProduct(listP[i]))
-					  .ToList();
+			foreach (var item in listP)
+			{
+				CreateProduct(item);
+			}
 
 			return ListSchedule;
 		}
 
-		private Schedule CreateProduct(IElement p)
+		private void CreateProduct(IElement p)
 		{
 			if (p.ChildElementCount >= 1)
 			{
@@ -51,8 +50,6 @@ namespace ElitTournament.Domain.Helpers
 				var index = ListSchedule.Count();
 				ListSchedule[index - 1].Games.Add(p.TextContent);
 			}
-
-			return null;
 		}
 
 		public IEnumerable<string> GetLinks(IDocument document)

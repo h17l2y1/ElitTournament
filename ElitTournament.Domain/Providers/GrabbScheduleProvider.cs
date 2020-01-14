@@ -17,7 +17,6 @@ namespace ElitTournament.Domain.Providers
 			: base(htmlLoaderHelper, сonfiguration)
 		{
 			ScheduleUrl = _сonfiguration.GetSection("ElitTournament:Schedule").Value;
-
 			_schedule = schedule;
 		}
 

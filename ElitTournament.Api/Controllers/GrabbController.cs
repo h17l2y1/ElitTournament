@@ -28,5 +28,12 @@ namespace ElitTournament.Api.Controllers
 			string result = await _service.UpdateSchedule();
 			return Ok(result);
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> GrabbLeagues()
+		{
+			var result = await _service.GrabbLeagues();
+			return Ok(result);
+		}
 	}
 }

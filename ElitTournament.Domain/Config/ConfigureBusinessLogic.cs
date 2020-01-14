@@ -20,16 +20,20 @@ namespace ElitTournament.Domain.Config
 
 			// Providers;
 			services.AddScoped<IGrabbScheduleProvider, GrabbScheduleProvider>();
-			services.AddScoped<IScoreProvider, ScoreProvider>();
+			services.AddScoped<IGrabbScoreProvider, GrabbScoreProvider>();
 			services.AddSingleton<IBotProvider, BotProvider>();
 
 
 			// Helpers;
 			services.AddScoped<IHtmlLoaderHelper, HtmlLoaderHelper>();
 			services.AddScoped<IGrabbScheduleHelper, GrabbScheduleHelper>();
-			services.AddScoped<IScoreHelper, ScoreHelper>();
+			services.AddScoped<IGrabbScoreHelper, GrabbScoreHelper>();
 
-			services.AddScoped<ICacheHelper, CacheHelper>();
+
+			services.AddSingleton<ICacheHelper, CacheHelper>();
+
+
+			//services.AddSingleton<CacheHelper>();
 
 
 		}

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers
 {
-	public class BaseGrabberProvider : IBaseProvider
+	public class BaseGrabberProvider : IBaseGrabberProvider
 	{
 		protected readonly IHtmlLoaderHelper _htmlLoaderHelper;
 		protected readonly IConfiguration _сonfiguration;

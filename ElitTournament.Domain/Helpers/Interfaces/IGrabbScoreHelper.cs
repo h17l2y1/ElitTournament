@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 namespace ElitTournament.Domain.Helpers.Interfaces
 {
-	public interface IScoreHelper : IBaseHelper
+	public interface IGrabbScoreHelper : IBaseHelper
 	{
-		List<Score> Parse(IDocument document);
+		List<League> Parse(IDocument document);
 	}
 }
