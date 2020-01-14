@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.Configuration;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -7,9 +8,9 @@ namespace ElitTournament.Domain.Commands
 {
     public class StartCommand : Command
     {
-        public StartCommand(string botName) : base(botName, "start")
+        public StartCommand() : base("расписание")
         {
-            Text = @"Для просмотра расписания выберите лигу, а потом команду.";
+            Text = @"Для просмотра расписание выберите лигу, а потом команду.";
         }
 
         public async override void Execute(Message message, TelegramBotClient client)
@@ -50,7 +51,6 @@ namespace ElitTournament.Domain.Commands
                     new KeyboardButton("9-лига"),
                     new KeyboardButton("10-лига"),
                 },
-
             };
 
             return menu;
