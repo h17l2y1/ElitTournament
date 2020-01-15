@@ -4,11 +4,12 @@ using System.Collections.Generic;
 
 namespace ElitTournament.Domain.Helpers.Interfaces
 {
-	public interface IGrabbScheduleHelper : IBaseHelper
+	public interface IGrabberHelper
 	{
-		List<Schedule> Parse(IDocument document);
+		List<Schedule> ParseSchedule(IDocument document);
 
 		IEnumerable<string> GetLinks(IDocument document);
 
+		List<League> ParseLeagues(IDocument document);
 	}
 }

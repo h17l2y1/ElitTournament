@@ -19,17 +19,16 @@ namespace ElitTournament.Domain.Config
 
 
 			// Providers;
-			services.AddScoped<IGrabbScheduleProvider, GrabbScheduleProvider>();
-			services.AddScoped<IGrabbScoreProvider, GrabbScoreProvider>();
-			services.AddSingleton<IBotProvider, BotProvider>();
+			services.AddScoped<IGrabberProvider, GrabberProvider>();
 
 
 			// Helpers;
 			services.AddScoped<IHtmlLoaderHelper, HtmlLoaderHelper>();
-			services.AddScoped<IGrabbScheduleHelper, GrabbScheduleHelper>();
-			services.AddScoped<IGrabbScoreHelper, GrabbScoreHelper>();
+			services.AddScoped<IGrabberHelper, GrabberHelper>();
 
 
+			// Singleton
+			services.AddSingleton<IBotProvider, BotProvider>();
 			services.AddSingleton<ICacheHelper, CacheHelper>();
 
 
