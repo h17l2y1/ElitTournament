@@ -1,5 +1,7 @@
 ﻿using ElitTournament.Domain.Commands;
+using ElitTournament.Domain.Helpers.Interfaces;
 using ElitTournament.Domain.Providers.Interfaces;
+using ElitTournament.Domain.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -16,9 +18,11 @@ namespace ElitTournament.Domain.Providers
         private readonly string _botName;
         private readonly string _url;
         private List<Command> _commands;
+        private readonly ICacheHelper _cacheHelper;
 
-        public BotProvider(IConfiguration configuration)
+        public BotProvider(IConfiguration configuration, ICacheHelper cacheHelper)
         {
+            _cacheHelper = cacheHelper;
             _key = configuration["TelegramToken"];
             _botName = configuration["BotName"];
             _url = configuration["WebHook"];
@@ -28,7 +32,8 @@ namespace ElitTournament.Domain.Providers
             if (_client == null)
             {
                 _commands = new List<Command>();
-                _commands.Add(new StartCommand());
+                _commands.Add(new StartCommand(_cacheHelper));
+                _commands.Add(new TeamsCommand());
 
                 _client = new TelegramBotClient(_key);
                 try
