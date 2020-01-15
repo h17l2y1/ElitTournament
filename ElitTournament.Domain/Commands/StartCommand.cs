@@ -50,7 +50,6 @@ namespace ElitTournament.Domain.Commands
         {
            
             var menu = new ReplyKeyboardMarkup();
-            var a = _cacheHelper.Get();
             List<List<KeyboardButton>> list = new List<List<KeyboardButton>>();
             var isEven = Leagues.Count % 2;
 

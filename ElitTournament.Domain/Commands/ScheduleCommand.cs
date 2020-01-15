@@ -13,7 +13,7 @@ namespace ElitTournament.Domain.Commands
     {
         private List<League> _leagues;
         private ICacheHelper _cacheHelper;
-        public ScheduleCommand(ICacheHelper cacheHelper) :base("")
+        public ScheduleCommand(ICacheHelper cacheHelper) : base("")
         {
             _cacheHelper = cacheHelper;
             _leagues = new List<League>();
@@ -33,8 +33,8 @@ namespace ElitTournament.Domain.Commands
         {
             foreach (var item in _leagues)
             {
-               var team =  item.Teams.FirstOrDefault(p => p.Contains(command));
-                if(team != null)
+                var team = item.Teams.FirstOrDefault(p => p.Contains(command));
+                if (team != null)
                 {
                     return true;
                 }
@@ -44,7 +44,10 @@ namespace ElitTournament.Domain.Commands
         }
         public async override void Execute(Message message, TelegramBotClient client)
         {
-           // _cacheHelper.
+            var schedule = _cacheHelper.FindGame(message.Text);
+            var chatId = message.Chat.Id;
+
+            await client.SendTextMessageAsync(chatId, schedule);
         }
     }
 }
