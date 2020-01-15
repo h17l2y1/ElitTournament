@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using ElitTournament.Domain.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -8,9 +9,13 @@ namespace ElitTournament.Domain.Commands
 {
     public class StartCommand : Command
     {
-        public StartCommand() : base("расписание")
+		private readonly IScheduleService _scheduleService;
+
+		public StartCommand(IScheduleService scheduleService) 
+			: base("расписание")
         {
-            Text = @"Для просмотра расписание выберите лигу, а потом команду.";
+			_scheduleService = scheduleService;
+			Text = @"Для просмотра расписание выберите лигу, а потом команду.";
         }
 
         public async override void Execute(Message message, TelegramBotClient client)
