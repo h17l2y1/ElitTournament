@@ -16,24 +16,11 @@ namespace ElitTournament.Api.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GrabbSchedule()
+		public async Task<IActionResult> GrabbElitTournament()
 		{
-			string result = await _service.GrabbSchedule();
+			string result = await _service.GrabbElitTournament();
 			return Ok(result);
 		}
 
-		[HttpGet]
-		public async Task<IActionResult> UpdateSchedule()
-		{
-			string result = await _service.UpdateSchedule();
-			return Ok(result);
-		}
-
-		[HttpGet]
-		public async Task<IActionResult> GrabbLeagues()
-		{
-			var result = await _service.GrabbLeagues();
-			return Ok(result);
-		}
 	}
 }

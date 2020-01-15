@@ -5,12 +5,8 @@ namespace ElitTournament.Domain.Helpers.Interfaces
 {
 	public interface ICacheHelper
 	{
-		void Clear();
+		void Update(List<Schedule> schedule, List<League> league);
 
-		void SaveSchedule(List<Schedule> data);
-
-		List<Schedule> Get();
-
-		void Update(List<Schedule> data);
+		string FindGame(string teamName);
 	}
 }

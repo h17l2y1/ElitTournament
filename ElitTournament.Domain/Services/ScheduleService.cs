@@ -20,26 +20,11 @@ namespace ElitTournament.Domain.Services
 
 		public string FindGame(string teamName)
 		{
-			List<Schedule> schedule = _сacheHelper.Get();
-			if (schedule == null)
-			{
-				return "Cache is empty";
-			}
-
-			foreach (var place in schedule)
-			{
-				string a = place.Place;
-				foreach (var game in place.Games)
-				{
-					if (game.Contains(teamName))
-					{
-						return $"{place.Place} {game}";
-					}
-				}
-			}
-			return "Команда не найдена";
+			string result = _сacheHelper.FindGame(teamName);
+			return result;
 		}
 
+		// not used
 		public async Task<List<League>> GetLeagues()
 		{
 			List<League> league = await _grabbScoreProvider.GetLeague();
