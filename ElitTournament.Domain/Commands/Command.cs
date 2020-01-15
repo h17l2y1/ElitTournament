@@ -5,19 +5,19 @@ namespace ElitTournament.Domain.Commands
 {
     public abstract class Command
     {
-        public readonly string _name;
+        public  string Name { get; set; }
         public string Text { get; set; }
 
         public Command(string commandName)
         {
-            _name = commandName;
+            Name = commandName;
         }
 
         public abstract void Execute(Message message, TelegramBotClient client);
 
-        public bool Contains(string command)
+        public virtual bool Contains(string command)
         {
-            return command.ToLower().Contains(this._name.ToLower());
+            return command.ToLower().Contains(this.Name.ToLower());
         }
     }
 }

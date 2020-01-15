@@ -11,5 +11,10 @@ namespace ElitTournament.Domain.Entities
 		{
 			Teams = new List<string>();
 		}
+		public League(string name)
+		{
+			Name = name;
+			Teams = new List<string>();
+		}
 	}
 }
