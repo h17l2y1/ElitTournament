@@ -31,7 +31,7 @@ namespace ElitTournament.Domain.Providers
 			//	IDocument document = await GetPage(link);
 			//	result = _schedule.Parse(document);
 			//}
-			var test = links.ToList()[0];
+			var test = links.ToList()[1];
 			IDocument document = await GetPage(test);
 			result = _grabber.ParseSchedule(document);
 

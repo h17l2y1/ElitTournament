@@ -16,18 +16,19 @@ namespace ElitTournament.Domain.Commands
         public ScheduleCommand(ICacheHelper cacheHelper) : base("")
         {
             _cacheHelper = cacheHelper;
-            _leagues = new List<League>();
-            for (int i = 0; i < 10; i++)
-            {
-                var leageNum = i + 1;
-                var league = new League($"Leage {leageNum}");
-                for (int j = 0; j < 10; j++)
-                {
-                    var teamNum = j + 1;
-                    league.Teams.Add($"Team {teamNum}");
-                }
-                _leagues.Add(league);
-            }
+            _leagues = _cacheHelper.GetLeagues();
+            //_leagues = new List<League>();
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    var leageNum = i + 1;
+            //    var league = new League($"Leage {leageNum}");
+            //    for (int j = 0; j < 10; j++)
+            //    {
+            //        var teamNum = j + 1;
+            //        league.Teams.Add($"Team {teamNum}");
+            //    }
+            //    _leagues.Add(league);
+            //}
         }
         public override bool Contains(string command)
         {

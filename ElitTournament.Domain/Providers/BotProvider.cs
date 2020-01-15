@@ -29,8 +29,8 @@ namespace ElitTournament.Domain.Providers
         }
         public async Task InitializeClient()
         {
-            if (_client == null)
-            {
+            //if (_client == null)
+            //{
                 _commands = new List<Command>();
                 _commands.Add(new StartCommand(_cacheHelper));
                 _commands.Add(new TeamsCommand());
@@ -45,7 +45,7 @@ namespace ElitTournament.Domain.Providers
                 {
 
                 }
-            }
+            //}
         }
 
         public async Task Update(Update update)
