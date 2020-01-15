@@ -9,15 +9,16 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers
 {
-	public class GrabbScheduleProvider : BaseGrabberProvider, IGrabbScheduleProvider
+	public class GrabberProvider : BaseGrabberProvider, IGrabberProvider
 	{
-		protected readonly IGrabbScheduleHelper _schedule;
+		protected readonly IGrabberHelper _grabber;
 
-		public GrabbScheduleProvider(IHtmlLoaderHelper htmlLoaderHelper, IConfiguration сonfiguration, IGrabbScheduleHelper schedule)
+		public GrabberProvider(IHtmlLoaderHelper htmlLoaderHelper, IConfiguration сonfiguration, IGrabberHelper schedule)
 			: base(htmlLoaderHelper, сonfiguration)
 		{
 			ScheduleUrl = _сonfiguration.GetSection("ElitTournament:Schedule").Value;
-			_schedule = schedule;
+			ScoreUrl = _сonfiguration.GetSection("ElitTournament:Score").Value;
+			_grabber = schedule;
 		}
 
 		public async Task<List<Schedule>> GetSchedule()
@@ -32,7 +33,7 @@ namespace ElitTournament.Domain.Providers
 			//}
 			var test = links.ToList()[0];
 			IDocument document = await GetPage(test);
-			result = _schedule.Parse(document);
+			result = _grabber.ParseSchedule(document);
 
 			return result;
 		}
@@ -40,10 +41,16 @@ namespace ElitTournament.Domain.Providers
 		private async Task<IEnumerable<string>> GetLinks()
 		{
 			IDocument document = await GetPage(ScheduleUrl);
-			IEnumerable<string> links = _schedule.GetLinks(document);
+			IEnumerable<string> links = _grabber.GetLinks(document);
 			return links;
 		}
 
+		public async Task<List<League>> GetLeagues()
+		{
+			IDocument document = await GetPage(ScoreUrl);
+			List<League> leagues = _grabber.ParseLeagues(document);
 
+			return leagues;
+		}
 	}
 }

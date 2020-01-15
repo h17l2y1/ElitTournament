@@ -9,21 +9,19 @@ namespace ElitTournament.Domain.Services
 {
 	public class GrabberService : IGrabberService
 	{
-		private readonly IGrabbScheduleProvider _scheduleProvider;
-		private readonly IGrabbScoreProvider _scoreProvider;
+		private readonly IGrabberProvider _grabberProvider;
 		private readonly ICacheHelper _сacheHelper;
 
-		public GrabberService(IGrabbScheduleProvider scheduleProvider, IGrabbScoreProvider scoreProvider, ICacheHelper сacheHelper)
+		public GrabberService(IGrabberProvider scheduleProvider, ICacheHelper сacheHelper)
 		{
-			_scoreProvider = scoreProvider;
-			_scheduleProvider = scheduleProvider;
+			_grabberProvider = scheduleProvider;
 			_сacheHelper = сacheHelper;
 		}
 
 		public async Task<string> GrabbElitTournament()
 		{
-			List<Schedule> schedule = await _scheduleProvider.GetSchedule();
-			List<League> leagues = await _scoreProvider.GetLeague();
+			List<Schedule> schedule = await _grabberProvider.GetSchedule();
+			List<League> leagues = await _grabberProvider.GetLeagues();
 
 			_сacheHelper.Update(schedule, leagues);
 			return $"Grabbed {leagues.Count} leagues and {schedule.Count} places";

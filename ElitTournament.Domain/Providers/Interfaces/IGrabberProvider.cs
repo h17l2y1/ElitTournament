@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers.Interfaces
 {
-	public interface IGrabbScheduleProvider
+	public interface IGrabberProvider
 	{
 		Task<List<Schedule>> GetSchedule();
+
+		Task<List<League>> GetLeagues();
 	}
 }
