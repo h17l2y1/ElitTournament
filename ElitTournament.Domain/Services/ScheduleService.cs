@@ -2,6 +2,7 @@
 using ElitTournament.Domain.Helpers.Interfaces;
 using ElitTournament.Domain.Providers.Interfaces;
 using ElitTournament.Domain.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,7 +21,8 @@ namespace ElitTournament.Domain.Services
 
 		public string FindGame(string teamName)
 		{
-			string result = _сacheHelper.FindGame(teamName);
+			List<string> result1 = _сacheHelper.FindGame(teamName);
+			var result = String.Join(", ", result1.ToArray());
 			return result;
 		}
 

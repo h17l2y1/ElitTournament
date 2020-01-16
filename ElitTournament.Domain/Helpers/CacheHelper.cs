@@ -52,12 +52,13 @@ namespace ElitTournament.Domain.Helpers
 			}
 		}
 
-		public string FindGame(string teamName)
+		public List<string> FindGame(string teamName)
 		{
 			List<Schedule> schedule = _cache.Get<List<Schedule>>(_ScheduleKey);
+			var list = new List<string>();
 			if (schedule == null)
 			{
-				return "Cache is empty";
+				return null;
 			}
 
 			foreach (var place in schedule)
@@ -67,11 +68,11 @@ namespace ElitTournament.Domain.Helpers
 				{
 					if (game.Contains(teamName.ToUpper()))
 					{
-						return $"{place.Place} {game}";
+						list.Add($"{place.Place} {game}");
 					}
 				}
 			}
-			return "Команда не найдена";
+			return list;
 		}
 
 		public List<League> GetLeagues()

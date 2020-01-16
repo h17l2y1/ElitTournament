@@ -41,8 +41,10 @@ namespace ElitTournament.Domain.Commands
 		{
 			var schedule = _cacheHelper.FindGame(message.Text);
 			var chatId = message.Chat.Id;
+			var result = String.Join(", ", schedule.ToArray());
 
-			await client.SendTextMessageAsync(chatId, schedule);
+
+			await client.SendTextMessageAsync(chatId, result);
 		}
 	}
 }
