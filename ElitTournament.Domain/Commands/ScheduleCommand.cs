@@ -39,10 +39,15 @@ namespace ElitTournament.Domain.Commands
 
 		public async override void Execute(Message message, TelegramBotClient client)
 		{
-			var schedule = _cacheHelper.FindGame(message.Text);
-			var chatId = message.Chat.Id;
-			var result = String.Join(", ", schedule.ToArray());
+			List<string> schedule = _cacheHelper.FindGame(message.Text);
+			long chatId = message.Chat.Id;
 
+			if (schedule.Count == 0)
+			{
+				await client.SendTextMessageAsync(chatId, "Игры не найдено или неправильно введено название команды");
+				return;
+			}
+			var result = String.Join(", ", schedule.ToArray());
 
 			await client.SendTextMessageAsync(chatId, result);
 		}
