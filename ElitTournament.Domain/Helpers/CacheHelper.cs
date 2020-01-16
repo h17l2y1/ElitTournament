@@ -44,11 +44,11 @@ namespace ElitTournament.Domain.Helpers
 		private void SaveLeagues(List<League> data)
 		{
 			List<League> deck = data;
-			if (!_cache.TryGetValue(_ScheduleKey, out data))
+			if (!_cache.TryGetValue(_LeagueKey, out data))
 			{
 				data = deck;
 				MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(8));
-				_cache.Set(_ScheduleKey, data, cacheEntryOptions);
+				_cache.Set(_LeagueKey, data, cacheEntryOptions);
 			}
 		}
 

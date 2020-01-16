@@ -22,6 +22,7 @@ namespace ElitTournament.Api
 		{
 			services.InjectBusinessLogicDependency();
 
+			services.AddMemoryCache();
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 		}
 
