@@ -29,14 +29,16 @@ namespace ElitTournament.Domain.Providers
         }
         public async Task InitializeClient()
         {
-            //if (_client == null)
-            //{
-                _commands = new List<Command>();
-                _commands.Add(new StartCommand(_cacheHelper));
-                _commands.Add(new TeamsCommand(_cacheHelper));
-                _commands.Add(new ScheduleCommand(_cacheHelper));
+			//if (_client == null)
+			//{
+				_commands = new List<Command>
+				{
+					new StartCommand(_cacheHelper),
+					new TeamsCommand(_cacheHelper),
+					new ScheduleCommand(_cacheHelper)
+				};
 
-                _client = new TelegramBotClient(_key);
+				_client = new TelegramBotClient(_key);
                 try
                 {
                     await _client.SetWebhookAsync(_url);
@@ -54,7 +56,8 @@ namespace ElitTournament.Domain.Providers
 
             foreach (var command in _commands)
             {
-                if (command.Contains(update?.Message?.Text))
+				bool isTeamExist = command.Contains(update?.Message?.Text);
+				if (isTeamExist)
                 {
                     command.Execute(update?.Message, _client);
                     break;

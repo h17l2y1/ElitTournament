@@ -36,7 +36,7 @@ namespace ElitTournament.Domain.Helpers
 
 			foreach (var item in listP)
 			{
-				CreateProduct(item);
+				CreateSchedule(item);
 			}
 
 			return ListSchedule;
@@ -54,7 +54,7 @@ namespace ElitTournament.Domain.Helpers
 			return Leagues;
 		}
 
-		private void CreateProduct(IElement p)
+		private void CreateSchedule(IElement p)
 		{
 			if (p.ChildElementCount >= 1)
 			{
@@ -68,7 +68,6 @@ namespace ElitTournament.Domain.Helpers
 				{
 					var index = ListSchedule.Count();
 					ListSchedule[index - 1].Games.AddRange(p.TextContent.ToUpper().Split("\n").ToList());
-					//ListSchedule[index - 1].Games = p.TextContent.Split("\n").ToList();
 				}
 			}
 			if (p.ChildElementCount == 0)

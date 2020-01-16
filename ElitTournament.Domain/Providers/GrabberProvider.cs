@@ -24,16 +24,9 @@ namespace ElitTournament.Domain.Providers
 		public async Task<List<Schedule>> GetSchedule()
 		{
 			IEnumerable<string> links = await GetLinks();
-
-			List<Schedule> result = new List<Schedule>();
-			//foreach (var link in links)
-			//{
-			//	IDocument document = await GetPage(link);
-			//	result = _schedule.Parse(document);
-			//}
-			var test = links.ToList()[1];
-			IDocument document = await GetPage(test);
-			result = _grabber.ParseSchedule(document);
+			string lastStageLink = links.FirstOrDefault();
+			IDocument document = await GetPage(lastStageLink);
+			List<Schedule> result = _grabber.ParseSchedule(document);
 
 			return result;
 		}
@@ -49,7 +42,6 @@ namespace ElitTournament.Domain.Providers
 		{
 			IDocument document = await GetPage(ScoreUrl);
 			List<League> leagues = _grabber.ParseLeagues(document);
-
 			return leagues;
 		}
 	}
