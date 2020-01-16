@@ -13,6 +13,7 @@ namespace ElitTournament.Domain.Commands
 {
     public class StartCommand : Command
     {
+        private readonly string _firstPossibleComand;
         private readonly string _secondPossibleComand;
 		private readonly ICacheHelper _cacheHelper;
 		private readonly List<League> Leagues;
@@ -20,6 +21,7 @@ namespace ElitTournament.Domain.Commands
 		public StartCommand(ICacheHelper cacheHelper) 
 			: base("расписание")
         {
+            _firstPossibleComand = "start";
             _secondPossibleComand = "назад";
             _cacheHelper = cacheHelper;
 			Leagues = new List<League>();
@@ -36,7 +38,9 @@ namespace ElitTournament.Domain.Commands
 
         public override bool Contains(string command)
         {
-           return command.ToLower().Contains(this.Name.ToLower()) || command.ToLower().Contains(_secondPossibleComand);
+           return command.ToLower().Contains(this.Name.ToLower()) 
+				|| command.ToLower().Contains(_firstPossibleComand)
+				|| command.ToLower().Contains(_secondPossibleComand);
         }
 
         private ReplyKeyboardMarkup GetMenu()
