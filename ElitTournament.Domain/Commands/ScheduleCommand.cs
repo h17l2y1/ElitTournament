@@ -9,34 +9,40 @@ using Telegram.Bot.Types;
 
 namespace ElitTournament.Domain.Commands
 {
-    public class ScheduleCommand : Command
-    {
-        private List<League> _leagues;
-        private ICacheHelper _cacheHelper;
-        public ScheduleCommand(ICacheHelper cacheHelper) : base("")
-        {
-            _cacheHelper = cacheHelper;
-            _leagues = _cacheHelper.GetLeagues();
-        }
-        public override bool Contains(string command)
-        {
-            foreach (var item in _leagues)
-            {
-                var team = item.Teams.FirstOrDefault(p => p==command);
-                if (team != null)
-                {
-                    return true;
-                }
-            }
+	public class ScheduleCommand : Command
+	{
+		private List<League> _leagues;
+		private ICacheHelper _cacheHelper;
 
-            return false;
-        }
-        public async override void Execute(Message message, TelegramBotClient client)
-        {
-            var schedule = _cacheHelper.FindGame(message.Text);
-            var chatId = message.Chat.Id;
+		public ScheduleCommand(ICacheHelper cacheHelper) : base("")
+		{
+			_cacheHelper = cacheHelper;
+			_leagues = _cacheHelper.GetLeagues();
+		}
 
-            await client.SendTextMessageAsync(chatId, schedule);
-        }
-    }
+		public override bool Contains(string command)
+		{
+			if (_leagues != null)
+			{
+				foreach (var item in _leagues)
+				{
+					var team = item.Teams.FirstOrDefault(p => p == command.ToUpper());
+					if (team != null)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		public async override void Execute(Message message, TelegramBotClient client)
+		{
+			var schedule = _cacheHelper.FindGame(message.Text);
+			var chatId = message.Chat.Id;
+
+			await client.SendTextMessageAsync(chatId, schedule);
+		}
+	}
 }

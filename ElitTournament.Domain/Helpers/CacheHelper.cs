@@ -65,7 +65,7 @@ namespace ElitTournament.Domain.Helpers
 				string a = place.Place;
 				foreach (var game in place.Games)
 				{
-					if (game.Contains(teamName))
+					if (game.Contains(teamName.ToUpper()))
 					{
 						return $"{place.Place} {game}";
 					}

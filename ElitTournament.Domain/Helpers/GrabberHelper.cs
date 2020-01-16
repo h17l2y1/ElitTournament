@@ -67,7 +67,8 @@ namespace ElitTournament.Domain.Helpers
 				if (str == "br")
 				{
 					var index = ListSchedule.Count();
-					ListSchedule[index - 1].Games = p.TextContent.Split("\n").ToList();
+					ListSchedule[index - 1].Games.AddRange(p.TextContent.ToUpper().Split("\n").ToList());
+					//ListSchedule[index - 1].Games = p.TextContent.Split("\n").ToList();
 				}
 			}
 			if (p.ChildElementCount == 0)
@@ -125,7 +126,7 @@ namespace ElitTournament.Domain.Helpers
 					string tdName = tdTeam.TextContent;
 					string teamName = Pattern.Replace(tdName, "");
 
-					Leagues[Leagues.Count - 1].Teams.Add(teamName);
+					Leagues[Leagues.Count - 1].Teams.Add(teamName.ToUpper());
 				}
 				Leagues[Leagues.Count - 1].Teams.RemoveAt(0);
 			}
