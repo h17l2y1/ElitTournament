@@ -1,4 +1,5 @@
 ﻿using ElitTournament.Domain.Entities;
+using ElitTournament.Domain.Helpers.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot;
@@ -11,21 +12,13 @@ namespace ElitTournament.Domain.Commands
     public class TeamsCommand : Command
     {
         private readonly List<League> Leagues;
-        public TeamsCommand() : base("all leages")
+        private readonly ICacheHelper _cacheHelper;
+        public TeamsCommand(ICacheHelper cacheHelper) : base("all leages")
         {
+            _cacheHelper = cacheHelper;
             Text = "Выберите команду или нажмите назад если вы ошиблись лигой";
             Leagues = new List<League>();
-            for (int i = 0; i < 10; i++)
-            {
-                var leageNum = i + 1;
-                var league = new League($"Leage {leageNum}");
-                for (int j = 0; j < 10; j++)
-                {
-                    var teamNum = j + 1;
-                    league.Teams.Add($"Team {teamNum}");
-                }
-                Leagues.Add(league);
-            }
+            Leagues = _cacheHelper.GetLeagues();
         }
         public async override void Execute(Message message, TelegramBotClient client)
         {
@@ -59,7 +52,7 @@ namespace ElitTournament.Domain.Commands
                 {
                     team.Add(new KeyboardButton(currentLeague.Teams[i]));
                     i++;
-                    if (i != Leagues.Count)
+                    if (i != currentLeague.Teams.Count)
                     {
                         team.Add(new KeyboardButton(currentLeague.Teams[i]));
                     }

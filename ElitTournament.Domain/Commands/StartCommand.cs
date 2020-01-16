@@ -23,20 +23,13 @@ namespace ElitTournament.Domain.Commands
             _secondPossibleComand = "назад";
             _cacheHelper = cacheHelper;
 			Leagues = new List<League>();
-            for (int i = 0; i < 7; i++)
-            {
-                var leage = new League();
-                var num = i + 1;
-                leage.Name = $"Leage {num}";
-                Leagues.Add(leage);
-            }
+            Leagues = _cacheHelper.GetLeagues();
             Text = @"Для просмотра расписание выберите лигу, а потом команду.";
         }
 
         public async override void Execute(Message message, TelegramBotClient client)
         {
             var chatId = message.Chat.Id;
-            var messageId = message.MessageId;
 
             await client.SendTextMessageAsync(chatId, Text, ParseMode.Html, false, false, 0, GetMenu());
         }
@@ -47,10 +40,8 @@ namespace ElitTournament.Domain.Commands
         }
 
         private ReplyKeyboardMarkup GetMenu()
-        {
-           
+        {        
             var menu = new ReplyKeyboardMarkup();
-            //_cacheHelper.Update();
             List<List<KeyboardButton>> list = new List<List<KeyboardButton>>();
             var isEven = Leagues.Count % 2;
 

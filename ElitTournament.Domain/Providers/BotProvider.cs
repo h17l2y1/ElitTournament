@@ -33,7 +33,7 @@ namespace ElitTournament.Domain.Providers
             //{
                 _commands = new List<Command>();
                 _commands.Add(new StartCommand(_cacheHelper));
-                _commands.Add(new TeamsCommand());
+                _commands.Add(new TeamsCommand(_cacheHelper));
                 _commands.Add(new ScheduleCommand(_cacheHelper));
 
                 _client = new TelegramBotClient(_key);
