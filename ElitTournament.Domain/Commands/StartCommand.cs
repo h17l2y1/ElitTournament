@@ -38,7 +38,7 @@ namespace ElitTournament.Domain.Commands
 
         public override bool Contains(string command)
         {
-           return command.ToLower().Contains(this.Name.ToLower()) 
+           return command.ToLower().Contains(Name.ToLower()) 
 				|| command.ToLower().Contains(_firstPossibleComand)
 				|| command.ToLower().Contains(_secondPossibleComand);
         }

@@ -11,6 +11,7 @@ namespace ElitTournament.Domain.Helpers
 		private IMemoryCache _cache;
 		private readonly string _ScheduleKey = "1908f0292df1";
 		private readonly string _LeagueKey = "14da59f1006a";
+		private readonly string _TeamKey = "77fg21v0984c";
 
 		public CacheHelper(IMemoryCache cache)
 		{
@@ -22,12 +23,14 @@ namespace ElitTournament.Domain.Helpers
 			Clear();
 			SaveSchedule(schedule);
 			SaveLeagues(league);
+			SaveTeams(league);
 		}
 
 		private void Clear()
 		{
 			_cache.Remove(_ScheduleKey);
 			_cache.Remove(_LeagueKey);
+			_cache.Remove(_TeamKey);
 		}
 
 		private void SaveSchedule(List<Schedule> data)
@@ -52,6 +55,22 @@ namespace ElitTournament.Domain.Helpers
 			}
 		}
 
+		private void SaveTeams(List<League> data)
+		{
+			List<string> teamList = new List<string>();
+
+			foreach (var team in data)
+			{
+				teamList.AddRange(team.Teams);
+			}
+
+			if (!_cache.TryGetValue(_TeamKey, out _))
+			{
+				MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(8));
+				_cache.Set(_TeamKey, teamList, cacheEntryOptions);
+			}
+		}
+
 		public List<string> FindGame(string teamName)
 		{
 			List<Schedule> schedule = _cache.Get<List<Schedule>>(_ScheduleKey);
@@ -63,10 +82,10 @@ namespace ElitTournament.Domain.Helpers
 
 			foreach (var place in schedule)
 			{
-				string a = place.Place;
 				foreach (var game in place.Games)
 				{
-					if (game.Contains(teamName.ToUpper()))
+					string team = teamName.Replace("-", " ").ToUpper();
+					if (game.Contains(team))
 					{
 						list.Add($"{place.Place} {game}");
 					}
@@ -84,6 +103,17 @@ namespace ElitTournament.Domain.Helpers
 			}
 
 			return leagues;
+		}
+
+		public List<string> GetTeams()
+		{
+			List<string> teams = _cache.Get<List<string>>(_TeamKey);
+			if (teams == null)
+			{
+				return null;
+			}
+
+			return teams;
 		}
 
 	}

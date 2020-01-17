@@ -1,7 +1,6 @@
 ﻿using ElitTournament.Domain.Commands;
 using ElitTournament.Domain.Helpers.Interfaces;
 using ElitTournament.Domain.Providers.Interfaces;
-using ElitTournament.Domain.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;

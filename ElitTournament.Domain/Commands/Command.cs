@@ -17,7 +17,7 @@ namespace ElitTournament.Domain.Commands
 
         public virtual bool Contains(string command)
         {
-            return command.ToLower().Contains(this.Name.ToLower());
+            return command.ToLower().Contains(Name.ToLower());
         }
     }
 }

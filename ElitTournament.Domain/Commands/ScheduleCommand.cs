@@ -24,16 +24,13 @@ namespace ElitTournament.Domain.Commands
 		{
 			if (_leagues != null)
 			{
-				foreach (var item in _leagues)
+				List<string> teams = _cacheHelper.GetTeams();
+				string team = teams.FirstOrDefault(x => x == command.ToUpper());
+				if (team != null)
 				{
-					var team = item.Teams.FirstOrDefault(p => p == command.ToUpper());
-					if (team != null)
-					{
-						return true;
-					}
+					return true;
 				}
 			}
-
 			return false;
 		}
 
@@ -44,7 +41,7 @@ namespace ElitTournament.Domain.Commands
 
 			if (schedule.Count == 0)
 			{
-				await client.SendTextMessageAsync(chatId, "Игры не найдено или неправильно введено название команды");
+				await client.SendTextMessageAsync(chatId, "Игры не найдено или неправильно введено название команды\n ");
 				return;
 			}
 			var result = String.Join(", ", schedule.ToArray());

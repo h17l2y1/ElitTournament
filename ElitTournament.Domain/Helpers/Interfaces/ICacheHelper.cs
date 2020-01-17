@@ -10,5 +10,7 @@ namespace ElitTournament.Domain.Helpers.Interfaces
 		List<string> FindGame(string teamName);
 
 		List<League> GetLeagues();
+
+		List<string> GetTeams();
 	}
 }
