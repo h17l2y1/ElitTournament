@@ -32,9 +32,6 @@ namespace ElitTournament.Domain.Config
 			services.AddSingleton<ICacheHelper, CacheHelper>();
 
 
-			//services.AddSingleton<CacheHelper>();
-
-
 		}
 
 	}

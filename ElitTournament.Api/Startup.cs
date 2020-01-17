@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace ElitTournament.Api
 {
@@ -37,8 +38,8 @@ namespace ElitTournament.Api
 				app.UseHsts();
 			}
 
-			var serviceProvider = app.ApplicationServices;
-			var bot = serviceProvider.GetService<IBotProvider>();
+			IServiceProvider serviceProvider = app.ApplicationServices;
+			IBotProvider bot = serviceProvider.GetService<IBotProvider>();
 			bot.InitializeClient().Wait();
 
 			app.UseHttpsRedirection();

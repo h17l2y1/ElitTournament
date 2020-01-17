@@ -20,18 +20,25 @@ namespace ElitTournament.Domain.Commands
 			_leagues = _cacheHelper.GetLeagues();
 		}
 
-		public override bool Contains(string command)
+		public override bool Contains(string text)
 		{
+			bool isExistTeam = false;
 			if (_leagues != null)
 			{
 				List<string> teams = _cacheHelper.GetTeams();
-				string team = teams.FirstOrDefault(x => x == command.ToUpper());
-				if (team != null)
+
+				string teamWithSpace = text.Replace("-", " ").ToUpper();
+				string teamWithHyphen = text.Replace(" ", "-").ToUpper();
+
+				string spaceTeam = teams.FirstOrDefault(x => x == teamWithSpace);
+				string hyphenTeam = teams.FirstOrDefault(x => x == teamWithHyphen);
+
+				if (spaceTeam != null || hyphenTeam != null)
 				{
-					return true;
+					isExistTeam = true;
 				}
 			}
-			return false;
+			return isExistTeam;
 		}
 
 		public async override void Execute(Message message, TelegramBotClient client)
@@ -41,7 +48,8 @@ namespace ElitTournament.Domain.Commands
 
 			if (schedule.Count == 0)
 			{
-				await client.SendTextMessageAsync(chatId, "Игры не найдено или неправильно введено название команды\n ");
+				string notFound = $"Игры команды \"{message.Text}\" не найдено";
+				await client.SendTextMessageAsync(chatId, notFound);
 				return;
 			}
 			var result = String.Join(", ", schedule.ToArray());

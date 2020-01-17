@@ -3,6 +3,7 @@ using ElitTournament.Domain.Helpers.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ElitTournament.Domain.Helpers
 {
@@ -46,10 +47,8 @@ namespace ElitTournament.Domain.Helpers
 
 		private void SaveLeagues(List<League> data)
 		{
-			List<League> deck = data;
-			if (!_cache.TryGetValue(_LeagueKey, out data))
+			if (!_cache.TryGetValue(_LeagueKey, out _))
 			{
-				data = deck;
 				MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(8));
 				_cache.Set(_LeagueKey, data, cacheEntryOptions);
 			}
@@ -75,23 +74,26 @@ namespace ElitTournament.Domain.Helpers
 		{
 			List<Schedule> schedule = _cache.Get<List<Schedule>>(_ScheduleKey);
 			var list = new List<string>();
-			if (schedule == null)
+			if (schedule != null)
 			{
-				return null;
-			}
-
-			foreach (var place in schedule)
-			{
-				foreach (var game in place.Games)
+				foreach (var place in schedule)
 				{
-					string team = teamName.Replace("-", " ").ToUpper();
-					if (game.Contains(team))
+					foreach (var game in place.Games)
 					{
-						list.Add($"{place.Place} {game}");
+						string teamWithSpace = teamName.Replace("-", " ").ToUpper();
+						string teamWithHyphen = teamName.Replace(" ", "-").ToUpper();
+
+						if (game.Contains(teamWithSpace) || game.Contains(teamWithHyphen))
+						{
+							list.Add($"{place.Place} {game}");
+						}
 					}
 				}
+
+				return list;
 			}
-			return list;
+
+			return null;
 		}
 
 		public List<League> GetLeagues()

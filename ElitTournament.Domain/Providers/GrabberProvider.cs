@@ -31,18 +31,18 @@ namespace ElitTournament.Domain.Providers
 			return result;
 		}
 
-		private async Task<IEnumerable<string>> GetLinks()
-		{
-			IDocument document = await GetPage(ScheduleUrl);
-			IEnumerable<string> links = _grabber.GetLinks(document);
-			return links;
-		}
-
 		public async Task<List<League>> GetLeagues()
 		{
 			IDocument document = await GetPage(ScoreUrl);
 			List<League> leagues = _grabber.ParseLeagues(document);
 			return leagues;
+		}
+
+		private async Task<IEnumerable<string>> GetLinks()
+		{
+			IDocument document = await GetPage(ScheduleUrl);
+			IEnumerable<string> links = _grabber.GetLinks(document);
+			return links;
 		}
 	}
 }
