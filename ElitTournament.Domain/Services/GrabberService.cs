@@ -18,13 +18,12 @@ namespace ElitTournament.Domain.Services
 			_сacheHelper = сacheHelper;
 		}
 
-		public async Task<string> GrabbElitTournament()
+		public async Task GrabbElitTournament()
 		{
 			List<Schedule> schedule = await _grabberProvider.GetSchedule();
 			List<League> leagues = await _grabberProvider.GetLeagues();
 
 			_сacheHelper.Update(schedule, leagues);
-			return $"Grabbed {leagues.Count} leagues and {schedule.Count} places";
 		}
 
 	}

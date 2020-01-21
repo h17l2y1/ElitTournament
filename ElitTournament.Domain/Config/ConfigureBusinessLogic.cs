@@ -18,11 +18,11 @@ namespace ElitTournament.Domain.Config
 			services.AddScoped<IScheduleService, ScheduleService>();
 
 
-			// Providers;
+			// Providers
 			services.AddScoped<IGrabberProvider, GrabberProvider>();
 
 
-			// Helpers;
+			// Helpers
 			services.AddScoped<IHtmlLoaderHelper, HtmlLoaderHelper>();
 			services.AddScoped<IGrabberHelper, GrabberHelper>();
 
@@ -31,7 +31,7 @@ namespace ElitTournament.Domain.Config
 			services.AddSingleton<IBotProvider, BotProvider>();
 			services.AddSingleton<ICacheHelper, CacheHelper>();
 
-
+			services.AddHostedService<GrabberBackgroudRefreshService>();
 		}
 
 	}

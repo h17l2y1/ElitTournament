@@ -18,8 +18,8 @@ namespace ElitTournament.Api.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GrabbElitTournament()
 		{
-			string result = await _service.GrabbElitTournament();
-			return Ok(result);
+			await _service.GrabbElitTournament();
+			return Ok();
 		}
 
 	}

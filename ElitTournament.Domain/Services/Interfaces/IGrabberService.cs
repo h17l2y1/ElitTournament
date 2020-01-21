@@ -4,6 +4,6 @@ namespace ElitTournament.Domain.Services.Interfaces
 {
 	public interface IGrabberService
 	{
-		Task<string> GrabbElitTournament();
+		Task GrabbElitTournament();
 	}
 }
