@@ -20,6 +20,7 @@ namespace ElitTournament.Domain.Config
 
 			// Providers;
 			services.AddScoped<IGrabberProvider, GrabberProvider>();
+			services.AddScoped<IViberProvider, ViberProvider>();
 
 
 			// Helpers;
