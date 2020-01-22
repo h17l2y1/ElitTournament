@@ -1,4 +1,5 @@
-﻿using ElitTournament.Domain.Config;
+﻿using ElitTournament.Api.Middleware;
+using ElitTournament.Domain.Config;
 using ElitTournament.Domain.Providers.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,8 @@ namespace ElitTournament.Api
 			{
 				app.UseHsts();
 			}
+
+			app.UseMiddleware<ErrorHandlingMiddleware>();
 
 			IServiceProvider serviceProvider = app.ApplicationServices;
 			IBotProvider bot = serviceProvider.GetService<IBotProvider>();
