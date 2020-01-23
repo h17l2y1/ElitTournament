@@ -47,6 +47,7 @@ namespace ElitTournament.Api
 			IBotProvider bot = serviceProvider.GetService<IBotProvider>();
 			bot.InitializeClient().Wait();
 
+
 			app.UseHttpsRedirection();
 			app.UseMvc();
 		}

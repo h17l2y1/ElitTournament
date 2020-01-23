@@ -25,6 +25,21 @@ namespace ElitTournament.Domain.Providers
             SetWebHookToken();
         }
 
+        public async Task Remove()
+        {
+            var client = new RestClient(_viberUrl);
+            var request = new RestRequest(Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("X-Viber-Auth-Token", _viberToken);
+            request.AddJsonBody(new { url = "" });
+            IRestResponse response = client.Execute(request);
+        }
+
+        public async Task Update(object res)
+        {
+            var asd = JsonConvert.DeserializeObject<CallBack>(res.ToString());
+        }
+
         private void SetWebHookToken()
         {
             var client = new RestClient(_viberUrl);
@@ -42,15 +57,7 @@ namespace ElitTournament.Domain.Providers
             var res = JsonConvert.DeserializeObject<ResponseWebHookViber>(response.Content);
         }
 
-        public async Task Remove()
-        {
-            var client = new RestClient(_viberUrl);
-            var request = new RestRequest(Method.POST);
-            request.RequestFormat = DataFormat.Json;
-            request.AddHeader("X-Viber-Auth-Token", _viberToken);
-            request.AddJsonBody(new { url = "" });
-            IRestResponse response = client.Execute(request);
-        }
+       
     }
 
     public class SetWebHookViber
@@ -95,7 +102,7 @@ namespace ElitTournament.Domain.Providers
     public class CallBack
     {
         public string Event { get; set; }
-        public int timestamp { get; set; }
+        public long timestamp { get; set; }
         public string type { get; set; }
         public string context { get; set; }
         public User user { get; set; }

@@ -1,6 +1,7 @@
 ﻿using ElitTournament.Domain.Providers;
 using ElitTournament.Domain.Providers.Interfaces;
 using ElitTournament.Domain.Services.Interfaces;
+using ElitTournament.Domain.Views;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -31,8 +32,9 @@ namespace ElitTournament.Api.Controllers
 		//	return Ok();
 		//}
 		[HttpPost]
-		public async Task<IActionResult> Update([FromBody]CallBack callBack)
+		public async Task<IActionResult> Update([FromBody]RootObject callBack)
 		{
+			await _service.Update(callBack);
 			return Ok();
 		}
 
