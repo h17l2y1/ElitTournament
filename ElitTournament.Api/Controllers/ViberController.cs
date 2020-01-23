@@ -2,6 +2,7 @@
 using ElitTournament.Domain.Providers.Interfaces;
 using ElitTournament.Domain.Services.Interfaces;
 using ElitTournament.Domain.Views;
+using ElitTournament.Domain.Views.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -34,6 +35,10 @@ namespace ElitTournament.Api.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Update([FromBody]RootObject callBack)
 		{
+            if(callBack.Event == ViberEventEnum.webhook.ToString())
+            {
+                return Ok();
+            }
 			await _service.Update(callBack);
 			return Ok();
 		}
