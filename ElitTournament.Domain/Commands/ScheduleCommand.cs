@@ -46,12 +46,20 @@ namespace ElitTournament.Domain.Commands
 			List<string> schedule = _cacheHelper.FindGame(message.Text);
 			long chatId = message.Chat.Id;
 
+			if (schedule == null)
+			{
+				string notFound = $"Не получилось получить расписание игр, поищите свою игру тут http://elitturnir.info/raspisanie/";
+				await client.SendTextMessageAsync(chatId, notFound);
+				return;
+			}
+
 			if (schedule.Count == 0)
 			{
 				string notFound = $"Игры команды \"{message.Text}\" не найдено";
 				await client.SendTextMessageAsync(chatId, notFound);
 				return;
 			}
+
 			var result = String.Join(", ", schedule.ToArray());
 
 			await client.SendTextMessageAsync(chatId, result);

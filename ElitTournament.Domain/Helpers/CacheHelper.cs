@@ -74,7 +74,7 @@ namespace ElitTournament.Domain.Helpers
 		{
 			List<Schedule> schedule = _cache.Get<List<Schedule>>(_ScheduleKey);
 			var list = new List<string>();
-			if (schedule != null)
+			if (schedule != null && schedule.Count != 0)
 			{
 				foreach (var place in schedule)
 				{
