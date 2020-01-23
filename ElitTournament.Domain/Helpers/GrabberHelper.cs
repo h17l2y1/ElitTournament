@@ -67,12 +67,20 @@ namespace ElitTournament.Domain.Helpers
 				if (str == "br")
 				{
 					var index = ListSchedule.Count();
+					if (index == 0)
+					{
+						return;
+					}
 					ListSchedule[index - 1].Games.AddRange(p.TextContent.ToUpper().Split("\n").ToList());
 				}
 			}
 			if (p.ChildElementCount == 0)
 			{
 				var index = ListSchedule.Count();
+				if (index == 0)
+				{
+					return;
+				}
 				ListSchedule[index - 1].Games.Add(p.TextContent);
 			}
 		}
