@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace ElitTournament.Api
@@ -28,7 +29,7 @@ namespace ElitTournament.Api
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 		}
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
 		{
 			if (env.IsDevelopment())
 			{
@@ -38,8 +39,9 @@ namespace ElitTournament.Api
 			{
 				app.UseHsts();
 			}
-
-			app.UseMiddleware<ErrorHandlingMiddleware>();
+			loggerFactory.AddFile(Configuration.GetSection("Logging"));
+			app.UseHttpStatusCodeExceptionMiddleware();
+			//app.UseMiddleware<ErrorHandlingMiddleware>();
 
 			IServiceProvider serviceProvider = app.ApplicationServices;
 			IBotProvider bot = serviceProvider.GetService<IBotProvider>();

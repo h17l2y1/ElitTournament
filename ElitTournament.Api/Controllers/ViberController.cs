@@ -1,4 +1,5 @@
-﻿using ElitTournament.Domain.Providers.Interfaces;
+﻿using ElitTournament.Domain.Providers;
+using ElitTournament.Domain.Providers.Interfaces;
 using ElitTournament.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -18,13 +19,27 @@ namespace ElitTournament.Api.Controllers
 
 		[HttpGet]
 		public async Task<IActionResult> Set()
+		
 		{
 			await _service.SetWebHook();
 			return Ok();
 		}
 
-		public async Task<IActionResult> Update()
+		//[HttpGet]
+		//public async Task<IActionResult> Update(/*[FromBody]CallBack callBack*/)
+		//{
+		//	return Ok();
+		//}
+		[HttpPost]
+		public async Task<IActionResult> Update([FromBody]CallBack callBack)
 		{
+			return Ok();
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> Remove()
+		{
+			await _service.Remove();
 			return Ok();
 		}
 	}
