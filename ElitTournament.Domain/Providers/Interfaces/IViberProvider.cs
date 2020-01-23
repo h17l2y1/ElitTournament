@@ -6,5 +6,6 @@ namespace ElitTournament.Domain.Providers.Interfaces
     {
         Task SetWebHook();
         Task Remove();
+        Task Update(object res);
     }
 }
