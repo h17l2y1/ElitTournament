@@ -38,7 +38,6 @@ namespace ElitTournament.Domain.Helpers
 			{
 				CreateSchedule(item);
 			}
-
 			return ListSchedule;
 		}
 
@@ -131,9 +130,12 @@ namespace ElitTournament.Domain.Helpers
 				{
 					var tdTeam = column.Children[1];
 					string tdName = tdTeam.TextContent;
-					string teamName = Pattern.Replace(tdName, "");
+					string teamName = Pattern
+											 .Replace(tdName, "")
+											 .Replace("-", " ")
+											 .ToUpper();
 
-					Leagues[Leagues.Count - 1].Teams.Add(teamName.ToUpper());
+					Leagues[Leagues.Count - 1].Teams.Add(teamName);
 				}
 				Leagues[Leagues.Count - 1].Teams.RemoveAt(0);
 			}

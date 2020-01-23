@@ -7,9 +7,9 @@ namespace ElitTournament.Domain.Helpers.Interfaces
 	{
 		void Update(List<Schedule> schedule, List<League> league);
 
-		List<string> FindGame(string teamName);
-
 		List<League> GetLeagues();
+
+		List<Schedule> GetSchedule();
 
 		List<string> GetTeams();
 	}

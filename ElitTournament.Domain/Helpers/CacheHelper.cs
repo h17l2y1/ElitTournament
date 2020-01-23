@@ -27,6 +27,38 @@ namespace ElitTournament.Domain.Helpers
 			SaveTeams(league);
 		}
 
+		public List<League> GetLeagues()
+		{
+			List<League> leagues = _cache.Get<List<League>>(_LeagueKey);
+			if (leagues == null)
+			{
+				return null;
+			}
+
+			return leagues;
+		}
+
+		public List<Schedule> GetSchedule()
+		{
+			List<Schedule> schedule = _cache.Get<List<Schedule>>(_ScheduleKey);
+			if (schedule == null)
+			{
+				return null;
+			}
+
+			return schedule;
+		}
+
+		public List<string> GetTeams()
+		{
+			List<string> teams = _cache.Get<List<string>>(_TeamKey);
+			if (teams != null)
+			{
+				return teams;
+			}
+			return null;
+		}
+
 		private void Clear()
 		{
 			_cache.Remove(_ScheduleKey);
@@ -69,54 +101,5 @@ namespace ElitTournament.Domain.Helpers
 				_cache.Set(_TeamKey, teamList, cacheEntryOptions);
 			}
 		}
-
-		public List<string> FindGame(string teamName)
-		{
-			List<Schedule> schedule = _cache.Get<List<Schedule>>(_ScheduleKey);
-			var list = new List<string>();
-			if (schedule != null && schedule.Count != 0)
-			{
-				foreach (var place in schedule)
-				{
-					foreach (var game in place.Games)
-					{
-						string teamWithSpace = teamName.Replace("-", " ").ToUpper();
-						string teamWithHyphen = teamName.Replace(" ", "-").ToUpper();
-
-						if (game.Contains(teamWithSpace) || game.Contains(teamWithHyphen))
-						{
-							list.Add($"{place.Place} {game}");
-						}
-					}
-				}
-
-				return list;
-			}
-
-			return null;
-		}
-
-		public List<League> GetLeagues()
-		{
-			List<League> leagues = _cache.Get<List<League>>(_LeagueKey);
-			if (leagues == null)
-			{
-				return null;
-			}
-
-			return leagues;
-		}
-
-		public List<string> GetTeams()
-		{
-			List<string> teams = _cache.Get<List<string>>(_TeamKey);
-			if (teams == null)
-			{
-				return null;
-			}
-
-			return teams;
-		}
-
 	}
 }

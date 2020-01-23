@@ -21,9 +21,10 @@ namespace ElitTournament.Domain.Services
 
 		public string FindGame(string teamName)
 		{
-			List<string> result1 = _сacheHelper.FindGame(teamName);
-			var result = String.Join(", ", result1.ToArray());
-			return result;
+			//List<string> result1 = _сacheHelper.FindGame(teamName);
+			//var result = String.Join(", ", result1.ToArray());
+			//return result;
+			return null;
 		}
 
 		public async Task<List<League>> GetLeagues()

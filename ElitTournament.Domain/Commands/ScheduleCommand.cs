@@ -27,13 +27,11 @@ namespace ElitTournament.Domain.Commands
 			{
 				List<string> teams = _cacheHelper.GetTeams();
 
-				string teamWithSpace = text.Replace("-", " ").ToUpper();
-				string teamWithHyphen = text.Replace(" ", "-").ToUpper();
+				string teamName = text.Replace("-", " ").ToUpper();
 
-				string spaceTeam = teams.FirstOrDefault(x => x == teamWithSpace);
-				string hyphenTeam = teams.FirstOrDefault(x => x == teamWithHyphen);
+				string spaceTeam = teams.FirstOrDefault(x => x == teamName);
 
-				if (spaceTeam != null || hyphenTeam != null)
+				if (spaceTeam != null )
 				{
 					isExistTeam = true;
 				}
@@ -43,7 +41,7 @@ namespace ElitTournament.Domain.Commands
 
 		public async override void Execute(Message message, TelegramBotClient client)
 		{
-			List<string> schedule = _cacheHelper.FindGame(message.Text);
+			List<string> schedule = FindGame(message.Text);
 			long chatId = message.Chat.Id;
 
 			if (schedule == null)
@@ -60,9 +58,35 @@ namespace ElitTournament.Domain.Commands
 				return;
 			}
 
-			var result = String.Join(", ", schedule.ToArray());
+			var result = String.Join("\n\n", schedule.ToArray());
 
 			await client.SendTextMessageAsync(chatId, result);
+		}
+
+		public List<string> FindGame(string teamName)
+		{
+			List<Schedule> schedule = _cacheHelper.GetSchedule();
+			if (schedule != null && schedule.Count != 0)
+			{
+				List<string> list = new List<string>();
+				string teamWithSpace = teamName.Replace("-", " ").ToUpper();
+
+				foreach (var place in schedule)
+				{
+					foreach (var game in place.Games)
+					{
+						string gameString = game.Replace("-"," ").ToUpper();
+						if (gameString.Contains(teamWithSpace))
+						{
+							list.Add($"{place.Place}\n{game}");
+						}
+					}
+				}
+
+				return list;
+			}
+
+			return null;
 		}
 	}
 }
