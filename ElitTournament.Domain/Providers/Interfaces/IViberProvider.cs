@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using ElitTournament.Domain.Views;
+using System.Threading.Tasks;
 
 namespace ElitTournament.Domain.Providers.Interfaces
 {
@@ -6,6 +7,6 @@ namespace ElitTournament.Domain.Providers.Interfaces
     {
         Task SetWebHook();
         Task Remove();
-        Task Update(object res);
+        Task Update(RootObject res);
     }
 }

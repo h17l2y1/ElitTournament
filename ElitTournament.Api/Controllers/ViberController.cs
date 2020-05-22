@@ -4,6 +4,7 @@ using ElitTournament.Domain.Services.Interfaces;
 using ElitTournament.Domain.Views;
 using ElitTournament.Domain.Views.Enums;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace ElitTournament.Api.Controllers
@@ -20,27 +21,28 @@ namespace ElitTournament.Api.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Set()
-		
+		public async Task<IActionResult> Set()		
 		{
 			await _service.SetWebHook();
 			return Ok();
 		}
 
-		//[HttpGet]
-		//public async Task<IActionResult> Update(/*[FromBody]CallBack callBack*/)
-		//{
-		//	return Ok();
-		//}
 		[HttpPost]
 		public async Task<IActionResult> Update([FromBody]RootObject callBack)
 		{
-            if(callBack.Event == ViberEventEnum.webhook.ToString())
-            {
-                return Ok();
-            }
-			await _service.Update(callBack);
-			return Ok();
+			try
+			{
+				if (callBack.Event == ViberEventEnum.webhook.ToString())
+				{
+					return Ok();
+				}
+				await _service.Update(callBack);
+				return Ok();
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
 		}
 
 		[HttpGet]

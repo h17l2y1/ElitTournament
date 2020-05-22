@@ -1,5 +1,6 @@
 ﻿using ElitTournament.Domain.Helpers.Interfaces;
 using ElitTournament.Domain.Providers.Interfaces;
+using ElitTournament.Domain.Views;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
@@ -11,13 +12,15 @@ namespace ElitTournament.Domain.Providers
     public class ViberProvider : IViberProvider
     {
         private readonly string _viberToken;
-        private readonly string _viberUrl;
+        private readonly string _viberSetWebHookUrl;
+        private readonly string _viberSendMessageUrl;
         private readonly string _viberWebHook;
         public ViberProvider(IConfiguration configuration, ICacheHelper cacheHelper)
         {
             _viberToken = configuration["Viber"];
-            _viberUrl = configuration["ViberUrl"];
+            _viberSetWebHookUrl = configuration["ViberUrl"];
             _viberWebHook = configuration["ViberWebHook"];
+            _viberSendMessageUrl = configuration["ViberWebHook"];
         }
 
         public async Task SetWebHook()
@@ -27,7 +30,7 @@ namespace ElitTournament.Domain.Providers
 
         public async Task Remove()
         {
-            var client = new RestClient(_viberUrl);
+            var client = new RestClient(_viberSetWebHookUrl);
             var request = new RestRequest(Method.POST);
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-Viber-Auth-Token", _viberToken);
@@ -35,14 +38,29 @@ namespace ElitTournament.Domain.Providers
             IRestResponse response = client.Execute(request);
         }
 
-        public async Task Update(object res)
+        public async Task Update(RootObject view)
         {
-            var asd = JsonConvert.DeserializeObject<CallBack>(res.ToString());
+            var client = new RestClient(_viberSendMessageUrl);
+            var request = new RestRequest(Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("X-Viber-Auth-Token", _viberToken);
+
+            var res = new SendViberMessageView();
+            res.Receiver = view.Sender?.Id;
+            res.Text = $"Выберите лигу";
+            res.Type = "text";
+            res.Keyboard = new ViberKeyboard();
+            res.Keyboard.DefaultHeight = true;
+            res.Keyboard.Type = "keyboard";
+            res.Keyboard.Buttons = new List<Button>();
+            res.Keyboard.Buttons.Add(new Button { ActionBody = "reply", ActionType = "reply", Text = "Call me", TextSize = "regular" });
+            request.AddJsonBody(res);
+            IRestResponse response = client.Execute(request);
         }
 
         private void SetWebHookToken()
         {
-            var client = new RestClient(_viberUrl);
+            var client = new RestClient(_viberSetWebHookUrl);
             var request = new RestRequest(Method.POST);
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-Viber-Auth-Token", _viberToken);
@@ -55,9 +73,7 @@ namespace ElitTournament.Domain.Providers
 
             IRestResponse response = client.Execute(request);
             var res = JsonConvert.DeserializeObject<ResponseWebHookViber>(response.Content);
-        }
-
-       
+        }     
     }
 
     public class SetWebHookViber
@@ -73,30 +89,30 @@ namespace ElitTournament.Domain.Providers
         public List<string> Event_types { get; set; } = new List<string>();
     }
 
-    public class StartedMessage
-    {
-        public string receiver { get; set; }
+    //public class StartedMessage
+    //{
+    //    public string receiver { get; set; }
 
-        public string type { get; set; }
+    //    public string type { get; set; }
 
-        public Keyboard keyboard { get; set; }
-    }
+    //    public Keyboard keyboard { get; set; }
+    //}
 
-    public class Keyboard
-    {
-        public string Type { get; set; }
-        public bool DefaultHeight { get; set; }
+    //public class Keyboard
+    //{
+    //    public string Type { get; set; }
+    //    public bool DefaultHeight { get; set; }
 
-        public List<Button> Buttons { get; set; } = new List<Button>();
-    }
+    //    public List<Button> Buttons { get; set; } = new List<Button>();
+    //}
 
-    public class Button
-    {
-        public string ActionType { get; set; }
-        public string ActionBody { get; set; }
-        public string Text { get; set; }
-        public string TextSize { get; set; }
-    }
+    //public class Button
+    //{
+    //    public string ActionType { get; set; }
+    //    public string ActionBody { get; set; }
+    //    public string Text { get; set; }
+    //    public string TextSize { get; set; }
+    //}
 
 
     public class CallBack

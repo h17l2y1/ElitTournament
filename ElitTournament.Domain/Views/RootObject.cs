@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ElitTournament.Domain.Views
+﻿namespace ElitTournament.Domain.Views
 {
 
     public class Sender
