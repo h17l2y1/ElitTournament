@@ -14,34 +14,25 @@ namespace ElitTournament.Api.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
-        {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(context, ex);
-            }
-        }
+		public async Task Invoke(HttpContext context)
+		{
+			try
+			{
+				await _next(context);
+			}
+			catch (Exception ex)
+			{
+				await HandleExceptionAsync(context, ex);
+			}
+		}
 
-        public Task HandleExceptionAsync(HttpContext context, Exception exception)
-        {
-            int code = (int)HttpStatusCode.InternalServerError;
-
-            string message = exception.Message;
-
-            if (code != StatusCodes.Status400BadRequest && code != StatusCodes.Status401Unauthorized && code != StatusCodes.Status404NotFound)
-            {
-
-            }
-
-            context.Response.ContentType = "application/json";
-
-            context.Response.StatusCode = code;
-
-            return context.Response.WriteAsync(message);
-        }
-    }
+		public Task HandleExceptionAsync(HttpContext context, Exception exception)
+		{
+			int code = (int)HttpStatusCode.InternalServerError;
+			string message = exception.Message;
+			context.Response.ContentType = "application/json";
+			context.Response.StatusCode = code;
+			return context.Response.WriteAsync(message);
+		}
+	}
 }

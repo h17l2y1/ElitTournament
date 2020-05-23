@@ -3,22 +3,39 @@ using ElitTournament.Domain.Entities;
 using ElitTournament.Domain.Helpers.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ElitTournament.Domain.Helpers
 {
 	public class GrabberHelper : IGrabberHelper
 	{
+		private readonly Regex Pattern;
+		private readonly List<string> Days;
+		private readonly List<string> Places;
+		private readonly Dictionary<char, char> _replacements;
+
 		public List<Schedule> ListSchedule { get; set; }
 		public List<League> Leagues { get; set; }
 
-		private readonly Regex Pattern;
 
 		public GrabberHelper()
 		{
+			Pattern = new Regex("[\t\n]");		
 			ListSchedule = new List<Schedule>();
 			Leagues = new List<League>();
-			Pattern = new Regex("[\t\n]");
+			_replacements = SetDictionary();
+
+			Days = new List<string>()
+			{
+				"понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"
+			};
+
+			Places = new List<string>()
+			{
+				"хнурэ", "ХИРЭ", "шервуд", "Football Park", "ШВСМ Пионер","ОНСК Локомотив",
+				"СК Звезда", "СК Вирта", "СК Хнувд", "Ск Фарм Академия", "КСК Комунар"
+			};
 		}
 
 		public IHtmlCollection<IElement> Parse(IDocument document)
@@ -34,10 +51,16 @@ namespace ElitTournament.Domain.Helpers
 		{
 			IHtmlCollection<IElement> listP = Parse(document);
 
+			var test = new List<string>();
+
 			foreach (var item in listP)
 			{
-				CreateSchedule(item);
+				string ruText = Converter(item.TextContent.ToUpper());
+				test.Add(ruText);
 			}
+
+			CreateSchedule(test);
+
 			return ListSchedule;
 		}
 
@@ -53,7 +76,38 @@ namespace ElitTournament.Domain.Helpers
 			return Leagues;
 		}
 
-		private void CreateSchedule(IElement p)
+		private void CreateSchedule(List<string> listP)
+		{
+			foreach (var text in listP)
+			{
+				bool isDateExist = false;
+				bool isPlaceExist = false;
+
+				foreach (var day in Days)
+				{
+					if (!isDateExist)
+					{
+						isDateExist = text.Contains(day.ToUpper());
+					}
+				}
+
+				foreach (var place in Places)
+				{
+					if (!isPlaceExist)
+					{
+						isPlaceExist = text.Contains(place.ToUpper());
+					}
+				}
+
+				if (isDateExist && isPlaceExist)
+				{
+					ListSchedule.Add(new Schedule(text));
+				}
+
+			}
+		}
+
+		private void CreateSchedule2(IElement p)
 		{
 			if (p.ChildElementCount >= 1)
 			{
@@ -140,6 +194,35 @@ namespace ElitTournament.Domain.Helpers
 				Leagues[Leagues.Count - 1].Teams.RemoveAt(0);
 			}
 		}
+
+		private string Converter(string str)
+		{
+			var sb = new StringBuilder(str);
+			foreach (var kvp in _replacements)
+			{
+				sb.Replace(kvp.Key, kvp.Value);
+			}
+			return sb.ToString();
+		}
+
+		private Dictionary<char, char> SetDictionary()
+		{
+			Dictionary<char, char> Replacements = new Dictionary<char, char>()
+			{
+				['a'] = 'а',
+				['A'] = 'А',
+				['B'] = 'В',
+				['c'] = 'с',
+				['C'] = 'С',
+				['e'] = 'е',
+				['E'] = 'Е',
+				['H'] = 'Н',
+				['i'] = 'і',
+				['I'] = 'І',
+			};
+			return Replacements;
+		}
+
 	}
 
 }
