@@ -55,8 +55,8 @@ namespace ElitTournament.Domain.Helpers
 
 			foreach (var item in listP)
 			{
-				string ruText = Converter(item.TextContent.ToUpper());
-				test.Add(ruText);
+				//string ruText = Converter(item.TextContent.ToUpper());
+				test.Add(item.TextContent.ToUpper());
 			}
 
 			CreateSchedule(test);
@@ -82,6 +82,7 @@ namespace ElitTournament.Domain.Helpers
 			{
 				bool isDateExist = false;
 				bool isPlaceExist = false;
+				int index = ListSchedule.Count();
 
 				foreach (var day in Days)
 				{
@@ -101,42 +102,49 @@ namespace ElitTournament.Domain.Helpers
 
 				if (isDateExist && isPlaceExist)
 				{
-					ListSchedule.Add(new Schedule(text));
+					string a = Converter(text);
+					ListSchedule.Add(new Schedule(a));
+					continue;
+				}
+
+				if (index != 0)
+				{
+					ListSchedule[index - 1].Games.AddRange(text.ToUpper().Split("\n").ToList());
 				}
 
 			}
 		}
 
-		private void CreateSchedule2(IElement p)
-		{
-			if (p.ChildElementCount >= 1)
-			{
-				string str = p.Children[0].LocalName;
-				if (str == "strong")
-				{
-					string obj = p.TextContent;
-					ListSchedule.Add(new Schedule(obj));
-				}
-				if (str == "br")
-				{
-					var index = ListSchedule.Count();
-					if (index == 0)
-					{
-						return;
-					}
-					ListSchedule[index - 1].Games.AddRange(p.TextContent.ToUpper().Split("\n").ToList());
-				}
-			}
-			if (p.ChildElementCount == 0)
-			{
-				var index = ListSchedule.Count();
-				if (index == 0)
-				{
-					return;
-				}
-				ListSchedule[index - 1].Games.Add(p.TextContent);
-			}
-		}
+		//private void CreateSchedule2(IElement p)
+		//{
+		//	if (p.ChildElementCount >= 1)
+		//	{
+		//		string str = p.Children[0].LocalName;
+		//		if (str == "strong")
+		//		{
+		//			string obj = p.TextContent;
+		//			ListSchedule.Add(new Schedule(obj));
+		//		}
+		//		if (str == "br")
+		//		{
+		//			var index = ListSchedule.Count();
+		//			if (index == 0)
+		//			{
+		//				return;
+		//			}
+		//			ListSchedule[index - 1].Games.AddRange(p.TextContent.ToUpper().Split("\n").ToList());
+		//		}
+		//	}
+		//	if (p.ChildElementCount == 0)
+		//	{
+		//		var index = ListSchedule.Count();
+		//		if (index == 0)
+		//		{
+		//			return;
+		//		}
+		//		ListSchedule[index - 1].Games.Add(p.TextContent);
+		//	}
+		//}
 
 		public IEnumerable<string> GetLinks(IDocument document)
 		{

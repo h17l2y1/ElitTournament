@@ -22,21 +22,22 @@ namespace ElitTournament.Domain.Commands
 
 		public override bool Contains(string text)
 		{
-			bool isExistTeam = false;
-			if (_leagues != null)
-			{
-				List<string> teams = _cacheHelper.GetTeams();
+			//bool isExistTeam = false;
+			//if (_leagues != null)
+			//{
+			//	List<string> teams = _cacheHelper.GetTeams();
 
-				string teamName = text.Replace("-", " ").ToUpper();
+			//	string teamName = text.Replace("-", " ").ToUpper();
 
-				string spaceTeam = teams.FirstOrDefault(x => x == teamName);
+			//	string spaceTeam = teams.FirstOrDefault(x => x == teamName);
 
-				if (spaceTeam != null )
-				{
-					isExistTeam = true;
-				}
-			}
-			return isExistTeam;
+			//	if (spaceTeam != null )
+			//	{
+			//		isExistTeam = true;
+			//	}
+			//}
+			//return isExistTeam;
+			return true;
 		}
 
 		public async override void Execute(Message message, TelegramBotClient client)
