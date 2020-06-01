@@ -1,9 +1,6 @@
 ﻿using ElitTournament.Domain.Entities;
 using ElitTournament.Domain.Helpers.Interfaces;
-using ElitTournament.Domain.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Linq;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;

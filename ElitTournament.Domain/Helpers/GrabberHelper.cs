@@ -3,7 +3,6 @@ using ElitTournament.Domain.Entities;
 using ElitTournament.Domain.Helpers.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ElitTournament.Domain.Helpers
@@ -158,8 +157,7 @@ namespace ElitTournament.Domain.Helpers
 				{
 					var tdTeam = column.Children[1];
 					string tdName = tdTeam.TextContent;
-					string teamName = Pattern
-											 .Replace(tdName, "")
+					string teamName = Pattern.Replace(tdName, "")
 											 .Replace("-", " ")
 											 .ToUpper();
 

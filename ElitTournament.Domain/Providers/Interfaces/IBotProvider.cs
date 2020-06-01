@@ -6,6 +6,7 @@ namespace ElitTournament.Domain.Providers.Interfaces
     public interface IBotProvider
     {
         Task Update(Update update);
+
         Task InitializeClient();
     }
 }
