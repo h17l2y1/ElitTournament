@@ -1,4 +1,5 @@
 ﻿using ElitTournament.Domain.Services.Interfaces;
+using ElitTournament.Domain.Views;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -20,6 +21,13 @@ namespace ElitTournament.Api.Controllers
 		{
 			await _service.GrabbElitTournament();
 			return Ok();
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetElitTournament()
+		{
+			GrabbElitTournamentView result = _service.GetElitTournament();
+			return Ok(result);
 		}
 
 	}

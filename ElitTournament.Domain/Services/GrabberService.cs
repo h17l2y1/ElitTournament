@@ -2,6 +2,7 @@
 using ElitTournament.Domain.Helpers.Interfaces;
 using ElitTournament.Domain.Providers.Interfaces;
 using ElitTournament.Domain.Services.Interfaces;
+using ElitTournament.Domain.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,5 +27,15 @@ namespace ElitTournament.Domain.Services
 			_сacheHelper.Update(schedule, leagues);
 		}
 
+
+		public GrabbElitTournamentView GetElitTournament()
+		{
+			List<Schedule> schedule = _сacheHelper.GetSchedule();
+			List<League> leagues = _сacheHelper.GetLeagues();
+
+			GrabbElitTournamentView result = new GrabbElitTournamentView(schedule, leagues);
+
+			return result;
+		}
 	}
 }
