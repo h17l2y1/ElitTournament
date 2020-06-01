@@ -13,7 +13,6 @@ namespace ElitTournament.Domain.Helpers
 		private readonly Regex Pattern;
 		private readonly List<string> Days;
 		private readonly List<string> Places;
-		private readonly Dictionary<char, char> _replacements;
 
 		public List<Schedule> ListSchedule { get; set; }
 		public List<League> Leagues { get; set; }
@@ -24,11 +23,11 @@ namespace ElitTournament.Domain.Helpers
 			Pattern = new Regex("[\t\n]");		
 			ListSchedule = new List<Schedule>();
 			Leagues = new List<League>();
-			_replacements = SetDictionary();
 
 			Days = new List<string>()
 			{
-				"понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"
+				"понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье",	// rus
+				"Bторник", "Cреда", "Cуббота", "Воскресенье"										// eng + rus
 			};
 
 			Places = new List<string>()
@@ -55,7 +54,6 @@ namespace ElitTournament.Domain.Helpers
 
 			foreach (var item in listP)
 			{
-				//string ruText = Converter(item.TextContent.ToUpper());
 				test.Add(item.TextContent.ToUpper());
 			}
 
@@ -102,8 +100,7 @@ namespace ElitTournament.Domain.Helpers
 
 				if (isDateExist && isPlaceExist)
 				{
-					string a = Converter(text);
-					ListSchedule.Add(new Schedule(a));
+					ListSchedule.Add(new Schedule(text));
 					continue;
 				}
 
@@ -114,37 +111,6 @@ namespace ElitTournament.Domain.Helpers
 
 			}
 		}
-
-		//private void CreateSchedule2(IElement p)
-		//{
-		//	if (p.ChildElementCount >= 1)
-		//	{
-		//		string str = p.Children[0].LocalName;
-		//		if (str == "strong")
-		//		{
-		//			string obj = p.TextContent;
-		//			ListSchedule.Add(new Schedule(obj));
-		//		}
-		//		if (str == "br")
-		//		{
-		//			var index = ListSchedule.Count();
-		//			if (index == 0)
-		//			{
-		//				return;
-		//			}
-		//			ListSchedule[index - 1].Games.AddRange(p.TextContent.ToUpper().Split("\n").ToList());
-		//		}
-		//	}
-		//	if (p.ChildElementCount == 0)
-		//	{
-		//		var index = ListSchedule.Count();
-		//		if (index == 0)
-		//		{
-		//			return;
-		//		}
-		//		ListSchedule[index - 1].Games.Add(p.TextContent);
-		//	}
-		//}
 
 		public IEnumerable<string> GetLinks(IDocument document)
 		{
@@ -173,7 +139,7 @@ namespace ElitTournament.Domain.Helpers
 				string leagueName = c2.TextContent;
 
 				Leagues.Add(new League());
-				Leagues[Leagues.Count - 1].Name = leagueName;
+				Leagues[Leagues.Count - 1].Name = leagueName.Trim();
 			}
 
 			if (element.LocalName == "strong")
@@ -181,7 +147,7 @@ namespace ElitTournament.Domain.Helpers
 				string leagueName = element.TextContent;
 
 				Leagues.Add(new League());
-				Leagues[Leagues.Count - 1].Name = leagueName;
+				Leagues[Leagues.Count - 1].Name = leagueName.Trim();
 			}
 
 			if (element.LocalName == "table")
@@ -201,34 +167,6 @@ namespace ElitTournament.Domain.Helpers
 				}
 				Leagues[Leagues.Count - 1].Teams.RemoveAt(0);
 			}
-		}
-
-		private string Converter(string str)
-		{
-			var sb = new StringBuilder(str);
-			foreach (var kvp in _replacements)
-			{
-				sb.Replace(kvp.Key, kvp.Value);
-			}
-			return sb.ToString();
-		}
-
-		private Dictionary<char, char> SetDictionary()
-		{
-			Dictionary<char, char> Replacements = new Dictionary<char, char>()
-			{
-				['a'] = 'а',
-				['A'] = 'А',
-				['B'] = 'В',
-				['c'] = 'с',
-				['C'] = 'С',
-				['e'] = 'е',
-				['E'] = 'Е',
-				['H'] = 'Н',
-				['i'] = 'і',
-				['I'] = 'І',
-			};
-			return Replacements;
 		}
 
 	}

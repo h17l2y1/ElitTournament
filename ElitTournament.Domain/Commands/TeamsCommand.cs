@@ -13,6 +13,7 @@ namespace ElitTournament.Domain.Commands
     {
         private readonly List<League> Leagues;
         private readonly ICacheHelper _cacheHelper;
+
         public TeamsCommand(ICacheHelper cacheHelper) : base("all leages")
         {
             _cacheHelper = cacheHelper;
@@ -20,6 +21,7 @@ namespace ElitTournament.Domain.Commands
             Leagues = new List<League>();
             Leagues = _cacheHelper.GetLeagues();
         }
+
         public async override void Execute(Message message, TelegramBotClient client)
         {
             var chatId = message.Chat.Id;
@@ -27,6 +29,7 @@ namespace ElitTournament.Domain.Commands
             
             await client.SendTextMessageAsync(chatId, Text, ParseMode.Html, false, false, 0, GetMenu(message.Text));
         }
+
         public override bool Contains(string command)
         {
             var leages = Leagues.Select(p => p.Name).ToList();
@@ -36,36 +39,47 @@ namespace ElitTournament.Domain.Commands
         private ReplyKeyboardMarkup GetMenu(string comand)
         {
             var menu = new ReplyKeyboardMarkup();
+            League currentLeague = Leagues.FirstOrDefault(p => p.Name == comand);
+
+            List<List<KeyboardButton>> buttons = CreateButtons(currentLeague);
+
+            menu.Keyboard = buttons;
+
+            return menu;
+        }
+
+        private List<List<KeyboardButton>> CreateButtons(League currentLeague)
+        {
             List<List<KeyboardButton>> keyBoard = new List<List<KeyboardButton>>();
-            var currentLeague = Leagues.FirstOrDefault(p => p.Name == comand);
-            var isEven = currentLeague.Teams.Count % 2;
-            for (int i = 0; i < currentLeague.Teams.Count; i++)
+
+            int teamsCount = currentLeague.Teams.Count();
+            bool isEven = teamsCount % 2 == 0 ? true : false;
+
+            for (int i = 0; i < teamsCount; i++)
             {
-                List<KeyboardButton> team = new List<KeyboardButton>();
-                if (isEven == 0)
+                List<KeyboardButton> teams = new List<KeyboardButton>();
+
+                if (isEven)
                 {
-                    team.Add(new KeyboardButton(currentLeague.Teams[i]));
+                    teams.Add(new KeyboardButton(currentLeague.Teams[i]));
                     i++;
-                    team.Add(new KeyboardButton(currentLeague.Teams[i]));
+                    teams.Add(new KeyboardButton(currentLeague.Teams[i]));
                 }
                 else
                 {
-                    team.Add(new KeyboardButton(currentLeague.Teams[i]));
+                    teams.Add(new KeyboardButton(currentLeague.Teams[i]));
                     i++;
                     if (i != currentLeague.Teams.Count)
                     {
-                        team.Add(new KeyboardButton(currentLeague.Teams[i]));
+                        teams.Add(new KeyboardButton(currentLeague.Teams[i]));
                     }
                 }
 
-                keyBoard.Add(team);
+                keyBoard.Add(teams);
             }
-            List<KeyboardButton> backButon = new List<KeyboardButton>();
-            backButon.Add(new KeyboardButton("Назад"));
-            keyBoard.Add(backButon);
-            menu.Keyboard = keyBoard;
 
-            return menu;
+            keyBoard.Add(new List<KeyboardButton> { new KeyboardButton("Назад") });
+            return keyBoard;
         }
     }
 }

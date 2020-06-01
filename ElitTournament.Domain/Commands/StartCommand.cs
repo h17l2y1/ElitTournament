@@ -21,7 +21,7 @@ namespace ElitTournament.Domain.Commands
 		public StartCommand(ICacheHelper cacheHelper) 
 			: base("расписание")
         {
-            _firstPossibleComand = "start";
+            _firstPossibleComand = "Начать";
             _secondPossibleComand = "назад";
             _cacheHelper = cacheHelper;
 			Leagues = new List<League>();
@@ -47,31 +47,34 @@ namespace ElitTournament.Domain.Commands
         {        
             var menu = new ReplyKeyboardMarkup();
             List<List<KeyboardButton>> list = new List<List<KeyboardButton>>();
-            var isEven = Leagues.Count % 2;
+            if (Leagues != null)
+            {
+                var isEven = Leagues.Count % 2;
 
-            for (int i = 0; i < Leagues.Count; i++)
-			{
-                List<KeyboardButton> test = new List<KeyboardButton>();
-                if (isEven == 0)
-                {                    
-                    test.Add(new KeyboardButton(Leagues[i].Name));
-                    i++;
-                    test.Add(new KeyboardButton(Leagues[i].Name));
-                }
-                else
+                for (int i = 0; i < Leagues.Count; i++)
                 {
-                    test.Add(new KeyboardButton(Leagues[i].Name));
-                    i++;
-                    if(i!= Leagues.Count)
+                    List<KeyboardButton> test = new List<KeyboardButton>();
+                    if (isEven == 0)
                     {
                         test.Add(new KeyboardButton(Leagues[i].Name));
+                        i++;
+                        test.Add(new KeyboardButton(Leagues[i].Name));
                     }
+                    else
+                    {
+                        test.Add(new KeyboardButton(Leagues[i].Name));
+                        i++;
+                        if (i != Leagues.Count)
+                        {
+                            test.Add(new KeyboardButton(Leagues[i].Name));
+                        }
+                    }
+
+                    list.Add(test);
                 }
+            }
 
-                list.Add(test);
-			}
-
-			menu.Keyboard = list;
+            menu.Keyboard = list;
             return menu;
         }
     }
