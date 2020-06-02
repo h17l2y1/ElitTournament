@@ -22,7 +22,6 @@ namespace ElitTournament.Domain.Config
 			services.AddScoped<IGrabberProvider, GrabberProvider>();
 			services.AddScoped<IViberProvider, ViberProvider>();
 
-
 			// Helpers
 			services.AddScoped<IHtmlLoaderHelper, HtmlLoaderHelper>();
 			services.AddScoped<IGrabberHelper, GrabberHelper>();

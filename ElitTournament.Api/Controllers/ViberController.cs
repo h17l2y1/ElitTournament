@@ -21,11 +21,26 @@ namespace ElitTournament.Api.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Set()		
+		public async Task<IActionResult> Set()
 		{
-			await _service.SetWebHook();
-			return Ok();
+			var res = await _service.SetWebHookToken();
+			return Ok(res);
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetAccountInfo()
+		{
+			var res = await _service.GetAccountInfo();
+			return Ok(res);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> SendTextMessage(string text)
+		{
+			var res = await _service.SendTextMessage(text);
+			return Ok(res);
+		}
+
 
 		[HttpPost]
 		public async Task<IActionResult> Update([FromBody]RootObject callBack)
@@ -39,17 +54,11 @@ namespace ElitTournament.Api.Controllers
 				await _service.Update(callBack);
 				return Ok();
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				throw ex;
 			}
 		}
 
-		[HttpGet]
-		public async Task<IActionResult> Remove()
-		{
-			await _service.Remove();
-			return Ok();
-		}
 	}
 }

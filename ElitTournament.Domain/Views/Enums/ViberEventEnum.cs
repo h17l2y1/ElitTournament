@@ -11,4 +11,14 @@
         failed,
         message
     }
+
+    public enum EventTypes
+    {
+        delivered,
+        seen,
+        failed,
+        subscribed,
+        unsubscribed,
+        conversation_started
+    }
 }

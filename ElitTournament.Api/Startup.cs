@@ -41,7 +41,7 @@ namespace ElitTournament.Api
 			}
 			loggerFactory.AddFile(Configuration.GetSection("Logging"));
 			app.UseHttpStatusCodeExceptionMiddleware();
-			//app.UseMiddleware<ErrorHandlingMiddleware>();
+			app.UseMiddleware<ErrorHandlingMiddleware>();
 
 			IServiceProvider serviceProvider = app.ApplicationServices;
 			IBotProvider bot = serviceProvider.GetService<IBotProvider>();
