@@ -1,4 +1,5 @@
 ﻿using ElitTournament.Viber.Core.Enums;
+using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.View;
 using Newtonsoft.Json;
@@ -11,7 +12,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ElitTournament.Viber.Core.Models
+namespace ElitTournament.Viber.Core
 {
 	public class ViberBotClient : IViberBotClient, IDisposable
 	{
@@ -21,8 +22,6 @@ namespace ElitTournament.Viber.Core.Models
 		private const string BaseAddress = "https://chatapi.viber.com/pa/";
 		private readonly HttpClient _httpClient;
 		private readonly HMACSHA256 _hashAlgorithm;
-		private readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-
 
 		public ViberBotClient(string authenticationToken) : this(authenticationToken, null)
 		{
@@ -47,6 +46,7 @@ namespace ElitTournament.Viber.Core.Models
 			};
 
 			string method = UrlTypes.set_webhook.ToString();
+
 			SetWebhookResponse result = await RequestApiAsync<SetWebhookResponse>(method, webHookViberModel);
 			return result;
 		}
@@ -74,7 +74,7 @@ namespace ElitTournament.Viber.Core.Models
 
 		private async Task<T> RequestApiAsync<T>(string method, object data = null) where T : ApiResponseBase, new()
 		{
-			string requestJson = data == null ? "{}" : JsonConvert.SerializeObject(data, _jsonSettings);
+			string requestJson = data == null ? "{}" : JsonConvert.SerializeObject(data);
 			HttpResponseMessage response = await _httpClient.PostAsync(method, new StringContent(requestJson));
 			string responseJson = await response.Content.ReadAsStringAsync();
 			T result = JsonConvert.DeserializeObject<T>(responseJson);

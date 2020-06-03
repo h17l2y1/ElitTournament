@@ -1,5 +1,5 @@
-﻿using ElitTournament.Domain.Entities;
-using ElitTournament.Domain.Helpers.Interfaces;
+﻿using ElitTournament.Core.Entities;
+using ElitTournament.Core.Helpers.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot;
@@ -7,7 +7,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace ElitTournament.Domain.Commands
+namespace ElitTournament.Telegram.BLL.Commands
 {
     public class TeamsCommand : Command
     {
@@ -18,7 +18,6 @@ namespace ElitTournament.Domain.Commands
         {
             _cacheHelper = cacheHelper;
             Text = "Выберите команду или нажмите назад если вы ошиблись лигой";
-            Leagues = new List<League>();
             Leagues = _cacheHelper.GetLeagues();
         }
 
@@ -26,7 +25,7 @@ namespace ElitTournament.Domain.Commands
         {
             var chatId = message.Chat.Id;
             var messageId = message.MessageId;
-            
+
             await client.SendTextMessageAsync(chatId, Text, ParseMode.Html, false, false, 0, GetMenu(message.Text));
         }
 

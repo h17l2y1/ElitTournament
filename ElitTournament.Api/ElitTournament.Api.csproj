@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ElitTournament.Domain\ElitTournament.Domain.csproj" />
-    <ProjectReference Include="..\ElitTournament.Infrastructure\ElitTournament.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

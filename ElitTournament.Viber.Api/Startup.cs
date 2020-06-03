@@ -1,6 +1,6 @@
-﻿using ElitTournament.Api.Middleware;
-using ElitTournament.Domain.Config;
-using ElitTournament.Domain.Services.Interfaces;
+﻿using ElitTournament.Viber.Api.Middleware;
+using ElitTournament.Viber.BLL.Config;
+using ElitTournament.Viber.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace ElitTournament.Api
+namespace ElitTournament.Viber.Api
 {
 	public class Startup
 	{
 		public IConfiguration Configuration { get; }
-
 
 		public Startup(IConfiguration configuration)
 		{
@@ -39,13 +38,14 @@ namespace ElitTournament.Api
 			{
 				app.UseHsts();
 			}
-			loggerFactory.AddFile(Configuration.GetSection("Logging"));
+
+			//loggerFactory.AddFile(Configuration.GetSection("Logging"));
 			app.UseHttpStatusCodeExceptionMiddleware();
 			app.UseMiddleware<ErrorHandlingMiddleware>();
 
 			IServiceProvider serviceProvider = app.ApplicationServices;
-			IBotService bot = serviceProvider.GetService<IBotService>();
-			bot.InitializeClients().Wait();
+			IViberBotService bot = serviceProvider.GetService<IViberBotService>();
+			bot.SetWebHookAsync().Wait();
 
 
 			app.UseHttpsRedirection();

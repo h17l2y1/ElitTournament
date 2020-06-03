@@ -1,6 +1,6 @@
-﻿using ElitTournament.Domain.Helpers.Interfaces;
-using ElitTournament.Domain.Providers.Interfaces;
+﻿using ElitTournament.Domain.Providers.Interfaces;
 using ElitTournament.Domain.Views;
+using ElitTournament.Viber.Core;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.View;
@@ -56,7 +56,7 @@ namespace ElitTournament.Domain.Providers
 
         public async Task Update(RootObject view)
         {
-            var client = new RestClient("https://21bbf222f958.ngrok.io/api/viber/update");
+            var client = new RestClient("https://e9e2b8910315.ngrok.io/api/viber/update");
             var request = new RestRequest(Method.POST);
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("X-Viber-Auth-Token", _viberToken);

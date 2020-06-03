@@ -3,13 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElitTournament.Infrastructure", "ElitTournament.Infrastructure\ElitTournament.Infrastructure.csproj", "{A5549071-2F4A-4861-904A-74909290E4B2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElitTournament.Domain", "ElitTournament.Domain\ElitTournament.Domain.csproj", "{D91AE55C-5EC9-4D1C-997F-CCBA96B69E21}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElitTournament.Api", "ElitTournament.Api\ElitTournament.Api.csproj", "{F89C1576-0A1B-4A4B-B48F-0C16DDF18266}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElitTournament.Viber.Core", "ElitTournament.Viber.Core\ElitTournament.Viber.Core.csproj", "{68A9BB74-2CC6-467F-AD6E-2363DA4BDD77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElitTournament.Viber.Core", "ElitTournament.Viber.Core\ElitTournament.Viber.Core.csproj", "{68A9BB74-2CC6-467F-AD6E-2363DA4BDD77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElitTournament.Telegram.Api", "ElitTournament.Telegram.Api\ElitTournament.Telegram.Api.csproj", "{BA96B60E-78D9-445F-97CF-13ACCF842FEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElitTournament.Viber.Api", "ElitTournament.Viber.Api\ElitTournament.Viber.Api.csproj", "{45ABAA8A-5BC0-49E2-BEEF-2C4D69DDAD19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElitTournament.Telegram.BLL", "ElitTournament.Telegram.BLL\ElitTournament.Telegram.BLL.csproj", "{2EA03B83-DD96-4D54-ABC9-E01EF67A181B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElitTournament.Viber.BLL", "ElitTournament.Viber.BLL\ElitTournament.Viber.BLL.csproj", "{0B6C2CFF-8CAC-4E0E-9BDC-E319FC606A0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElitTournament.Core", "ElitTournament.Core\ElitTournament.Core.csproj", "{E3779E21-7DA9-47E4-86D0-6D321AB50F0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A5549071-2F4A-4861-904A-74909290E4B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A5549071-2F4A-4861-904A-74909290E4B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A5549071-2F4A-4861-904A-74909290E4B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A5549071-2F4A-4861-904A-74909290E4B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D91AE55C-5EC9-4D1C-997F-CCBA96B69E21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D91AE55C-5EC9-4D1C-997F-CCBA96B69E21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D91AE55C-5EC9-4D1C-997F-CCBA96B69E21}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +37,26 @@ Global
 		{68A9BB74-2CC6-467F-AD6E-2363DA4BDD77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68A9BB74-2CC6-467F-AD6E-2363DA4BDD77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68A9BB74-2CC6-467F-AD6E-2363DA4BDD77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA96B60E-78D9-445F-97CF-13ACCF842FEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA96B60E-78D9-445F-97CF-13ACCF842FEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA96B60E-78D9-445F-97CF-13ACCF842FEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA96B60E-78D9-445F-97CF-13ACCF842FEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45ABAA8A-5BC0-49E2-BEEF-2C4D69DDAD19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45ABAA8A-5BC0-49E2-BEEF-2C4D69DDAD19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45ABAA8A-5BC0-49E2-BEEF-2C4D69DDAD19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45ABAA8A-5BC0-49E2-BEEF-2C4D69DDAD19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EA03B83-DD96-4D54-ABC9-E01EF67A181B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EA03B83-DD96-4D54-ABC9-E01EF67A181B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EA03B83-DD96-4D54-ABC9-E01EF67A181B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EA03B83-DD96-4D54-ABC9-E01EF67A181B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B6C2CFF-8CAC-4E0E-9BDC-E319FC606A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B6C2CFF-8CAC-4E0E-9BDC-E319FC606A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B6C2CFF-8CAC-4E0E-9BDC-E319FC606A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B6C2CFF-8CAC-4E0E-9BDC-E319FC606A0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3779E21-7DA9-47E4-86D0-6D321AB50F0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3779E21-7DA9-47E4-86D0-6D321AB50F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3779E21-7DA9-47E4-86D0-6D321AB50F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3779E21-7DA9-47E4-86D0-6D321AB50F0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,17 +1,17 @@
-﻿using ElitTournament.Domain.Services.Interfaces;
+﻿using ElitTournament.Telegram.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
-namespace ElitTournament.Api.Controllers
+namespace ElitTournament.Telegram.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class TelegramController : ControllerBase
     {
-        private ITelegramService _service;
-        public TelegramController(ITelegramService service)
+        private ITelegramBotService _service;
+        public TelegramController(ITelegramBotService service)
         {
             _service = service;
         }

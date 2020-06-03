@@ -1,13 +1,11 @@
-﻿using ElitTournament.Domain.Entities;
-using ElitTournament.Domain.Helpers.Interfaces;
+﻿using ElitTournament.Core.Entities;
+using ElitTournament.Core.Helpers.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace ElitTournament.Domain.Commands
+namespace ElitTournament.Telegram.BLL.Commands
 {
 	public class ScheduleCommand : Command
 	{
@@ -76,7 +74,7 @@ namespace ElitTournament.Domain.Commands
 				{
 					foreach (var game in place.Games)
 					{
-						string gameString = game.Replace("-"," ").ToUpper();
+						string gameString = game.Replace("-", " ").ToUpper();
 						if (gameString.Contains(teamWithSpace))
 						{
 							list.Add($"{place.Place}\n{game}");

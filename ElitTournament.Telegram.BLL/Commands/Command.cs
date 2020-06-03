@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace ElitTournament.Domain.Commands
+namespace ElitTournament.Telegram.BLL.Commands
 {
     public abstract class Command
     {

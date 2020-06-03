@@ -1,27 +1,27 @@
-﻿using ElitTournament.Domain.Entities;
-using ElitTournament.Domain.Helpers.Interfaces;
+﻿using ElitTournament.Core.Entities;
+using ElitTournament.Core.Helpers.Interfaces;
 using System.Collections.Generic;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace ElitTournament.Domain.Commands
+namespace ElitTournament.Telegram.BLL.Commands
 {
     public class StartCommand : Command
     {
         private readonly string _firstPossibleComand;
         private readonly string _secondPossibleComand;
-		private readonly ICacheHelper _cacheHelper;
-		private readonly List<League> Leagues;
+        private readonly ICacheHelper _cacheHelper;
+        private readonly List<League> Leagues;
 
-		public StartCommand(ICacheHelper cacheHelper) 
-			: base("расписание")
+        public StartCommand(ICacheHelper cacheHelper)
+            : base("расписание")
         {
             _firstPossibleComand = "Начать";
             _secondPossibleComand = "назад";
             _cacheHelper = cacheHelper;
-			Leagues = new List<League>();
+            Leagues = new List<League>();
             Leagues = _cacheHelper.GetLeagues();
             Text = @"Для просмотра расписание выберите лигу, а потом команду.";
         }
@@ -35,13 +35,13 @@ namespace ElitTournament.Domain.Commands
 
         public override bool Contains(string command)
         {
-           return command.ToLower().Contains(Name.ToLower()) 
-				|| command.ToLower().Contains(_firstPossibleComand)
-				|| command.ToLower().Contains(_secondPossibleComand);
+            return command.ToLower().Contains(Name.ToLower())
+                 || command.ToLower().Contains(_firstPossibleComand)
+                 || command.ToLower().Contains(_secondPossibleComand);
         }
 
         private ReplyKeyboardMarkup GetMenu()
-        {        
+        {
             var menu = new ReplyKeyboardMarkup();
             List<List<KeyboardButton>> list = new List<List<KeyboardButton>>();
             if (Leagues != null)
