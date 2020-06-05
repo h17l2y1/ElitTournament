@@ -2,6 +2,7 @@
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Core.Providers.Interfaces;
 using ElitTournament.Core.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,10 +21,9 @@ namespace ElitTournament.Core.Services
 
 		public string FindGame(string teamName)
 		{
-			//List<string> result1 = _сacheHelper.FindGame(teamName);
-			//var result = String.Join(", ", result1.ToArray());
-			//return result;
-			return null;
+			List<string> result1 = _сacheHelper.FindGame(teamName);
+			var result = String.Join(", ", result1.ToArray());
+			return result;
 		}
 
 		public async Task<List<League>> GetLeagues()

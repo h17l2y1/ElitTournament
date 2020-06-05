@@ -58,6 +58,32 @@ namespace ElitTournament.Core.Helpers
 			return null;
 		}
 
+		public List<string> FindGame(string teamName)
+		{
+			List<Schedule> schedule = GetSchedule();
+			if (schedule != null && schedule.Count != 0)
+			{
+				List<string> list = new List<string>();
+				string teamWithSpace = teamName.Replace("-", " ").ToUpper();
+
+				foreach (var place in schedule)
+				{
+					foreach (var game in place.Games)
+					{
+						string gameString = game.Replace("-", " ").ToUpper();
+						if (gameString.Contains(teamWithSpace))
+						{
+							list.Add($"{place.Place}\n{game}");
+						}
+					}
+				}
+
+				return list;
+			}
+
+			return null;
+		}
+
 		private void Clear()
 		{
 			_cache.Remove(_ScheduleKey);

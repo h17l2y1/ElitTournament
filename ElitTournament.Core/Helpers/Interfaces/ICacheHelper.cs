@@ -12,5 +12,7 @@ namespace ElitTournament.Core.Helpers.Interfaces
 		List<Schedule> GetSchedule();
 
 		List<string> GetTeams();
+
+		List<string> FindGame(string teamName);
 	}
 }
