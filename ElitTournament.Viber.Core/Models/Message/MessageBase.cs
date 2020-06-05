@@ -1,13 +1,14 @@
 ﻿using ElitTournament.Viber.Core.Enums;
 using Newtonsoft.Json;
 
-namespace ElitTournament.Viber.Core.Models
+namespace ElitTournament.Viber.Core.Models.Message
 {
 	public abstract class MessageBase
 	{
 		protected MessageBase(MessageType type)
 		{
 			Type = type;
+			MinApiVersion = 1;
 		}
 
 		[JsonProperty("receiver")]

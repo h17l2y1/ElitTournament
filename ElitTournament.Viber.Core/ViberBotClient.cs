@@ -1,6 +1,7 @@
 ﻿using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
+using ElitTournament.Viber.Core.Models.Message;
 using ElitTournament.Viber.Core.View;
 using Newtonsoft.Json;
 using System;
@@ -64,6 +65,8 @@ namespace ElitTournament.Viber.Core
 		}
 
 		public Task<long> SendTextMessageAsync(TextMessage message) => SendMessageAsync(message);
+
+		public Task<long> SendKeyboardMessageAsync(KeyboardMessage message) => SendMessageAsync(message);
 
 
 		private async Task<long> SendMessageAsync(MessageBase message, bool isBroadcast = false)

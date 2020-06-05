@@ -1,4 +1,5 @@
 ﻿using ElitTournament.Viber.Core.Enums;
+using ElitTournament.Viber.Core.Models.Message;
 using ElitTournament.Viber.Core.View;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,5 +15,7 @@ namespace ElitTournament.Viber.Core.Models.Interfaces
 		Task<IAccountInfo> GetAccountInfoAsync();
 
 		Task<long> SendTextMessageAsync(TextMessage message);
+
+		Task<long> SendKeyboardMessageAsync(KeyboardMessage message);
 	}
 }

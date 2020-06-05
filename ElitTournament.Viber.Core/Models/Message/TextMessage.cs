@@ -1,7 +1,7 @@
 ﻿using ElitTournament.Viber.Core.Enums;
 using Newtonsoft.Json;
 
-namespace ElitTournament.Viber.Core.Models
+namespace ElitTournament.Viber.Core.Models.Message
 {
 	public class TextMessage : MessageBase
 	{

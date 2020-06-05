@@ -11,6 +11,7 @@ namespace ElitTournament.Core.Entities
 		{
 			Teams = new List<string>();
 		}
+
 		public League(string name)
 		{
 			Name = name;

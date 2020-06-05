@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ElitTournament.Viber.Core.View
+namespace ElitTournament.Viber.Core.Model
 {
 	public class Delivered
 	{

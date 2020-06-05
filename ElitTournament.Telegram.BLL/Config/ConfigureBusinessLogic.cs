@@ -31,7 +31,6 @@ namespace ElitTournament.Telegram.BLL.Config
 			// Services;
 			//services.AddScoped<ITelegramBotService, TelegramBotService>();
 			services.AddScoped<IGrabberService, GrabberService>();
-			services.AddScoped<IScheduleService, ScheduleService>();
 
 
 			// Providers

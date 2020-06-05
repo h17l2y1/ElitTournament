@@ -17,7 +17,7 @@ namespace ElitTournament.Api.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Set()
+		public async Task<IActionResult> SetWebHook()
 		{
 			var res = await _service.SetWebHookAsync();
 			return Ok(res);
@@ -27,13 +27,6 @@ namespace ElitTournament.Api.Controllers
 		public async Task<IActionResult> GetAccountInfo()
 		{
 			var res = await _service.GetAccountInfo();
-			return Ok(res);
-		}
-
-		[HttpGet]
-		public async Task<IActionResult> SendTextMessage(string text)
-		{
-			var res = await _service.SendTextMessage(text);
 			return Ok(res);
 		}
 

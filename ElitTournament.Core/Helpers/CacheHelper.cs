@@ -58,7 +58,7 @@ namespace ElitTournament.Core.Helpers
 			return null;
 		}
 
-		public List<string> FindGame(string teamName)
+		public string FindGame(string teamName)
 		{
 			List<Schedule> schedule = GetSchedule();
 			if (schedule != null && schedule.Count != 0)
@@ -78,7 +78,8 @@ namespace ElitTournament.Core.Helpers
 					}
 				}
 
-				return list;
+				var result = String.Join(", ", list);
+				return result;
 			}
 
 			return null;
