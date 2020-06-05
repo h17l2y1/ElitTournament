@@ -16,6 +16,7 @@
         public Sender Sender { get; set; }
         public Message Message { get; set; }
         public bool Silent { get; set; }
+        public string User_Id { get; set; }
     }
 
     public class Sender

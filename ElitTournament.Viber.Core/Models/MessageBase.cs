@@ -13,8 +13,8 @@ namespace ElitTournament.Viber.Core.Models
 		[JsonProperty("receiver")]
 		public string Receiver { get; set; }
 
-		[JsonProperty("type")]
-		public MessageType Type { get; }
+		[JsonProperty("min_api_version")]
+		public double? MinApiVersion { get; set; }
 
 		[JsonProperty("sender")]
 		public UserBase Sender { get; set; }
@@ -22,7 +22,8 @@ namespace ElitTournament.Viber.Core.Models
 		[JsonProperty("tracking_data")]
 		public string TrackingData { get; set; }
 
-		[JsonProperty("min_api_version")]
-		public double? MinApiVersion { get; set; }
+		[JsonProperty("type")]
+		public MessageType Type { get; }
+
 	}
 }

@@ -1,10 +1,11 @@
-﻿using ElitTournament.Viber.BLL.Services.Interfaces;
+﻿using ElitTournament.Core.Services.Interfaces;
+using ElitTournament.Viber.BLL.Services.Interfaces;
 using ElitTournament.Viber.BLL.View;
+using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.View;
 using Microsoft.Extensions.Configuration;
-using RestSharp;
 using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Services
@@ -12,18 +13,16 @@ namespace ElitTournament.Viber.BLL.Services
 	public class ViberBotService : IViberBotService
 	{
 		private readonly IViberBotClient _viberBotClient;
+		private readonly IScheduleService _scheduleService;
 		private readonly string _webHook;
 		private readonly string _viberUrl;
 
-		private readonly string tkn;
-
-		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient)
+		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, IScheduleService scheduleService)
 		{
 			_viberBotClient = viberBotClient;
+			_scheduleService = scheduleService;
 			_webHook = configuration["WebHook"];
 			_viberUrl = "/api/viber/update";
-
-			tkn = configuration["Token"];
 		}
 
 		public async Task<SetWebhookResponse> SetWebHookAsync()
@@ -47,26 +46,47 @@ namespace ElitTournament.Viber.BLL.Services
 			return res;
 		}
 
-
 		public async Task Update(RootObject view)
 		{
-			string webHook = $"{_webHook}{_viberUrl}";
-			var client = new RestClient(webHook);
-			var request = new RestRequest(Method.POST);
-			request.RequestFormat = DataFormat.Json;
-			request.AddHeader("X-Viber-Auth-Token", tkn);
+			if (view.Event == EventType.Webhook.ToString().ToLower())
+			{
+				return;
+			}
 
-			var res = new SendViberMessageView();
-			res.Receiver = view.Sender?.Id;
-			res.Text = $"Выберите лигу";
-			res.Type = "text";
-			res.Keyboard = new ViberKeyboard();
-			res.Keyboard.DefaultHeight = true;
-			res.Keyboard.Type = "keyboard";
-			//res.Keyboard.Buttons = new List<Button>();
-			//res.Keyboard.Buttons.Add(new Button { ActionBody = "reply", ActionType = "reply", Text = "Call me", TextSize = "regular" });
-			request.AddJsonBody(res);
-			IRestResponse response = client.Execute(request);
+			if (view.Event == EventType.Message.ToString().ToLower())
+			{
+				var x = _scheduleService.FindGame(view.Message.Text);
+
+				var result = await _viberBotClient.SendTextMessageAsync(new TextMessage
+				{
+					Receiver = view.Sender.Id,
+					Sender = new UserBase
+					{
+						Name = "Элит Турнир",
+						Avatar = "https://media-direct.cdn.viber.com/pg_download?pgtp=icons&dlid=0-04-01-f41cdc768c7d7cedd43ea09bfac31374299fde787fb57b0ff50efa1143fa87fd&fltp=jpg&imsz=0000"
+					},
+					Text = x,
+					MinApiVersion = 1,
+					TrackingData = "tracking data"
+				});
+				return;
+			}
+
+			if (view.Event == EventType.Delivered.ToString().ToLower())
+			{
+				var c = new Delivered
+				{
+					Event = EventType.Seen.ToString().ToLower(),
+					Timestamp = view.Timestamp,
+					MessageToken = view.Message_token,
+					UserId = view.User_Id,
+				};
+
+				return;
+			}
+
 		}
 	}
+
+
 }

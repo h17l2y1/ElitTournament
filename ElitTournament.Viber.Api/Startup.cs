@@ -43,9 +43,9 @@ namespace ElitTournament.Viber.Api
 			app.UseHttpStatusCodeExceptionMiddleware();
 			app.UseMiddleware<ErrorHandlingMiddleware>();
 
-			IServiceProvider serviceProvider = app.ApplicationServices;
-			IViberBotService bot = serviceProvider.GetService<IViberBotService>();
-			bot.SetWebHookAsync().Wait();
+			//IServiceProvider serviceProvider = app.ApplicationServices;
+			//IViberBotService bot = serviceProvider.GetService<IViberBotService>();
+			//bot.SetWebHookAsync().Wait();
 
 
 			app.UseHttpsRedirection();
