@@ -13,7 +13,7 @@ namespace ElitTournament.Viber.BLL.Services.Interfaces
 
 		Task<long> SendTextMessage(string text);
 
-		Task Update(RootObject view);
+		void Update(RootObject view);
 
 	}
 }

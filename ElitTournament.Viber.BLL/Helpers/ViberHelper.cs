@@ -66,13 +66,16 @@ namespace ElitTournament.Viber.BLL.Helpers
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = leagues.Select(p => new KeyboardButton
+					Buttons = leagues.Select(p => new Core.Models.Button
 					{
+						Columns = 3,
+						Rows = 1,
+						BackgroundColor = "#E1E5E4",
 						ActionType = KeyboardActionType.Reply,
 						ActionBody = p.Name,
 						Text = p.Name,
 						TextSize = TextSize.Regular
-					})
+					}).ToList()
 				},
 				TrackingData = "td"
 			};
@@ -100,16 +103,28 @@ namespace ElitTournament.Viber.BLL.Helpers
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = league.Teams.Select(p => new KeyboardButton
+					Buttons = league.Teams.Select(p => new Core.Models.Button
 					{
+						Columns = 3,
+						Rows = 1,
+						BackgroundColor = "E1E5E4",
 						ActionType = KeyboardActionType.Reply,
 						ActionBody = p,
 						Text = p,
 						TextSize = TextSize.Regular
-					})
+					}).ToList()
 				},
 				TrackingData = "td"
 			};
+
+			test.Keyboard.Buttons.Add(new Core.Models.Button()
+			{
+				BackgroundColor = "#E1E5E4",
+				ActionType = KeyboardActionType.Reply,
+				ActionBody = "Назад",
+				Text = "Назад",
+				TextSize = TextSize.Regular
+			});
 
 			var result = await _viberBotClient.SendKeyboardMessageAsync(test);
 		}

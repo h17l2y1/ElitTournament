@@ -1,31 +1,38 @@
-﻿using ElitTournament.Viber.BLL.Helpers.Interfaces;
+﻿using ElitTournament.Core.Helpers.Interfaces;
+using ElitTournament.Viber.BLL.Commands;
+using ElitTournament.Viber.BLL.Helpers.Interfaces;
 using ElitTournament.Viber.BLL.Services.Interfaces;
 using ElitTournament.Viber.BLL.View;
 using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Model;
+using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
 using ElitTournament.Viber.Core.View;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Services
 {
 	public class ViberBotService : IViberBotService
 	{
-		private readonly IViberHelper _viberHelper;
 		private readonly IViberBotClient _viberBotClient;
-		//private readonly ICacheHelper _cacheHelper;
+		private readonly ICacheHelper _cacheHelper;
 		private readonly string _webHook;
 		private readonly string _viberUrl;
+		private List<Command> _commands;
+		private readonly string _botName;
+		private readonly string _botAvatar;
 
-		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, /*ICacheHelper cacheHelper,*/ IViberHelper viberHelper)
+		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ICacheHelper cacheHelper)
 		{
-			_viberHelper = viberHelper;
 			_viberBotClient = viberBotClient;
-			//_cacheHelper = cacheHelper;
+			_cacheHelper = cacheHelper;
 			_webHook = configuration["WebHook"];
 			_viberUrl = "/api/viber/update";
+			_botName = configuration.GetSection($"Bot:Name").Value;
+			_botAvatar = configuration.GetSection($"Bot:Avatar").Value;
 		}
 
 		public async Task<SetWebhookResponse> SetWebHookAsync()
@@ -49,30 +56,55 @@ namespace ElitTournament.Viber.BLL.Services
 			return res;
 		}
 
-		public async Task Update(RootObject view)
+		public void Update(RootObject rootObject)
 		{
-			if (view.Event == EventType.Webhook.ToString().ToLower())
+			if (rootObject.Event == EventType.Webhook.ToString().ToLower())
 			{
 				return;
 			}
 
-			if (view.Event == EventType.Delivered.ToString().ToLower())
+			if (rootObject.Event == EventType.Delivered.ToString().ToLower())
 			{
 				var c = new Delivered
 				{
 					Event = EventType.Seen.ToString().ToLower(),
-					Timestamp = view.Timestamp,
-					MessageToken = view.Message_token,
-					UserId = view.User_Id,
+					Timestamp = rootObject.Timestamp,
+					MessageToken = rootObject.Message_token,
+					UserId = rootObject.User_Id,
 				};
 
 				return;
 			}
 
-			if (view.Event == EventType.Message.ToString().ToLower())
+			if (rootObject.Event == EventType.Message.ToString().ToLower())
 			{
-				await _viberHelper.SendTextMessage(view);
+				SendMessage(rootObject);
 				return;
+			}
+		}
+
+		private void InitCommands()
+		{
+			_commands = new List<Command>
+			{
+				new LeaguesCommand(_cacheHelper),
+				new TeamsCommand(_cacheHelper),
+				new ScheduleCommand(_cacheHelper)
+			};
+		}
+
+		public void SendMessage(RootObject rootObject)
+		{
+			InitCommands();
+
+			foreach (Command command in _commands)
+			{
+				bool isTeamExist = command.Contains(rootObject?.Message?.Text);
+				if (isTeamExist)
+				{
+					command.Execute(rootObject, _viberBotClient);
+					break;
+				}
 			}
 		}
 

@@ -33,7 +33,7 @@ namespace ElitTournament.Api.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Update([FromBody]RootObject callBack)
 		{
-			await _service.Update(callBack);
+			_service.Update(callBack);
 			return Ok();
 		}
 

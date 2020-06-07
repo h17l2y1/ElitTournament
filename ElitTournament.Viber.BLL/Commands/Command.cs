@@ -1,11 +1,11 @@
-﻿using Telegram.Bot;
-using Telegram.Bot.Types;
+﻿using ElitTournament.Viber.BLL.View;
+using ElitTournament.Viber.Core.Models.Interfaces;
 
-namespace ElitTournament.Telegram.BLL.Commands
+namespace ElitTournament.Viber.BLL.Commands
 {
     public abstract class Command
     {
-        public  string Name { get; set; }
+        public string Name { get; set; }
 
         public string Text { get; set; }
 
@@ -14,11 +14,12 @@ namespace ElitTournament.Telegram.BLL.Commands
             Name = commandName;
         }
 
-        public abstract void Execute(Message message, ITelegramBotClient client);
-
         public virtual bool Contains(string command)
         {
             return command.ToLower().Contains(Name.ToLower());
         }
+
+        public abstract void Execute(RootObject rootObject, IViberBotClient client);
+
     }
 }

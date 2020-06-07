@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace ElitTournament.Viber.Core.Models
 {
-	public class KeyboardButton
+	public class Button
 	{
 		[JsonProperty("ActionType")]
 		public KeyboardActionType? ActionType { get; set; }

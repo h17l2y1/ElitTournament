@@ -10,7 +10,7 @@ namespace ElitTournament.Viber.Core.Models.Message
 		private const string Type = "keyboard";
 
 		[JsonProperty("Buttons")]
-		public IEnumerable<KeyboardButton> Buttons { get; set; }
+		public ICollection<Button> Buttons { get; set; }
 
 		[JsonProperty("DefaultHeight")]
 		public bool DefaultHeight { get; set; }
