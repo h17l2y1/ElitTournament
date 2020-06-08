@@ -17,5 +17,7 @@ namespace ElitTournament.Viber.Core.Models.Interfaces
 		Task<long> SendTextMessageAsync(TextMessage message);
 
 		Task<long> SendKeyboardMessageAsync(KeyboardMessage message);
+
+		Task<UserDetails> GetUserDetailsAsync(string userId);
 	}
 }

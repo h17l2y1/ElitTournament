@@ -6,43 +6,38 @@ using ElitTournament.Viber.Core.Models.Message;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
-	public class ScheduleCommand : Command
+	public class DevelopCommand : Command
 	{
 		private readonly ICacheHelper _cacheHelper;
 
-		public ScheduleCommand(ICacheHelper cacheHelper)
+		public DevelopCommand(ICacheHelper cacheHelper)
 		{
 			_cacheHelper = cacheHelper;
 		}
 
-		public override bool Contains(string text)
+		public override bool Contains(string command)
 		{
-			if (text.Contains(ButtonConstant.BACK) || text.Contains(ButtonConstant.REFRESH) ||
-				text.Contains(ButtonConstant.DEVELOP) || text.Contains(ButtonConstant.START))
-			{
-				return false;
-			}
-
-			return true;
+			return command.Contains(ButtonConstant.DEVELOP);
 		}
 
 		public async override void Execute(Callback callback, IViberBotClient client)
 		{
-			TextMessage msg = GetSchedule(callback);
+			TextMessage msg = SendShedule(callback);
 			long result = await client.SendTextMessageAsync(msg);
 
 			LeaguesCommand leaguesCommand = new LeaguesCommand(_cacheHelper);
 			leaguesCommand.Execute(callback, client);
 		}
 
-		public TextMessage GetSchedule(Callback callback)
+		public TextMessage SendShedule(Callback callback)
 		{
-			string shedule = _cacheHelper.FindGame(callback.Message.Text) ?? $"Игры команды\"{callback.Message.Text}\" не найдено";
-		
+			string id = callback.Sender?.Id ?? callback.User?.Id;
+
 			var textMessage = new TextMessage
 			{
-				Receiver = callback.Sender.Id,
-				Text = shedule,
+				// надо куда-то вынести, пока хз куда
+				Text = "В разработке: \n1.Турнирные таблицы \n2. Бот будет сам уведомлять когда игра\n3. ...\n\nСвязь с разработчиком\n0955923228",
+				Receiver = id,
 				Sender = new UserBase
 				{
 					Name = MessageConstant.BOT_NAME,
@@ -52,6 +47,5 @@ namespace ElitTournament.Viber.BLL.Commands
 
 			return textMessage;
 		}
-
 	}
 }

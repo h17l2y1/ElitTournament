@@ -1,5 +1,4 @@
-﻿using ElitTournament.Viber.BLL.View;
-using ElitTournament.Viber.Core.Models;
+﻿using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.View;
 using System.Threading.Tasks;
@@ -14,7 +13,7 @@ namespace ElitTournament.Viber.BLL.Services.Interfaces
 
 		Task<long> SendTextMessage(string text);
 
-		void Update(Callback view);
+		Task Update(Callback view);
 
 	}
 }

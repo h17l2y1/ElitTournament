@@ -9,6 +9,7 @@ namespace ElitTournament.Viber.Core.Models.Message
 		{
 			Type = type;
 			MinApiVersion = 1;
+			TrackingData = "tracking data";
 		}
 
 		[JsonProperty("receiver")]

@@ -9,9 +9,10 @@ namespace ElitTournament.Core.Helpers
 	public class CacheHelper : ICacheHelper
 	{
 		private IMemoryCache _cache;
-		private readonly string _ScheduleKey = "1908f0292df1";
-		private readonly string _LeagueKey = "14da59f1006a";
-		private readonly string _TeamKey = "77fg21v0984c";
+		private readonly string _scheduleKey = "1908f0292df1";
+		private readonly string _leagueKey = "14da59f1006a";
+		private readonly string _teamKey = "77fg21v0984c";
+		public bool IsCacheExist { get; set; }
 
 		public CacheHelper(IMemoryCache cache)
 		{
@@ -24,11 +25,13 @@ namespace ElitTournament.Core.Helpers
 			SaveSchedule(schedule);
 			SaveLeagues(league);
 			SaveTeams(league);
+
+			IsCacheExist = true;
 		}
 
 		public List<League> GetLeagues()
 		{
-			List<League> leagues = _cache.Get<List<League>>(_LeagueKey);
+			List<League> leagues = _cache.Get<List<League>>(_leagueKey);
 			if (leagues == null)
 			{
 				return null;
@@ -39,7 +42,7 @@ namespace ElitTournament.Core.Helpers
 
 		public List<Schedule> GetSchedule()
 		{
-			List<Schedule> schedule = _cache.Get<List<Schedule>>(_ScheduleKey);
+			List<Schedule> schedule = _cache.Get<List<Schedule>>(_scheduleKey);
 			if (schedule == null)
 			{
 				return null;
@@ -50,7 +53,7 @@ namespace ElitTournament.Core.Helpers
 
 		public List<string> GetTeams()
 		{
-			List<string> teams = _cache.Get<List<string>>(_TeamKey);
+			List<string> teams = _cache.Get<List<string>>(_teamKey);
 			if (teams != null)
 			{
 				return teams;
@@ -78,8 +81,11 @@ namespace ElitTournament.Core.Helpers
 					}
 				}
 
-				var result = String.Join(", ", list);
-				return result;
+				if (list.Count != 0)
+				{
+					string scheduleString = String.Join("\n\n", list);
+					return scheduleString;
+				}
 			}
 
 			return null;
@@ -87,28 +93,28 @@ namespace ElitTournament.Core.Helpers
 
 		private void Clear()
 		{
-			_cache.Remove(_ScheduleKey);
-			_cache.Remove(_LeagueKey);
-			_cache.Remove(_TeamKey);
+			_cache.Remove(_scheduleKey);
+			_cache.Remove(_leagueKey);
+			_cache.Remove(_teamKey);
 		}
 
 		private void SaveSchedule(List<Schedule> data)
 		{
 			List<Schedule> deck = data;
-			if (!_cache.TryGetValue(_ScheduleKey, out data))
+			if (!_cache.TryGetValue(_scheduleKey, out data))
 			{
 				data = deck;
 				MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(8));
-				_cache.Set(_ScheduleKey, data, cacheEntryOptions);
+				_cache.Set(_scheduleKey, data, cacheEntryOptions);
 			}
 		}
 
 		private void SaveLeagues(List<League> data)
 		{
-			if (!_cache.TryGetValue(_LeagueKey, out _))
+			if (!_cache.TryGetValue(_leagueKey, out _))
 			{
 				MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(8));
-				_cache.Set(_LeagueKey, data, cacheEntryOptions);
+				_cache.Set(_leagueKey, data, cacheEntryOptions);
 			}
 		}
 
@@ -121,10 +127,10 @@ namespace ElitTournament.Core.Helpers
 				teamList.AddRange(team.Teams);
 			}
 
-			if (!_cache.TryGetValue(_TeamKey, out _))
+			if (!_cache.TryGetValue(_teamKey, out _))
 			{
 				MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(8));
-				_cache.Set(_TeamKey, teamList, cacheEntryOptions);
+				_cache.Set(_teamKey, teamList, cacheEntryOptions);
 			}
 		}
 	}

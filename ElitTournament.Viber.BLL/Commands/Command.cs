@@ -9,11 +9,6 @@ namespace ElitTournament.Viber.BLL.Commands
 
         public string Text { get; set; }
 
-        public Command(string commandName)
-        {
-            Name = commandName;
-        }
-
         public virtual bool Contains(string command)
         {
             return command.ToLower().Contains(Name.ToLower());

@@ -1,5 +1,4 @@
 ﻿using ElitTournament.Viber.BLL.Services.Interfaces;
-using ElitTournament.Viber.BLL.View;
 using ElitTournament.Viber.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

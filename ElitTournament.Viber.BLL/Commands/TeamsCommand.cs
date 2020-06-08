@@ -1,7 +1,6 @@
 ﻿using ElitTournament.Core.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
-using ElitTournament.Viber.BLL.View;
 using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
@@ -15,15 +14,9 @@ namespace ElitTournament.Viber.BLL.Commands
 	{
 		private readonly ICacheHelper _cacheHelper;
 
-		public TeamsCommand(ICacheHelper cacheHelper) : base("all leages")
+		public TeamsCommand(ICacheHelper cacheHelper)
 		{
 			_cacheHelper = cacheHelper;
-		}
-
-		public async override void Execute(Callback callback, IViberBotClient client)
-		{
-			KeyboardMessage msg = SendTeams(callback);
-			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 
 		public override bool Contains(string command)
@@ -32,7 +25,13 @@ namespace ElitTournament.Viber.BLL.Commands
 			return leages.Contains(command);
 		}
 
-		public KeyboardMessage SendTeams(Callback callback)
+		public async override void Execute(Callback callback, IViberBotClient client)
+		{
+			KeyboardMessage msg = GetTeams(callback);
+			long result = await client.SendKeyboardMessageAsync(msg);
+		}
+
+		public KeyboardMessage GetTeams(Callback callback)
 		{
 			List<League> leagues = _cacheHelper.GetLeagues();
 
@@ -41,40 +40,38 @@ namespace ElitTournament.Viber.BLL.Commands
 			var keyboardMessage = new KeyboardMessage
 			{
 				Receiver = callback.Sender.Id,
-				Text = "Для просмотра расписание выберите лигу, а потом команду.",
-				Sender = new UserBase 
+				Text = MessageConstant.CHOOSE_TEAM,
+				Sender = new UserBase
 				{
-					Name = Constant.BOT_NAME,
-					Avatar = Constant.BOT_AVATAR,
+					Name = MessageConstant.BOT_NAME,
+					Avatar = MessageConstant.BOT_AVATAR,
 				},
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = league.Teams.Select(p => new Core.Models.Button
+					Buttons = league.Teams.Select(p => new Button
 					{
 						Columns = 3,
 						Rows = 1,
-						BackgroundColor = "#E1E5E4",
+						BackgroundColor = ButtonConstant.DEFAULT_COLOR,
 						ActionType = KeyboardActionType.Reply,
 						ActionBody = p,
 						Text = p,
 						TextSize = TextSize.Regular
 					}).ToList()
 				},
-				TrackingData = "td"
 			};
 
-			keyboardMessage.Keyboard.Buttons.Add(new Core.Models.Button()
+			keyboardMessage.Keyboard.Buttons.Add(new Button()
 			{
-				BackgroundColor = "#E1E5E4",
+				BackgroundColor = ButtonConstant.RED_COLOR,
 				ActionType = KeyboardActionType.Reply,
-				ActionBody = "Назад",
-				Text = "Назад",
+				ActionBody = ButtonConstant.BACK,
+				Text = MessageConstant.BACK,
 				TextSize = TextSize.Regular
 			});
 
 			return keyboardMessage;
-
 		}
 	}
 }

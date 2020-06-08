@@ -4,8 +4,6 @@ using ElitTournament.Core.Providers;
 using ElitTournament.Core.Providers.Interfaces;
 using ElitTournament.Core.Services;
 using ElitTournament.Core.Services.Interfaces;
-using ElitTournament.Viber.BLL.Helpers;
-using ElitTournament.Viber.BLL.Helpers.Interfaces;
 using ElitTournament.Viber.BLL.Services;
 using ElitTournament.Viber.BLL.Services.Interfaces;
 using ElitTournament.Viber.Core;
@@ -34,6 +32,7 @@ namespace ElitTournament.Viber.BLL.Config
 			// Services;
 			services.AddScoped<IGrabberService, GrabberService>();
 
+
 			// Providers
 			services.AddScoped<IGrabberProvider, GrabberProvider>();
 
@@ -45,7 +44,6 @@ namespace ElitTournament.Viber.BLL.Config
 
 			// Singleton
 			services.AddSingleton<IViberBotService, ViberBotService>();
-			services.AddSingleton<IViberHelper, ViberHelper>();
 			services.AddSingleton<ICacheHelper, CacheHelper>();
 
 

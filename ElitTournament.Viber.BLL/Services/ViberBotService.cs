@@ -1,10 +1,8 @@
-﻿using ElitTournament.Core.Helpers.Interfaces;
+﻿using ElitTournament.Core.Helpers;
+using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Viber.BLL.Commands;
-using ElitTournament.Viber.BLL.Helpers.Interfaces;
 using ElitTournament.Viber.BLL.Services.Interfaces;
-using ElitTournament.Viber.BLL.View;
 using ElitTournament.Viber.Core.Enums;
-using ElitTournament.Viber.Core.Model;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
@@ -22,8 +20,6 @@ namespace ElitTournament.Viber.BLL.Services
 		private readonly string _webHook;
 		private readonly string _viberUrl;
 		private List<Command> _commands;
-		private readonly string _botName;
-		private readonly string _botAvatar;
 
 		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ICacheHelper cacheHelper)
 		{
@@ -31,8 +27,6 @@ namespace ElitTournament.Viber.BLL.Services
 			_cacheHelper = cacheHelper;
 			_webHook = configuration["WebHook"];
 			_viberUrl = "/api/viber/update";
-			_botName = configuration.GetSection($"Bot:Name").Value;
-			_botAvatar = configuration.GetSection($"Bot:Avatar").Value;
 		}
 
 		public async Task<SetWebhookResponse> SetWebHookAsync()
@@ -56,15 +50,22 @@ namespace ElitTournament.Viber.BLL.Services
 			return res;
 		}
 
-		public void Update(Callback callback)
+		public async Task Update(Callback callback)
 		{
 			if (callback.Event == EventType.Webhook)
 			{
 				return;
 			}
 
+			if (callback.Event == EventType.ConversationStarted)
+			{
+				ConversationStarted(callback);
+				return;
+			}
+
 			if (callback.Event == EventType.Message)
 			{
+				await GetUserDetails(callback);
 				SendMessage(callback);
 				return;
 			}
@@ -74,25 +75,50 @@ namespace ElitTournament.Viber.BLL.Services
 		{
 			_commands = new List<Command>
 			{
-				new LeaguesCommand(_cacheHelper),
+				new ErrorCommand(),
+				new DevelopCommand(_cacheHelper),
 				new TeamsCommand(_cacheHelper),
-				new ScheduleCommand(_cacheHelper)
+				new ScheduleCommand(_cacheHelper),
+				new LeaguesCommand(_cacheHelper),
 			};
+
+			if (_cacheHelper.IsCacheExist)
+			{
+				_commands.RemoveAt(0);
+			}
 		}
 
-		public void SendMessage(Callback callback)
+		private void SendMessage(Callback callback)
 		{
 			InitCommands();
 
 			foreach (Command command in _commands)
 			{
-				bool isTeamExist = command.Contains(callback?.Message?.Text);
+				bool isTeamExist = command.Contains(callback?.Message?.Text.Trim());
 				if (isTeamExist)
 				{
 					command.Execute(callback, _viberBotClient);
 					break;
 				}
 			}
+		}
+
+		private void ConversationStarted(Callback callback)
+		{
+			var command = new WelcomCommand(_cacheHelper);
+			command.Execute(callback, _viberBotClient);
+		}
+
+
+		//	need to implement this
+		private async Task GetUserDetails(Callback callback)
+		{
+			// User user = _userRepository.GetById(callback.Sender.Id)
+			// if(user != null)
+			//{
+			//	UserDetails newUser = await _viberBotClient.GetUserDetailsAsync(callback.Sender.Id);
+			//	_userRepository.add(newUser);
+			//}
 		}
 
 	}

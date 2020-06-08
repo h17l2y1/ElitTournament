@@ -64,10 +64,15 @@ namespace ElitTournament.Viber.Core
 			return await RequestApiAsync<GetAccountInfoResponse>(method);
 		}
 
+		public async Task<UserDetails> GetUserDetailsAsync(string userId)
+		{
+			GetUserDetailsResponse response = await RequestApiAsync<GetUserDetailsResponse>("get_user_details", new  { id = userId });
+			return response.User;
+		}
+
 		public Task<long> SendTextMessageAsync(TextMessage message) => SendMessageAsync(message);
 
 		public Task<long> SendKeyboardMessageAsync(KeyboardMessage message) => SendMessageAsync(message);
-
 
 		private async Task<long> SendMessageAsync(MessageBase message, bool isBroadcast = false)
 		{
@@ -103,6 +108,5 @@ namespace ElitTournament.Viber.Core
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-
 	}
 }
