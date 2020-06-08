@@ -20,11 +20,11 @@ namespace ElitTournament.Viber.BLL.Commands
 			_cacheHelper = cacheHelper;
 		}
 
-		public async override void Execute(RootObject rootObject, IViberBotClient client)
+		public async override void Execute(Callback callback, IViberBotClient client)
 		{
-			TextMessage msg = SendShedule(rootObject);
+			TextMessage msg = SendShedule(callback);
 			long result = await client.SendTextMessageAsync(msg);
-			KeyboardMessage msg1 = SendLeagues(rootObject.Sender.Id);
+			KeyboardMessage msg1 = SendLeagues(callback.Sender.Id);
 			long result1 = await client.SendKeyboardMessageAsync(msg1);
 		}
 
@@ -34,13 +34,13 @@ namespace ElitTournament.Viber.BLL.Commands
 			return true;
 		}
 
-		public TextMessage SendShedule(RootObject rootObject)
+		public TextMessage SendShedule(Callback callback)
 		{
-			string shedule = _cacheHelper.FindGame(rootObject.Message.Text);
+			string shedule = _cacheHelper.FindGame(callback.Message.Text);
 
 			var result = new TextMessage
 			{
-				Receiver = rootObject.Sender.Id,
+				Receiver = callback.Sender.Id,
 				Sender = new UserBase
 				{
 					Name = Constant.BOT_NAME,

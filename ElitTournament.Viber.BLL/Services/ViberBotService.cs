@@ -56,29 +56,16 @@ namespace ElitTournament.Viber.BLL.Services
 			return res;
 		}
 
-		public void Update(RootObject rootObject)
+		public void Update(Callback callback)
 		{
-			if (rootObject.Event == EventType.Webhook.ToString().ToLower())
+			if (callback.Event == EventType.Webhook)
 			{
 				return;
 			}
 
-			if (rootObject.Event == EventType.Delivered.ToString().ToLower())
+			if (callback.Event == EventType.Message)
 			{
-				var c = new Delivered
-				{
-					Event = EventType.Seen.ToString().ToLower(),
-					Timestamp = rootObject.Timestamp,
-					MessageToken = rootObject.Message_token,
-					UserId = rootObject.User_Id,
-				};
-
-				return;
-			}
-
-			if (rootObject.Event == EventType.Message.ToString().ToLower())
-			{
-				SendMessage(rootObject);
+				SendMessage(callback);
 				return;
 			}
 		}
@@ -93,16 +80,16 @@ namespace ElitTournament.Viber.BLL.Services
 			};
 		}
 
-		public void SendMessage(RootObject rootObject)
+		public void SendMessage(Callback callback)
 		{
 			InitCommands();
 
 			foreach (Command command in _commands)
 			{
-				bool isTeamExist = command.Contains(rootObject?.Message?.Text);
+				bool isTeamExist = command.Contains(callback?.Message?.Text);
 				if (isTeamExist)
 				{
-					command.Execute(rootObject, _viberBotClient);
+					command.Execute(callback, _viberBotClient);
 					break;
 				}
 			}

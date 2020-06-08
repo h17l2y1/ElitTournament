@@ -36,9 +36,9 @@ namespace ElitTournament.Viber.BLL.Commands
 			return c;
 		}
 
-		public async override void Execute(RootObject rootObject, IViberBotClient client)
+		public async override void Execute(Callback callback, IViberBotClient client)
 		{
-			KeyboardMessage msg = SendLeagues(rootObject.Sender.Id);
+			KeyboardMessage msg = SendLeagues(callback.Sender.Id);
 			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 

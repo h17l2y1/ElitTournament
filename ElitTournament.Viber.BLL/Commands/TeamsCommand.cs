@@ -20,9 +20,9 @@ namespace ElitTournament.Viber.BLL.Commands
 			_cacheHelper = cacheHelper;
 		}
 
-		public async override void Execute(RootObject rootObject, IViberBotClient client)
+		public async override void Execute(Callback callback, IViberBotClient client)
 		{
-			KeyboardMessage msg = SendTeams(rootObject);
+			KeyboardMessage msg = SendTeams(callback);
 			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 
@@ -32,15 +32,15 @@ namespace ElitTournament.Viber.BLL.Commands
 			return leages.Contains(command);
 		}
 
-		public KeyboardMessage SendTeams(RootObject rootObject)
+		public KeyboardMessage SendTeams(Callback callback)
 		{
 			List<League> leagues = _cacheHelper.GetLeagues();
 
-			League league = leagues.SingleOrDefault(x => x.Name == rootObject.Message.Text);
+			League league = leagues.SingleOrDefault(x => x.Name == callback.Message.Text);
 
 			var keyboardMessage = new KeyboardMessage
 			{
-				Receiver = rootObject.Sender.Id,
+				Receiver = callback.Sender.Id,
 				Text = "Для просмотра расписание выберите лигу, а потом команду.",
 				Sender = new UserBase 
 				{

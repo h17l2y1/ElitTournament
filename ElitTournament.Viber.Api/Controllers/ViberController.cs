@@ -1,5 +1,6 @@
 ﻿using ElitTournament.Viber.BLL.Services.Interfaces;
 using ElitTournament.Viber.BLL.View;
+using ElitTournament.Viber.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace ElitTournament.Api.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Update([FromBody]RootObject callBack)
+		public async Task<IActionResult> Update([FromBody]Callback callBack)
 		{
 			_service.Update(callBack);
 			return Ok();

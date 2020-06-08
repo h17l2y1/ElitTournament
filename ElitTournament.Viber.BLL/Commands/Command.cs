@@ -1,4 +1,4 @@
-﻿using ElitTournament.Viber.BLL.View;
+﻿using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 
 namespace ElitTournament.Viber.BLL.Commands
@@ -19,7 +19,7 @@ namespace ElitTournament.Viber.BLL.Commands
             return command.ToLower().Contains(Name.ToLower());
         }
 
-        public abstract void Execute(RootObject rootObject, IViberBotClient client);
+        public abstract void Execute(Callback callback, IViberBotClient client);
 
     }
 }
