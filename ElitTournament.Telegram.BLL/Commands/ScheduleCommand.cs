@@ -1,7 +1,5 @@
-﻿using ElitTournament.Core.Entities;
-using ElitTournament.Core.Helpers.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using ElitTournament.Core.Helpers.Interfaces;
+using ElitTournament.Telegram.BLL.Constants;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -9,83 +7,28 @@ namespace ElitTournament.Telegram.BLL.Commands
 {
 	public class ScheduleCommand : Command
 	{
-		private List<League> _leagues;
 		private ICacheHelper _cacheHelper;
 
-		public ScheduleCommand(ICacheHelper cacheHelper) : base("")
+		public ScheduleCommand(ICacheHelper cacheHelper)
 		{
 			_cacheHelper = cacheHelper;
-			_leagues = _cacheHelper.GetLeagues();
 		}
 
 		public override bool Contains(string text)
 		{
-			//bool isExistTeam = false;
-			//if (_leagues != null)
-			//{
-			//	List<string> teams = _cacheHelper.GetTeams();
+			if (text.Contains(ButtonConstant.BACK) || text.Contains(ButtonConstant.REFRESH) ||
+				text.Contains(ButtonConstant.DEVELOP) || text.Contains(ButtonConstant.START) || text.Contains(MessageConstant.START))
+			{
+				return false;
+			}
 
-			//	string teamName = text.Replace("-", " ").ToUpper();
-
-			//	string spaceTeam = teams.FirstOrDefault(x => x == teamName);
-
-			//	if (spaceTeam != null )
-			//	{
-			//		isExistTeam = true;
-			//	}
-			//}
-			//return isExistTeam;
 			return true;
 		}
 
 		public async override void Execute(Message message, ITelegramBotClient client)
 		{
-			List<string> schedule = FindGame(message.Text);
-			long chatId = message.Chat.Id;
-
-			if (schedule == null)
-			{
-				string notFound = $"Не получилось получить расписание игр, поищите свою игру тут http://elitturnir.info/raspisanie/";
-				await client.SendTextMessageAsync(chatId, notFound);
-				return;
-			}
-
-			if (schedule.Count == 0)
-			{
-				string notFound = $"Игры команды \"{message.Text}\" не найдено";
-				await client.SendTextMessageAsync(chatId, notFound);
-				return;
-			}
-
-			var result = String.Join("\n\n", schedule.ToArray());
-
-			await client.SendTextMessageAsync(chatId, result);
-		}
-
-		public List<string> FindGame(string teamName)
-		{
-			List<Schedule> schedule = _cacheHelper.GetSchedule();
-			if (schedule != null && schedule.Count != 0)
-			{
-				List<string> list = new List<string>();
-				string teamWithSpace = teamName.Replace("-", " ").ToUpper();
-
-				foreach (var place in schedule)
-				{
-					foreach (var game in place.Games)
-					{
-						string gameString = game.Replace("-", " ").ToUpper();
-						if (gameString.Contains(teamWithSpace))
-						{
-							list.Add($"{place.Place}\n{game}");
-						}
-					}
-				}
-
-				return list;
-			}
-
-			return null;
+			string shedule = _cacheHelper.FindGame(message.Text) ?? $"Игры команды \"{message.Text}\" не найдено";
+			await client.SendTextMessageAsync(message.Chat.Id, shedule);
 		}
 	}
 }

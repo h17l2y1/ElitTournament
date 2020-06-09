@@ -1,13 +1,11 @@
 ﻿using ElitTournament.Telegram.Api.Middleware;
 using ElitTournament.Telegram.BLL.Config;
-using ElitTournament.Telegram.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace ElitTournament.Telegram.Api
 {
@@ -44,9 +42,9 @@ namespace ElitTournament.Telegram.Api
 			app.UseHttpStatusCodeExceptionMiddleware();
 			app.UseMiddleware<ErrorHandlingMiddleware>();
 
-			IServiceProvider serviceProvider = app.ApplicationServices;
-			ITelegramBotService bot = serviceProvider.GetService<ITelegramBotService>();
-			bot.SetWebhookAsync().Wait();
+			//IServiceProvider serviceProvider = app.ApplicationServices;
+			//ITelegramBotService bot = serviceProvider.GetService<ITelegramBotService>();
+			//bot.SetWebhookAsync().Wait();
 
 
 			app.UseHttpsRedirection();

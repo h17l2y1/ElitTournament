@@ -37,7 +37,7 @@ namespace ElitTournament.Viber.BLL.Commands
 
 		public TextMessage GetSchedule(Callback callback)
 		{
-			string shedule = _cacheHelper.FindGame(callback.Message.Text) ?? $"Игры команды\"{callback.Message.Text}\" не найдено";
+			string shedule = _cacheHelper.FindGame(callback.Message.Text) ?? $"Игры команды \"{callback.Message.Text}\" не найдено";
 		
 			var textMessage = new TextMessage
 			{

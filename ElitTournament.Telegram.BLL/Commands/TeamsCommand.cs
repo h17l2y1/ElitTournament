@@ -1,5 +1,6 @@
 ﻿using ElitTournament.Core.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
+using ElitTournament.Telegram.BLL.Constants;
 using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot;
@@ -11,34 +12,31 @@ namespace ElitTournament.Telegram.BLL.Commands
 {
     public class TeamsCommand : Command
     {
-        private readonly List<League> Leagues;
         private readonly ICacheHelper _cacheHelper;
 
-        public TeamsCommand(ICacheHelper cacheHelper) : base("all leages")
+        public TeamsCommand(ICacheHelper cacheHelper)
         {
             _cacheHelper = cacheHelper;
-            Text = "Выберите команду или нажмите назад если вы ошиблись лигой";
-            Leagues = _cacheHelper.GetLeagues();
-        }
-
-        public async override void Execute(Message message, ITelegramBotClient client)
-        {
-            var chatId = message.Chat.Id;
-            var messageId = message.MessageId;
-
-            await client.SendTextMessageAsync(chatId, Text, ParseMode.Html, false, false, 0, GetMenu(message.Text));
         }
 
         public override bool Contains(string command)
         {
-            var leages = Leagues.Select(p => p.Name).ToList();
+            var leages = _cacheHelper.GetLeagues().Select(p => p.Name).ToList();
             return leages.Contains(command);
+        }
+
+        public async override void Execute(Message message, ITelegramBotClient client)
+        {
+            ReplyKeyboardMarkup replyKeyboardMarkup = GetMenu(message.Text);
+            await client.SendTextMessageAsync(message.Chat.Id, MessageConstant.CHOOSE_TEAM, ParseMode.Html, false, false, 0, replyKeyboardMarkup);
         }
 
         private ReplyKeyboardMarkup GetMenu(string comand)
         {
+            List<League> leagues = _cacheHelper.GetLeagues();
+
             var menu = new ReplyKeyboardMarkup();
-            League currentLeague = Leagues.FirstOrDefault(p => p.Name == comand);
+            League currentLeague = leagues.FirstOrDefault(p => p.Name == comand);
 
             List<List<KeyboardButton>> buttons = CreateButtons(currentLeague);
 

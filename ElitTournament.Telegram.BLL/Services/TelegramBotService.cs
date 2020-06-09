@@ -1,5 +1,6 @@
 ﻿using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Telegram.BLL.Commands;
+using ElitTournament.Telegram.BLL.Constants;
 using ElitTournament.Telegram.BLL.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -35,14 +36,28 @@ namespace ElitTournament.Telegram.BLL.Services
         {
             _commands = new List<Command>
             {
-                new StartCommand(_cacheHelper),
+                new ErrorCommand(),
+                new DevelopCommand(_cacheHelper),
                 new TeamsCommand(_cacheHelper),
-                new ScheduleCommand(_cacheHelper)
+                new ScheduleCommand(_cacheHelper),
+                new LeagueCommand(_cacheHelper),
             };
+
+            if (_cacheHelper.IsCacheExist)
+            {
+                _commands.RemoveAt(0);
+            }
         }
 
         public void Update(Update update)
         {
+            if (update.Message.Text == ButtonConstant.START)
+            {
+                var c = new WelcomCommand();
+                c.Execute(update?.Message, _telegramClient);
+                return;
+            }
+
             InitCommands();
 
             foreach (Command command in _commands)

@@ -16,8 +16,15 @@ namespace ElitTournament.Telegram.Api.Controllers
             _service = service;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SetWebHook()
+        {
+            await _service.SetWebhookAsync();
+            return Ok();
+        }
+
         [HttpPost]
-        public async Task<ActionResult> Update([FromBody]Update update)
+        public async Task<IActionResult> Update([FromBody]Update update)
         {
             if (update == null)
             {
