@@ -37,5 +37,11 @@ namespace ElitTournament.Core.Services
 
 			return result;
 		}
+
+		public string FindGame(string team)
+		{
+			var result = _сacheHelper.FindGame(team);
+			return result;
+		}
 	}
 }

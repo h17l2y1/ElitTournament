@@ -8,5 +8,7 @@ namespace ElitTournament.Core.Services.Interfaces
 		Task GrabbElitTournament();
 
 		GrabbElitTournamentView GetElitTournament();
+
+		string FindGame(string team);
 	}
 }

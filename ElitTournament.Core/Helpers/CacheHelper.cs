@@ -3,6 +3,7 @@ using ElitTournament.Core.Helpers.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace ElitTournament.Core.Helpers
 {
@@ -74,10 +75,12 @@ namespace ElitTournament.Core.Helpers
 					foreach (var game in place.Games)
 					{
 						string gameString = game.Replace("-", " ").ToUpper();
-						if (gameString.Contains(teamWithSpace))
+						bool teamIsExist = Regex.IsMatch(gameString, $"\\b{teamWithSpace}\\b");
+						if (teamIsExist)
 						{
 							list.Add($"{place.Place}\n{game}");
 						}
+
 					}
 				}
 
