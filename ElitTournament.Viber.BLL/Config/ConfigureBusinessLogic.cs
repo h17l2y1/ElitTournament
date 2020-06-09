@@ -48,6 +48,7 @@ namespace ElitTournament.Viber.BLL.Config
 		{
 			// Services;
 			services.AddScoped<IGrabberService, GrabberService>();
+			services.AddScoped<IViberBotService, ViberBotService>();
 
 
 			// Providers
@@ -60,7 +61,7 @@ namespace ElitTournament.Viber.BLL.Config
 
 
 			// Singleton
-			services.AddSingleton<IViberBotService, ViberBotService>();
+			//services.AddSingleton<IViberBotService, ViberBotService>();
 			services.AddSingleton<ICacheHelper, CacheHelper>();
 
 

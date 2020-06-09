@@ -2,9 +2,9 @@
 {
 	public class User
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 
-		public string ClientId { get; set; }
+		public int ClientId { get; set; }
 
 		public bool IsViber { get; set; }
 

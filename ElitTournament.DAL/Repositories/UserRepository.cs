@@ -23,7 +23,7 @@ namespace ElitTournament.DAL.Repositories
 
 		public async Task<bool> IsExist(string clientId)
 		{
-			User user = await _context.Set<User>().SingleOrDefaultAsync(p=>p.ClientId == clientId);
+			User user = await _context.Set<User>().SingleOrDefaultAsync(p=>p.Id == clientId);
 			return user == null ? false : true;
 		}
 

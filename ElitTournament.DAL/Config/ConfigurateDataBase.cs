@@ -27,7 +27,7 @@ namespace ElitTournament.DAL.Config
 
 		public static void AddDependecies(IServiceCollection services)
 		{
-			services.AddSingleton<IUserRepository, UserRepository>();
+			services.AddTransient<IUserRepository, UserRepository>();
 		}
 	}
 }

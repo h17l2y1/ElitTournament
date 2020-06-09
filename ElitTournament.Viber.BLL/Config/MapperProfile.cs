@@ -9,6 +9,10 @@ namespace ElitTournament.Viber.BLL.Config
 		{
 			CreateMap<UserDetails, User>()
 				.ForMember(from => from.ClientId, to => to.MapFrom(source => source.Id))
+				.ForMember(from => from.IsViber, to => to.MapFrom(source => true)).ReverseMap();
+
+			CreateMap<UserDetails, User>()
+				//.ForMember(from => from.ClientId, to => to.MapFrom(source => source.Id)).ReverseMap();
 				.ForMember(from => from.IsViber, to => to.MapFrom(source => true));
 		}
 	}
