@@ -1,9 +1,11 @@
-﻿using ElitTournament.Core.Helpers;
+﻿using AutoMapper;
+using ElitTournament.Core.Helpers;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Core.Providers;
 using ElitTournament.Core.Providers.Interfaces;
 using ElitTournament.Core.Services;
 using ElitTournament.Core.Services.Interfaces;
+using ElitTournament.DAL.Config;
 using ElitTournament.Viber.BLL.Services;
 using ElitTournament.Viber.BLL.Services.Interfaces;
 using ElitTournament.Viber.Core;
@@ -18,13 +20,28 @@ namespace ElitTournament.Viber.BLL.Config
 		public static void InjectBusinessLogicDependency(this IServiceCollection services, IConfiguration configuration)
 		{
 			InitViberBotClient(services, configuration);
+			AddAutoMapper(services);
 			AddDependency(services);
+
+			services.InjectDataAccessDependency(configuration);
 		}
 
 		private static void InitViberBotClient(IServiceCollection services, IConfiguration configuration)
 		{
 			IViberBotClient viberClient = new ViberBotClient(configuration["Token"]);
 			services.AddSingleton(viberClient);
+		}
+
+		private static void AddAutoMapper(IServiceCollection services)
+		{
+			var config = new MapperConfiguration(c =>
+			{
+				c.AddProfile(new MapperProfile());
+			});
+
+			IMapper mapper = config.CreateMapper();
+
+			services.AddSingleton(mapper);
 		}
 
 		public static void AddDependency(IServiceCollection services)

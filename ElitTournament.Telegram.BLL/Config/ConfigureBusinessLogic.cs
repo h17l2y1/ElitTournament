@@ -4,6 +4,7 @@ using ElitTournament.Core.Providers;
 using ElitTournament.Core.Providers.Interfaces;
 using ElitTournament.Core.Services;
 using ElitTournament.Core.Services.Interfaces;
+using ElitTournament.DAL.Config;
 using ElitTournament.Telegram.BLL.Services;
 using ElitTournament.Telegram.BLL.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +19,8 @@ namespace ElitTournament.Telegram.BLL.Config
 		{
 			InitTelegramBotClient(services, configuration);
 			AddDependency(services);
+
+			services.InjectDataAccessDependency(configuration);
 		}
 
 		private static void InitTelegramBotClient(IServiceCollection services, IConfiguration configuration)
@@ -29,9 +32,7 @@ namespace ElitTournament.Telegram.BLL.Config
 		public static void AddDependency(IServiceCollection services)
 		{
 			// Services;
-			//services.AddScoped<ITelegramBotService, TelegramBotService>();
 			services.AddScoped<IGrabberService, GrabberService>();
-
 
 			// Providers
 			services.AddScoped<IGrabberProvider, GrabberProvider>();

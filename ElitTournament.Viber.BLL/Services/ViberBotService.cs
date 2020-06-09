@@ -1,5 +1,7 @@
-﻿using ElitTournament.Core.Helpers;
+﻿using ElitTournament.Core.Entities;
+using ElitTournament.Core.Helpers;
 using ElitTournament.Core.Helpers.Interfaces;
+using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Viber.BLL.Commands;
 using ElitTournament.Viber.BLL.Services.Interfaces;
 using ElitTournament.Viber.Core.Enums;
@@ -15,14 +17,16 @@ namespace ElitTournament.Viber.BLL.Services
 {
 	public class ViberBotService : IViberBotService
 	{
+		private readonly IUserRepository _userRepository;
 		private readonly IViberBotClient _viberBotClient;
 		private readonly ICacheHelper _cacheHelper;
 		private readonly string _webHook;
 		private readonly string _viberUrl;
 		private List<Command> _commands;
 
-		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ICacheHelper cacheHelper)
+		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ICacheHelper cacheHelper, IUserRepository userRepository)
 		{
+			_userRepository = userRepository;
 			_viberBotClient = viberBotClient;
 			_cacheHelper = cacheHelper;
 			_webHook = configuration["WebHook"];
@@ -58,7 +62,7 @@ namespace ElitTournament.Viber.BLL.Services
 			if (callback.Event == EventType.Message)
 			{
 				await GetUserDetails(callback);
-				SendMessage(callback);
+				await SendMessage(callback);
 				return;
 			}
 		}
@@ -80,8 +84,9 @@ namespace ElitTournament.Viber.BLL.Services
 			}
 		}
 
-		private void SendMessage(Callback callback)
+		private async Task SendMessage(Callback callback)
 		{
+			//await GetUserDetails(callback);
 			InitCommands();
 
 			foreach (Command command in _commands)
@@ -105,12 +110,14 @@ namespace ElitTournament.Viber.BLL.Services
 		//	need to implement this
 		private async Task GetUserDetails(Callback callback)
 		{
-			// User user = _userRepository.GetById(callback.Sender.Id)
-			// if(user != null)
-			//{
-			//	UserDetails newUser = await _viberBotClient.GetUserDetailsAsync(callback.Sender.Id);
-			//	_userRepository.add(newUser);
-			//}
+			bool userIsExist = await _userRepository.IsExist(callback.Sender.Id);
+			if (!userIsExist)
+			{
+				UserDetails viberUser = await _viberBotClient.GetUserDetailsAsync(callback.Sender.Id);
+
+				User newUser = new User();
+				await _userRepository.Add(newUser);
+			}
 		}
 
 	}
