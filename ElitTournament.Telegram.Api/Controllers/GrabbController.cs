@@ -30,5 +30,12 @@ namespace ElitTournament.Telegram.Api.Controllers
 			return Ok(result);
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> FindGame(string team)
+		{
+			string result = _service.FindGame(team);
+			return Ok(result);
+		}
+
 	}
 }
