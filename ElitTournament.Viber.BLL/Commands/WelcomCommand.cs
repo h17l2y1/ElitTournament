@@ -30,10 +30,8 @@ namespace ElitTournament.Viber.BLL.Commands
 
 		public KeyboardMessage GetWelcomeMessage(Callback callback)
 		{
-			var keyboardMessage = new KeyboardMessage
+			var keyboardMessage = new KeyboardMessage(callback.User.Id, MessageConstant.WELCOME_MESSAGE)
 			{
-				Receiver = callback.User.Id,
-				Text = MessageConstant.WELCOME_MESSAGE,
 				Sender = new UserBase
 				{
 					Name = MessageConstant.BOT_NAME,
@@ -42,15 +40,7 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = Enumerable.Range(0, 1).Select(x =>
-					 new Button
-					 {
-						 BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-						 ActionType = KeyboardActionType.Reply,
-						 ActionBody = ButtonConstant.START,
-						 Text = MessageConstant.START,
-						 TextSize = TextSize.Regular
-					 }).ToList()
+					Buttons = Enumerable.Range(0, 1).Select(x => new Button(ButtonConstant.START, MessageConstant.START)).ToList()
 				},
 			};
 

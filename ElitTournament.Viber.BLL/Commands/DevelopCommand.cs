@@ -32,12 +32,10 @@ namespace ElitTournament.Viber.BLL.Commands
 		public TextMessage SendShedule(Callback callback)
 		{
 			string id = callback.Sender?.Id ?? callback.User?.Id;
+			string text = "В разработке: \n1.Турнирные таблицы \n2. Бот будет сам уведомлять когда игра\n3. ...\n\nСвязь с разработчиком\n0955923228";
 
-			var textMessage = new TextMessage
+			var textMessage = new TextMessage(id, text)
 			{
-				// надо куда-то вынести, пока хз куда
-				Text = "В разработке: \n1.Турнирные таблицы \n2. Бот будет сам уведомлять когда игра\n3. ...\n\nСвязь с разработчиком\n0955923228",
-				Receiver = id,
 				Sender = new UserBase
 				{
 					Name = MessageConstant.BOT_NAME,

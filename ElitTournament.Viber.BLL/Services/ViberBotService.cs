@@ -42,14 +42,6 @@ namespace ElitTournament.Viber.BLL.Services
 			return res;
 		}
 
-		public async Task<long> SendTextMessage(string text)
-		{
-			TextMessage message = new TextMessage { Text = text };
-
-			long res = await _viberBotClient.SendTextMessageAsync(message);
-			return res;
-		}
-
 		public async Task Update(Callback callback)
 		{
 			if (callback.Event == EventType.Webhook)

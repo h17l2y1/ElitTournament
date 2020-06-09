@@ -5,6 +5,18 @@ namespace ElitTournament.Viber.Core.Models
 {
 	public class Button
 	{
+		public Button(string actionBody, string text)
+		{
+			ActionType = KeyboardActionType.Reply;
+			ActionBody = actionBody;
+			Text = text;
+			TextSize = Enums.TextSize.Regular;
+		}
+
+		public Button()
+		{ 
+		}
+
 		[JsonProperty("ActionType")]
 		public KeyboardActionType? ActionType { get; set; }
 

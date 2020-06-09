@@ -9,11 +9,6 @@ namespace ElitTournament.Viber.BLL.Commands
 {
 	public class ErrorCommand : Command
 	{
-		public override bool Contains(string text)
-		{
-			return true;
-		}
-
 		public async override void Execute(Callback callback, IViberBotClient client)
 		{
 			KeyboardMessage msg = GetErrorMessage(callback);
@@ -22,10 +17,8 @@ namespace ElitTournament.Viber.BLL.Commands
 
 		public KeyboardMessage GetErrorMessage(Callback callback)
 		{
-			var keyboardMessage = new KeyboardMessage
+			var keyboardMessage = new KeyboardMessage(callback.Sender.Id, MessageConstant.CACHE_EMPTY)
 			{
-				Receiver = callback.Sender.Id,
-				Text = MessageConstant.CACHE_EMPTY,
 				Sender = new UserBase
 				{
 					Name = MessageConstant.BOT_NAME,
@@ -34,15 +27,7 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = Enumerable.Range(0, 1).Select(x =>
-					 new Button
-					 {
-						 BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-						 ActionType = KeyboardActionType.Reply,
-						 ActionBody = ButtonConstant.REFRESH,
-						 Text = MessageConstant.REFRESH,
-						 TextSize = TextSize.Regular
-					 }).ToList()
+					Buttons = Enumerable.Range(0, 1).Select(x => new Button(ButtonConstant.REFRESH, MessageConstant.REFRESH)).ToList()
 				},
 			};
 

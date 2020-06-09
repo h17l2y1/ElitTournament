@@ -11,9 +11,6 @@ namespace ElitTournament.Viber.BLL.Services.Interfaces
 
 		Task<IAccountInfo> GetAccountInfo();
 
-		Task<long> SendTextMessage(string text);
-
 		Task Update(Callback view);
-
 	}
 }

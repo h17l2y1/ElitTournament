@@ -5,9 +5,9 @@ namespace ElitTournament.Viber.Core.Models.Message
 {
 	public class KeyboardMessage : MessageBase
 	{
-		public KeyboardMessage()
-			: base(MessageType.Text)
+		public KeyboardMessage(string receiverId, string text) : base(MessageType.Text, receiverId)
 		{
+			Text = text;
 		}
 
 		[JsonProperty("text")]

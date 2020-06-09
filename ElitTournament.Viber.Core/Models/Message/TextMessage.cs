@@ -5,11 +5,12 @@ namespace ElitTournament.Viber.Core.Models.Message
 {
 	public class TextMessage : MessageBase
 	{
-		public TextMessage() : base(MessageType.Text)
-		{
-		}
-
 		[JsonProperty("text")]
 		public string Text { get; set; }
+
+		public TextMessage(string receiverId, string text) : base(MessageType.Text, receiverId)
+		{
+			Text = text;
+		}
 	}
 }

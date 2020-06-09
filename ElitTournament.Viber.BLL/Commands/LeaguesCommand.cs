@@ -19,11 +19,6 @@ namespace ElitTournament.Viber.BLL.Commands
 			_cacheHelper = cacheHelper;
 		}
 
-		public override bool Contains(string command)
-		{
-			return true;
-		}
-
 		public async override void Execute(Callback callback, IViberBotClient client)
 		{
 			KeyboardMessage msg = GetLeagues(callback);
@@ -34,10 +29,8 @@ namespace ElitTournament.Viber.BLL.Commands
 		{
 			List<League> leagues = _cacheHelper.GetLeagues();
 
-			var keyboardMessage = new KeyboardMessage
+			var keyboardMessage = new KeyboardMessage(callback.Sender.Id, MessageConstant.CHOOSE_LEAGUE)
 			{
-				Receiver = callback.Sender.Id,
-				Text = MessageConstant.CHOOSE_LEAGUE,
 				Sender = new UserBase
 				{
 					Name = MessageConstant.BOT_NAME,
@@ -46,16 +39,13 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = leagues.Select(p => new Button
+					Buttons = leagues.Select(p => new Button(p.Name, p.Name)
 					{
+						BackgroundColor = ButtonConstant.DEFAULT_COLOR,
 						Columns = 3,
 						Rows = 1,
-						BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-						ActionType = KeyboardActionType.Reply,
-						ActionBody = p.Name,
-						Text = p.Name,
-						TextSize = TextSize.Regular
-					}).ToList()
+					})
+					.ToList()
 				}
 			};
 

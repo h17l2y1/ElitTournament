@@ -5,11 +5,12 @@ namespace ElitTournament.Viber.Core.Models.Message
 {
 	public abstract class MessageBase
 	{
-		protected MessageBase(MessageType type)
+		protected MessageBase(MessageType type, string receiverId)
 		{
 			Type = type;
 			MinApiVersion = 1;
 			TrackingData = "tracking data";
+			Receiver = receiverId;
 		}
 
 		[JsonProperty("receiver")]

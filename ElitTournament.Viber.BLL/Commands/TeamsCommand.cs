@@ -37,10 +37,8 @@ namespace ElitTournament.Viber.BLL.Commands
 
 			League league = leagues.SingleOrDefault(x => x.Name == callback.Message.Text);
 
-			var keyboardMessage = new KeyboardMessage
+			var keyboardMessage = new KeyboardMessage(callback.Sender.Id, MessageConstant.CHOOSE_TEAM)
 			{
-				Receiver = callback.Sender.Id,
-				Text = MessageConstant.CHOOSE_TEAM,
 				Sender = new UserBase
 				{
 					Name = MessageConstant.BOT_NAME,
@@ -49,15 +47,11 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = league.Teams.Select(p => new Button
+					Buttons = league.Teams.Select(p => new Button(p, p)
 					{
 						Columns = 3,
 						Rows = 1,
 						BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-						ActionType = KeyboardActionType.Reply,
-						ActionBody = p,
-						Text = p,
-						TextSize = TextSize.Regular
 					}).ToList()
 				},
 			};
