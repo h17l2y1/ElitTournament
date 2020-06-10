@@ -48,6 +48,8 @@ namespace ElitTournament.DAL.Migrations
 
                     b.Property<string>("PrimaryDeviceOS");
 
+                    b.Property<string>("Username");
+
                     b.Property<string>("ViberVersion");
 
                     b.HasKey("Id");

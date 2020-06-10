@@ -1,6 +1,8 @@
-﻿using ElitTournament.Viber.Core.Models;
+﻿using ElitTournament.Core.Entities;
+using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.View;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Services.Interfaces
@@ -12,5 +14,7 @@ namespace ElitTournament.Viber.BLL.Services.Interfaces
 		Task<IAccountInfo> GetAccountInfo();
 
 		Task Update(Callback view);
+
+		Task<IEnumerable<User>> GetAllUsers();
 	}
 }

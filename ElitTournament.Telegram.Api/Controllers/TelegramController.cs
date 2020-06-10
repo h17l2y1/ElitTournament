@@ -36,8 +36,15 @@ namespace ElitTournament.Telegram.Api.Controllers
                 return Ok();
             }
 
-            _service.Update(update);
+            await _service.Update(update);
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var result = await _service.GetAllUsers();
+            return Ok(result);
         }
     }
 }

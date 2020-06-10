@@ -1,4 +1,5 @@
-﻿using ElitTournament.Core.Helpers;
+﻿using AutoMapper;
+using ElitTournament.Core.Helpers;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Core.Providers;
 using ElitTournament.Core.Providers.Interfaces;
@@ -18,6 +19,7 @@ namespace ElitTournament.Telegram.BLL.Config
 		public static void InjectBusinessLogicDependency(this IServiceCollection services, IConfiguration configuration)
 		{
 			InitTelegramBotClient(services, configuration);
+			AddAutoMapper(services);
 			AddDependency(services);
 
 			services.InjectDataAccessDependency(configuration);
@@ -29,10 +31,23 @@ namespace ElitTournament.Telegram.BLL.Config
 			services.AddSingleton(telegramClient);
 		}
 
-		public static void AddDependency(IServiceCollection services)
+		private static void AddAutoMapper(IServiceCollection services)
+		{
+			var config = new MapperConfiguration(c =>
+			{
+				c.AddProfile(new MapperProfile());
+			});
+
+			IMapper mapper = config.CreateMapper();
+
+			services.AddSingleton(mapper);
+		}
+
+		private static void AddDependency(IServiceCollection services)
 		{
 			// Services;
 			services.AddScoped<IGrabberService, GrabberService>();
+			services.AddScoped<ITelegramBotService, TelegramBotService>();
 
 			// Providers
 			services.AddScoped<IGrabberProvider, GrabberProvider>();
@@ -42,7 +57,6 @@ namespace ElitTournament.Telegram.BLL.Config
 			services.AddScoped<IGrabberHelper, GrabberHelper>();
 
 			// Singleton
-			services.AddSingleton<ITelegramBotService, TelegramBotService>();
 			services.AddSingleton<ICacheHelper, CacheHelper>();
 
 			services.AddHostedService<GrabberBackgroudRefreshService>();

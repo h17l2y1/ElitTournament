@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
 namespace ElitTournament.Telegram.BLL.Services.Interfaces
@@ -7,6 +8,8 @@ namespace ElitTournament.Telegram.BLL.Services.Interfaces
 	{
 		Task SetWebhookAsync();
 
-		void Update(Update update);
+		Task<IEnumerable<Core.Entities.User>> GetAllUsers();
+
+		Task Update(Update update);
 	}
 }

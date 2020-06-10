@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElitTournament.DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200610102430_init")]
+    [Migration("20200610162420_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,8 @@ namespace ElitTournament.DAL.Migrations
                     b.Property<string>("Name");
 
                     b.Property<string>("PrimaryDeviceOS");
+
+                    b.Property<string>("Username");
 
                     b.Property<string>("ViberVersion");
 

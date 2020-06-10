@@ -48,6 +48,12 @@ namespace ElitTournament.Viber.BLL.Services
 			return res;
 		}
 
+		public async Task<IEnumerable<User>> GetAllUsers()
+		{
+			IEnumerable<User> users = await _userRepository.GetAll();
+			return users;
+		}
+
 		public async Task Update(Callback callback)
 		{
 			if (callback.Event == EventType.Webhook)

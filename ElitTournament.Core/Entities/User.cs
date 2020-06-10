@@ -1,10 +1,15 @@
-﻿namespace ElitTournament.Core.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ElitTournament.Core.Entities
 {
 	public class User
 	{
-		public string Id { get; set; }
+		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+		public int Id { get; set; }
 
-		public int ClientId { get; set; }
+		public string ClientId { get; set; }
 
 		public bool IsViber { get; set; }
 
@@ -29,5 +34,8 @@
 		public string Name { get; set; }
 
 		public string Avatar { get; set; }
+
+		public string Username { get; set; }
+
 	}
 }

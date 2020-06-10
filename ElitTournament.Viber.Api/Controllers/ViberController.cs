@@ -37,5 +37,12 @@ namespace ElitTournament.Api.Controllers
 			return Ok();
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> GetUsers()
+		{
+			var result = await _service.GetAllUsers();
+			return Ok(result);
+		}
+
 	}
 }

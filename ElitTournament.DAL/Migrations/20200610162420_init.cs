@@ -25,7 +25,8 @@ namespace ElitTournament.DAL.Migrations
                     Language = table.Column<string>(nullable: true),
                     ApiVersion = table.Column<double>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    Avatar = table.Column<string>(nullable: true)
+                    Avatar = table.Column<string>(nullable: true),
+                    Username = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
