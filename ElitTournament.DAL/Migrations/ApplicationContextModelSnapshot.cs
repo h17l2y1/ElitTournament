@@ -20,14 +20,15 @@ namespace ElitTournament.DAL.Migrations
 
             modelBuilder.Entity("ElitTournament.Core.Entities.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("ApiVersion");
 
                     b.Property<string>("Avatar");
 
-                    b.Property<int>("ClientId");
+                    b.Property<string>("ClientId");
 
                     b.Property<string>("Country");
 

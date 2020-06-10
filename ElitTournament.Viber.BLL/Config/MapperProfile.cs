@@ -1,19 +1,17 @@
-﻿using ElitTournament.Core.Entities;
+﻿using AutoMapper;
+using ElitTournament.Core.Entities;
 using ElitTournament.Viber.Core.Models;
 
 namespace ElitTournament.Viber.BLL.Config
 {
-	public class MapperProfile : AutoMapper.Profile
+	public class MapperProfile : Profile
 	{
 		public MapperProfile()
 		{
 			CreateMap<UserDetails, User>()
-				.ForMember(from => from.ClientId, to => to.MapFrom(source => source.Id))
-				.ForMember(from => from.IsViber, to => to.MapFrom(source => true)).ReverseMap();
-
-			CreateMap<UserDetails, User>()
-				//.ForMember(from => from.ClientId, to => to.MapFrom(source => source.Id)).ReverseMap();
-				.ForMember(from => from.IsViber, to => to.MapFrom(source => true));
+				.ForMember(to => to.Id, from => from.Ignore())
+				.ForMember(to => to.ClientId, from => from.MapFrom(source => source.Id))
+				.ForMember(to => to.IsViber, from => from.MapFrom(source => true));
 		}
 	}
 }

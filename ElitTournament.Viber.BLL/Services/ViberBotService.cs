@@ -88,7 +88,6 @@ namespace ElitTournament.Viber.BLL.Services
 
 		private async Task SendMessage(Callback callback)
 		{
-			//await GetUserDetails(callback);
 			InitCommands();
 
 			foreach (Command command in _commands)
@@ -108,34 +107,21 @@ namespace ElitTournament.Viber.BLL.Services
 			command.Execute(callback, _viberBotClient);
 		}
 
-
-		//	need to implement this
 		private async Task GetUserDetails(Callback callback)
 		{
 			bool userIsExist = await _userRepository.IsExist(callback.Sender.Id);
 			if (!userIsExist)
 			{
-				//UserDetails viberUser = await _viberBotClient.GetUserDetailsAsync(callback.Sender.Id);
+				//var jsonString = "{\"primary_device_os\":\"Android 6.0\",\"viber_version\":\"12.9.5.2\",\"mcc\":0,\"mnc\":0,\"device_type\":\"M5s\",\"id\":\"+sTRbtkHmuy5QsK+vr/FkQ==\",\"country\":\"UA\",\"language\":\"en\",\"api_version\":8.0,\"name\":\"Suzanna Rybtsova\",\"avatar\":\"https://media-direct.cdn.viber.com/download_photo?dlid=EhLSmQPRZ4hwe6ZLBa-ydQ8XxzK_bSBVBBNS2QZ0y1LGqFcBXIIqR_vAwsjqlu2TRnu-MQjGq3ZZZwNJe2pX3UcZhKyqhXXZ_3weOShaY8DRvrSQ6zMtcB6AJet36e4Cl9AXyg&fltp=jpg&imsz=0000\"}";
+				//UserDetails viberUser = Newtonsoft.Json.JsonConvert.DeserializeObject<UserDetails>(jsonString);
 
-				var jsonString = "{\"primary_device_os\":\"Android 6.0\",\"viber_version\":\"12.9.5.2\",\"mcc\":0,\"mnc\":0,\"device_type\":\"M5s\",\"id\":\"+sTRbtkHmuy5QsK+vr/FkQ==\",\"country\":\"UA\",\"language\":\"en\",\"api_version\":8.0,\"name\":\"Suzanna Rybtsova\",\"avatar\":\"https://media-direct.cdn.viber.com/download_photo?dlid=EhLSmQPRZ4hwe6ZLBa-ydQ8XxzK_bSBVBBNS2QZ0y1LGqFcBXIIqR_vAwsjqlu2TRnu-MQjGq3ZZZwNJe2pX3UcZhKyqhXXZ_3weOShaY8DRvrSQ6zMtcB6AJet36e4Cl9AXyg&fltp=jpg&imsz=0000\"}";
+				UserDetails viberUser = await _viberBotClient.GetUserDetailsAsync(callback.Sender.Id);
+				User newUser = _mapper.Map<User>(viberUser);
+				await _userRepository.Add(newUser);
 
-				UserDetails viberUser = Newtonsoft.Json.JsonConvert.DeserializeObject<UserDetails>(jsonString);
 
-				try
-				{
-					User newUser = _mapper.Map<User>(viberUser);
-					await _userRepository.Add(newUser);
-				}
-				catch (System.Exception ex)
-				{
-
-					throw;
-				}
-
-				
 			}
 		}
 
 	}
-
 }

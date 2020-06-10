@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElitTournament.DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200609171918_initialize")]
-    partial class initialize
+    [Migration("20200610102430_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,14 +22,15 @@ namespace ElitTournament.DAL.Migrations
 
             modelBuilder.Entity("ElitTournament.Core.Entities.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("ApiVersion");
 
                     b.Property<string>("Avatar");
 
-                    b.Property<int>("ClientId");
+                    b.Property<string>("ClientId");
 
                     b.Property<string>("Country");
 
