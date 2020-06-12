@@ -39,13 +39,6 @@ namespace ElitTournament.Core.Providers
 			return leagues;
 		}
 
-		public async Task<List<League>> GetTables()
-		{
-			IDocument document = await GetPage(TableUrl);
-			List<League> leagues = _grabber.ParseLeagues(document);
-			return leagues;
-		}
-
 		private async Task<IEnumerable<string>> GetLinks()
 		{
 			IDocument document = await GetPage(ScheduleUrl);

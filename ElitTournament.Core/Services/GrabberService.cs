@@ -46,10 +46,5 @@ namespace ElitTournament.Core.Services
 			return result;
 		}
 
-		public async Task RemoveAll()
-		{
-			await _scheduleRepository.RemoveAsync()
-			await _leagueRepository.RemoveAsync()
-		}
 	}
 }

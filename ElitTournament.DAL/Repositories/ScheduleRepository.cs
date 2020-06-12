@@ -15,6 +15,12 @@ namespace ElitTournament.DAL.Repositories
 		{
 		}
 
+		public async override Task<IEnumerable<Schedule>> GetAll()
+		{
+			IEnumerable<Schedule> schedule = await _dbSet.Include(x => x.Games).AsNoTracking().ToListAsync();
+			return schedule;
+		}
+
 		public async Task<string> FindGame(string teamName)
 		{
 			ICollection<Schedule> schedule = await _dbSet.AsNoTracking().ToListAsync();
