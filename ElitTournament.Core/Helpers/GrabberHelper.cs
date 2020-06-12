@@ -1,14 +1,18 @@
 ﻿using AngleSharp.Dom;
-using ElitTournament.Core.Entities;
+using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ElitTournament.DAL.Repositories.Interfaces;
+using ElitTournament.DAL.Enities;
 
 namespace ElitTournament.Core.Helpers
 {
 	public class GrabberHelper : IGrabberHelper
 	{
+		private readonly IScheduleRepository _scheduleRepository;
+		private readonly IGameRepository _gameRepository;
 		private readonly Regex Pattern;
 		private readonly List<string> Days;
 		private readonly List<string> Places;
@@ -16,9 +20,12 @@ namespace ElitTournament.Core.Helpers
 		public List<Schedule> ListSchedule { get; set; }
 		public List<League> Leagues { get; set; }
 
-
-		public GrabberHelper()
+		public GrabberHelper(IScheduleRepository scheduleRepository, IGameRepository gameRepository)
 		{
+			_scheduleRepository = scheduleRepository;
+			_gameRepository = gameRepository;
+
+
 			Pattern = new Regex("[\t\n]");		
 			ListSchedule = new List<Schedule>();
 			Leagues = new List<League>();
@@ -105,7 +112,12 @@ namespace ElitTournament.Core.Helpers
 
 				if (index != 0)
 				{
-					ListSchedule[index - 1].Games.AddRange(text.ToUpper().Split("\n").ToList());
+					if (!text.ToUpper().Contains("ПОЛЕ"))
+					{
+						ListSchedule[index - 1].Games.AddRange(text.ToUpper()
+																	.Split("\n")
+																	.Select(x => new Game(x)));
+					}
 				}
 
 			}
@@ -161,7 +173,7 @@ namespace ElitTournament.Core.Helpers
 											 .Replace("-", " ")
 											 .ToUpper();
 
-					Leagues[Leagues.Count - 1].Teams.Add(teamName);
+					Leagues[Leagues.Count - 1].Teams.Add(new Team(teamName));
 				}
 				Leagues[Leagues.Count - 1].Teams.RemoveAt(0);
 			}

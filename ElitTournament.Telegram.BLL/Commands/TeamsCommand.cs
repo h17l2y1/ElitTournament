@@ -1,4 +1,4 @@
-﻿using ElitTournament.Core.Entities;
+﻿using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Telegram.BLL.Constants;
 using System.Collections.Generic;
@@ -58,17 +58,17 @@ namespace ElitTournament.Telegram.BLL.Commands
 
                 if (isEven)
                 {
-                    teams.Add(new KeyboardButton(currentLeague.Teams[i]));
+                    teams.Add(new KeyboardButton(currentLeague.Teams[i].Name));
                     i++;
-                    teams.Add(new KeyboardButton(currentLeague.Teams[i]));
+                    teams.Add(new KeyboardButton(currentLeague.Teams[i].Name));
                 }
                 else
                 {
-                    teams.Add(new KeyboardButton(currentLeague.Teams[i]));
+                    teams.Add(new KeyboardButton(currentLeague.Teams[i].Name));
                     i++;
                     if (i != currentLeague.Teams.Count)
                     {
-                        teams.Add(new KeyboardButton(currentLeague.Teams[i]));
+                        teams.Add(new KeyboardButton(currentLeague.Teams[i].Name));
                     }
                 }
 

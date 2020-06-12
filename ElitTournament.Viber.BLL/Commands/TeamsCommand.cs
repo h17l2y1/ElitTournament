@@ -1,4 +1,4 @@
-﻿using ElitTournament.Core.Entities;
+﻿using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
 using ElitTournament.Viber.Core.Enums;
@@ -7,6 +7,7 @@ using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
@@ -25,7 +26,7 @@ namespace ElitTournament.Viber.BLL.Commands
 			return leages.Contains(command);
 		}
 
-		public async override void Execute(Callback callback, IViberBotClient client)
+		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
 			KeyboardMessage msg = GetTeams(callback);
 			long result = await client.SendKeyboardMessageAsync(msg);
@@ -47,7 +48,7 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = league.Teams.Select(p => new Button(p, p)
+					Buttons = league.Teams.Select(p => new Button(p.Name, p.Name)
 					{
 						Columns = 3,
 						Rows = 1,

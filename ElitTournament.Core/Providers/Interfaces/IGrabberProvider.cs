@@ -1,4 +1,4 @@
-﻿using ElitTournament.Core.Entities;
+﻿using ElitTournament.DAL.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -1,5 +1,6 @@
 ﻿using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
+using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
@@ -10,7 +11,7 @@ namespace ElitTournament.Viber.BLL.Commands
             return true;
         }
 
-        public abstract void Execute(Callback callback, IViberBotClient client);
+        public abstract Task Execute(Callback callback, IViberBotClient client);
 
     }
 }

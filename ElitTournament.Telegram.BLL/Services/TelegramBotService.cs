@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ElitTournament.Core.Entities;
+using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Telegram.BLL.Commands;
@@ -40,9 +40,9 @@ namespace ElitTournament.Telegram.BLL.Services
             await _telegramClient.SetWebhookAsync(telegramWebHook);
         }
 
-        public async Task<IEnumerable<Core.Entities.User>> GetAllUsers()
+        public async Task<IEnumerable<DAL.Entities.User>> GetAllUsers()
         {
-            IEnumerable<Core.Entities.User> users = await _userRepository.GetAll();
+            IEnumerable<DAL.Entities.User> users = await _userRepository.GetAll();
             return users;
         }
 
@@ -93,8 +93,8 @@ namespace ElitTournament.Telegram.BLL.Services
             if (!userIsExist)
             {
                 var telegramUser = update.Message.From;
-                var newUser = _mapper.Map<Core.Entities.User>(telegramUser);
-                await _userRepository.Add(newUser);
+                var newUser = _mapper.Map<DAL.Entities.User>(telegramUser);
+                await _userRepository.CreateAsync(newUser);
             }
         }
 

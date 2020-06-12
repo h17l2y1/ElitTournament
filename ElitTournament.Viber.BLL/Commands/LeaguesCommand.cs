@@ -1,4 +1,4 @@
-﻿using ElitTournament.Core.Entities;
+﻿using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
 using ElitTournament.Viber.Core.Enums;
@@ -7,6 +7,7 @@ using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
@@ -19,7 +20,7 @@ namespace ElitTournament.Viber.BLL.Commands
 			_cacheHelper = cacheHelper;
 		}
 
-		public async override void Execute(Callback callback, IViberBotClient client)
+		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
 			KeyboardMessage msg = GetLeagues(callback);
 			long result = await client.SendKeyboardMessageAsync(msg);

@@ -1,5 +1,5 @@
 ﻿using AngleSharp.Dom;
-using ElitTournament.Core.Entities;
+using ElitTournament.DAL.Entities;
 using System.Collections.Generic;
 
 namespace ElitTournament.Core.Helpers.Interfaces

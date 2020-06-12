@@ -5,6 +5,7 @@ using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
@@ -22,7 +23,7 @@ namespace ElitTournament.Viber.BLL.Commands
 			return text == null ? true : false;
 		}
 
-		public async override void Execute(Callback callback, IViberBotClient client)
+		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
 			KeyboardMessage msg = GetWelcomeMessage(callback);
 			long result = await client.SendKeyboardMessageAsync(msg);

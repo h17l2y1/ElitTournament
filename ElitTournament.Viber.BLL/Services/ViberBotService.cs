@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ElitTournament.Core.Entities;
+using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Viber.BLL.Commands;
@@ -63,7 +63,7 @@ namespace ElitTournament.Viber.BLL.Services
 
 			if (callback.Event == EventType.ConversationStarted)
 			{
-				ConversationStarted(callback);
+				await ConversationStarted(callback);
 				return;
 			}
 
@@ -101,16 +101,16 @@ namespace ElitTournament.Viber.BLL.Services
 				bool isTeamExist = command.Contains(callback?.Message?.Text.Trim());
 				if (isTeamExist)
 				{
-					command.Execute(callback, _viberBotClient);
+					await command.Execute(callback, _viberBotClient);
 					break;
 				}
 			}
 		}
 
-		private void ConversationStarted(Callback callback)
+		private async Task ConversationStarted(Callback callback)
 		{
 			var command = new WelcomCommand(_cacheHelper);
-			command.Execute(callback, _viberBotClient);
+			await command.Execute(callback, _viberBotClient);
 		}
 
 		private async Task GetUserDetails(Callback callback)
@@ -123,7 +123,7 @@ namespace ElitTournament.Viber.BLL.Services
 
 				UserDetails viberUser = await _viberBotClient.GetUserDetailsAsync(callback.Sender.Id);
 				User newUser = _mapper.Map<User>(viberUser);
-				await _userRepository.Add(newUser);
+				await _userRepository.CreateAsync(newUser);
 
 
 			}

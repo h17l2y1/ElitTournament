@@ -1,4 +1,4 @@
-﻿using ElitTournament.Core.Entities;
+﻿using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Telegram.BLL.Constants;
 using System.Collections.Generic;

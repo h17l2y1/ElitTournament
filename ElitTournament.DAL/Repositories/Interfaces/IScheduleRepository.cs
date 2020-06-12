@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.DAL.Repositories.Interfaces
 {
-	public interface IUserRepository : IBaseRepository<User>
+	public interface IScheduleRepository : IBaseRepository<Schedule>
 	{
-		Task<bool> IsExist(string clientId);
+		Task<string> FindGame(string teamName);
 	}
 }

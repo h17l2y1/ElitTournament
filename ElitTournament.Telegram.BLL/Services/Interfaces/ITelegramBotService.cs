@@ -8,7 +8,7 @@ namespace ElitTournament.Telegram.BLL.Services.Interfaces
 	{
 		Task SetWebhookAsync();
 
-		Task<IEnumerable<Core.Entities.User>> GetAllUsers();
+		Task<IEnumerable<DAL.Entities.User>> GetAllUsers();
 
 		Task Update(Update update);
 	}

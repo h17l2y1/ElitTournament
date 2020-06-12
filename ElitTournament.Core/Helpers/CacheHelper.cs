@@ -1,5 +1,5 @@
-﻿using ElitTournament.Core.Entities;
-using ElitTournament.Core.Helpers.Interfaces;
+﻿using ElitTournament.Core.Helpers.Interfaces;
+using ElitTournament.DAL.Entities;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
@@ -74,7 +74,7 @@ namespace ElitTournament.Core.Helpers
 				{
 					foreach (var game in place.Games)
 					{
-						string gameString = game.Replace("-", " ").ToUpper();
+						string gameString = game.Match.Replace("-", " ").ToUpper();
 						bool teamIsExist = Regex.IsMatch(gameString, $"\\b{teamWithSpace}\\b");
 						if (teamIsExist)
 						{
@@ -123,18 +123,18 @@ namespace ElitTournament.Core.Helpers
 
 		private void SaveTeams(List<League> data)
 		{
-			List<string> teamList = new List<string>();
+			//List<string> teamList = new List<string>();
 
-			foreach (var team in data)
-			{
-				teamList.AddRange(team.Teams);
-			}
+			//foreach (var team in data)
+			//{
+			//	teamList.AddRange(team.Teams);
+			//}
 
-			if (!_cache.TryGetValue(_teamKey, out _))
-			{
-				MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(8));
-				_cache.Set(_teamKey, teamList, cacheEntryOptions);
-			}
+			//if (!_cache.TryGetValue(_teamKey, out _))
+			//{
+			//	MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(8));
+			//	_cache.Set(_teamKey, teamList, cacheEntryOptions);
+			//}
 		}
 	}
 }

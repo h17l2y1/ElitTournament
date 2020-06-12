@@ -1,11 +1,11 @@
 ﻿using AngleSharp.Dom;
 using ElitTournament.Core.Providers.Interfaces;
-using ElitTournament.Core.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElitTournament.DAL.Entities;
 
 namespace ElitTournament.Core.Providers
 {
@@ -18,6 +18,7 @@ namespace ElitTournament.Core.Providers
 		{
 			ScheduleUrl = _сonfiguration.GetSection("ElitTournament:Schedule").Value;
 			ScoreUrl = _сonfiguration.GetSection("ElitTournament:Score").Value;
+			TableUrl = _сonfiguration.GetSection("ElitTournament:Table").Value;
 			_grabber = schedule;
 		}
 
@@ -34,6 +35,13 @@ namespace ElitTournament.Core.Providers
 		public async Task<List<League>> GetLeagues()
 		{
 			IDocument document = await GetPage(ScoreUrl);
+			List<League> leagues = _grabber.ParseLeagues(document);
+			return leagues;
+		}
+
+		public async Task<List<League>> GetTables()
+		{
+			IDocument document = await GetPage(TableUrl);
 			List<League> leagues = _grabber.ParseLeagues(document);
 			return leagues;
 		}

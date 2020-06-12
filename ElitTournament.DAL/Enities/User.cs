@@ -1,14 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ElitTournament.Core.Entities
+﻿namespace ElitTournament.DAL.Entities
 {
-	public class User
+	public class User : BaseEntity
 	{
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int Id { get; set; }
-
 		public string ClientId { get; set; }
 
 		public bool IsViber { get; set; }
