@@ -24,7 +24,7 @@ namespace ElitTournament.Core.Providers
 		public async Task<List<Schedule>> GetSchedule()
 		{
 			IEnumerable<string> links = await GetLinks();
-			string lastStageLink = links.FirstOrDefault();
+			string lastStageLink = links.FirstOrDefault(x=>x.Contains("raspisanie"));
 			IDocument document = await GetPage(lastStageLink);
 			List<Schedule> result = _grabber.ParseSchedule(document);
 
