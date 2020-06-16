@@ -68,7 +68,7 @@ namespace ElitTournament.Core.Helpers
 			if (schedule != null && schedule.Count != 0)
 			{
 				List<string> list = new List<string>();
-				string teamWithSpace = teamName.Replace("-", " ").ToUpper();
+				string teamWithSpace = teamName.Replace("-", " ").Trim().ToUpper();
 
 				foreach (var place in schedule)
 				{
