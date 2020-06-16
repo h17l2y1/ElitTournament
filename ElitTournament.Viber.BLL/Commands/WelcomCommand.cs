@@ -1,6 +1,5 @@
 ﻿using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
-using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
@@ -11,14 +10,7 @@ namespace ElitTournament.Viber.BLL.Commands
 {
 	public class WelcomCommand : Command
 	{
-		private readonly ICacheHelper _cacheHelper;
-
-		public WelcomCommand(ICacheHelper cacheHelper)
-		{
-			_cacheHelper = cacheHelper;
-		}
-
-		public override bool Contains(string text)
+		public async override Task<bool> Contains(string text)
 		{
 			return text == null ? true : false;
 		}

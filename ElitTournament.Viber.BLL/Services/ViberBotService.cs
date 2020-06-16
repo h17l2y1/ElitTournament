@@ -17,20 +17,24 @@ namespace ElitTournament.Viber.BLL.Services
 	public class ViberBotService : IViberBotService
 	{
 		private readonly IMapper _mapper;
-		private readonly IUserRepository _userRepository;
 		private readonly IViberBotClient _viberBotClient;
-		private readonly ICacheHelper _cacheHelper;
+		private readonly IUserRepository _userRepository;
+		private readonly ITeamRepository _teamRepository;
+		private readonly ILeagueRepository _leagueRepository;
+		private readonly IScheduleRepository _scheduleRepository;
 		private readonly string _webHook;
 		private readonly string _viberUrl;
 		private List<Command> _commands;
 
-		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ICacheHelper cacheHelper,
-			IUserRepository userRepository, IMapper mapper)
+		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ITeamRepository teamRepository, 
+			IUserRepository userRepository, ILeagueRepository leagueRepository, IScheduleRepository scheduleRepository, IMapper mapper)
 		{
 			_mapper = mapper;
-			_userRepository = userRepository;
 			_viberBotClient = viberBotClient;
-			_cacheHelper = cacheHelper;
+			_userRepository = userRepository;
+			_teamRepository = teamRepository;
+			_leagueRepository = leagueRepository;
+			_scheduleRepository = scheduleRepository;
 			_webHook = configuration["WebHook"];
 			_viberUrl = "/api/viber/update";
 		}
@@ -79,17 +83,12 @@ namespace ElitTournament.Viber.BLL.Services
 		{
 			_commands = new List<Command>
 			{
-				new ErrorCommand(),
-				new DevelopCommand(_cacheHelper),
-				new TeamsCommand(_cacheHelper),
-				new ScheduleCommand(_cacheHelper),
-				new LeaguesCommand(_cacheHelper),
+				//new ErrorCommand(),
+				new DevelopCommand(_leagueRepository),
+				new TeamsCommand(_leagueRepository),
+				new ScheduleCommand(_scheduleRepository, _leagueRepository),
+				new LeaguesCommand(_leagueRepository),
 			};
-
-			if (_cacheHelper.IsCacheExist)
-			{
-				_commands.RemoveAt(0);
-			}
 		}
 
 		private async Task SendMessage(Callback callback)
@@ -98,7 +97,7 @@ namespace ElitTournament.Viber.BLL.Services
 
 			foreach (Command command in _commands)
 			{
-				bool isTeamExist = command.Contains(callback?.Message?.Text.Trim());
+				bool isTeamExist = await command.Contains(callback?.Message?.Text.Trim());
 				if (isTeamExist)
 				{
 					await command.Execute(callback, _viberBotClient);
@@ -109,7 +108,7 @@ namespace ElitTournament.Viber.BLL.Services
 
 		private async Task ConversationStarted(Callback callback)
 		{
-			var command = new WelcomCommand(_cacheHelper);
+			var command = new WelcomCommand();
 			await command.Execute(callback, _viberBotClient);
 		}
 

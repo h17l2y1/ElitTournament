@@ -1,4 +1,5 @@
 ﻿using ElitTournament.Core.Helpers.Interfaces;
+using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
@@ -9,14 +10,16 @@ namespace ElitTournament.Viber.BLL.Commands
 {
 	public class ScheduleCommand : Command
 	{
-		private readonly ICacheHelper _cacheHelper;
+		private readonly IScheduleRepository _scheduleRepository;
+		private readonly ILeagueRepository _leagueRepository;
 
-		public ScheduleCommand(ICacheHelper cacheHelper)
+		public ScheduleCommand(IScheduleRepository scheduleRepository, ILeagueRepository leagueRepository)
 		{
-			_cacheHelper = cacheHelper;
+			_scheduleRepository = scheduleRepository;
+			_leagueRepository = leagueRepository;
 		}
 
-		public override bool Contains(string text)
+		public async override Task<bool> Contains(string text)
 		{
 			if (text.Contains(ButtonConstant.BACK) || text.Contains(ButtonConstant.REFRESH) ||
 				text.Contains(ButtonConstant.DEVELOP) || text.Contains(ButtonConstant.START))
@@ -29,16 +32,16 @@ namespace ElitTournament.Viber.BLL.Commands
 
 		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
-			TextMessage msg = GetSchedule(callback);
+			TextMessage msg = await GetSchedule(callback);
 			long result = await client.SendTextMessageAsync(msg);
 
-			LeaguesCommand leaguesCommand = new LeaguesCommand(_cacheHelper);
+			LeaguesCommand leaguesCommand = new LeaguesCommand(_leagueRepository);
 			await leaguesCommand.Execute(callback, client);
 		}
 
-		public TextMessage GetSchedule(Callback callback)
+		public async Task<TextMessage> GetSchedule(Callback callback)
 		{
-			string shedule = _cacheHelper.FindGame(callback.Message.Text) ?? $"Игры команды \"{callback.Message.Text}\" не найдено";
+			string shedule = await _scheduleRepository.FindGame(callback.Message.Text) ?? $"Игры команды \"{callback.Message.Text}\" не найдено";
 		
 			var textMessage = new TextMessage(callback.Sender.Id, shedule)
 			{

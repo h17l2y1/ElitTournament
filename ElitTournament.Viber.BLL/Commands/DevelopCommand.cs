@@ -1,4 +1,4 @@
-﻿using ElitTournament.Core.Helpers.Interfaces;
+﻿using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
@@ -9,14 +9,14 @@ namespace ElitTournament.Viber.BLL.Commands
 {
 	public class DevelopCommand : Command
 	{
-		private readonly ICacheHelper _cacheHelper;
+		private readonly ILeagueRepository _leagueRepository;
 
-		public DevelopCommand(ICacheHelper cacheHelper)
+		public DevelopCommand(ILeagueRepository leagueRepository)
 		{
-			_cacheHelper = cacheHelper;
+			_leagueRepository = leagueRepository;
 		}
 
-		public override bool Contains(string command)
+		public async override Task<bool> Contains(string command)
 		{
 			return command.Contains(ButtonConstant.DEVELOP);
 		}
@@ -26,7 +26,7 @@ namespace ElitTournament.Viber.BLL.Commands
 			TextMessage msg = SendShedule(callback);
 			long result = await client.SendTextMessageAsync(msg);
 
-			LeaguesCommand leaguesCommand = new LeaguesCommand(_cacheHelper);
+			LeaguesCommand leaguesCommand = new LeaguesCommand(_leagueRepository);
 			await leaguesCommand.Execute(callback, client);
 		}
 

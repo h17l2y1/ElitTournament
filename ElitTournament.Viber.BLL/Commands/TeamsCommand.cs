@@ -1,5 +1,4 @@
 ﻿using ElitTournament.DAL.Entities;
-using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
 using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
@@ -8,33 +7,35 @@ using ElitTournament.Viber.Core.Models.Message;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElitTournament.DAL.Repositories.Interfaces;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
 	public class TeamsCommand : Command
 	{
-		private readonly ICacheHelper _cacheHelper;
+		private readonly ILeagueRepository _leagueRepository;
 
-		public TeamsCommand(ICacheHelper cacheHelper)
+		public TeamsCommand(ILeagueRepository leagueRepository)
 		{
-			_cacheHelper = cacheHelper;
+			_leagueRepository = leagueRepository;
 		}
 
-		public override bool Contains(string command)
+		public async override Task<bool> Contains(string command)
 		{
-			ICollection<string> leages = _cacheHelper.GetLeagues().Select(p => p.Name).ToList();
-			return leages.Contains(command);
+			IEnumerable<League> teams = await _leagueRepository.GetAll();
+			IEnumerable<string> teamNames = teams.Select(p => p.Name);
+			return teamNames.Contains(command);
 		}
 
 		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
-			KeyboardMessage msg = GetTeams(callback);
+			KeyboardMessage msg = await GetTeams(callback);
 			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 
-		public KeyboardMessage GetTeams(Callback callback)
+		public async Task <KeyboardMessage> GetTeams(Callback callback)
 		{
-			List<League> leagues = _cacheHelper.GetLeagues();
+			IEnumerable<League> leagues = await _leagueRepository.GetAll();
 
 			League league = leagues.SingleOrDefault(x => x.Name == callback.Message.Text);
 

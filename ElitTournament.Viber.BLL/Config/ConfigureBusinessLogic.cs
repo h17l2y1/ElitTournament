@@ -61,11 +61,10 @@ namespace ElitTournament.Viber.BLL.Config
 
 
 			// Singleton
-			//services.AddSingleton<IViberBotService, ViberBotService>();
 			services.AddSingleton<ICacheHelper, CacheHelper>();
 
 
-			services.AddHostedService<GrabberBackgroudRefreshService>();
+			//services.AddHostedService<GrabberBackgroudRefreshService>();
 		}
 
 	}

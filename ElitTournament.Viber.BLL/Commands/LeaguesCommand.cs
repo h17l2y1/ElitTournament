@@ -1,5 +1,5 @@
 ﻿using ElitTournament.DAL.Entities;
-using ElitTournament.Core.Helpers.Interfaces;
+using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
 using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
@@ -13,22 +13,22 @@ namespace ElitTournament.Viber.BLL.Commands
 {
 	public class LeaguesCommand : Command
 	{
-		private readonly ICacheHelper _cacheHelper;
+		private readonly ILeagueRepository _leagueRepository;
 
-		public LeaguesCommand(ICacheHelper cacheHelper)
+		public LeaguesCommand(ILeagueRepository leagueRepository)
 		{
-			_cacheHelper = cacheHelper;
+			_leagueRepository = leagueRepository;
 		}
 
 		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
-			KeyboardMessage msg = GetLeagues(callback);
+			KeyboardMessage msg = await GetLeagues(callback);
 			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 
-		public KeyboardMessage GetLeagues(Callback callback)
+		public async Task<KeyboardMessage> GetLeagues(Callback callback)
 		{
-			List<League> leagues = _cacheHelper.GetLeagues();
+			IEnumerable<League> leagues = await _leagueRepository.GetAll();
 
 			var keyboardMessage = new KeyboardMessage(callback.Sender.Id, MessageConstant.CHOOSE_LEAGUE)
 			{

@@ -6,12 +6,11 @@ namespace ElitTournament.Viber.BLL.Commands
 {
     public abstract class Command
     {
-        public virtual bool Contains(string command)
+        public async virtual Task<bool> Contains(string command)
         {
             return true;
         }
 
         public abstract Task Execute(Callback callback, IViberBotClient client);
-
     }
 }

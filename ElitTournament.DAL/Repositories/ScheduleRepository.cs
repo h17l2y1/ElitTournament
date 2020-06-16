@@ -23,10 +23,10 @@ namespace ElitTournament.DAL.Repositories
 
 		public async Task<string> FindGame(string teamName)
 		{
-			ICollection<Schedule> schedule = await _dbSet.AsNoTracking().ToListAsync();
+			ICollection<Schedule> schedule = await _dbSet.Include(x => x.Games).AsNoTracking().ToListAsync();
 
 			List<string> list = new List<string>();
-			string teamWithSpace = teamName.Replace("-", " ").ToUpper();
+			string teamWithSpace = teamName.Replace("-", " ").Trim().ToUpper();
 
 			foreach (var place in schedule)
 			{
@@ -36,7 +36,7 @@ namespace ElitTournament.DAL.Repositories
 					bool teamIsExist = Regex.IsMatch(gameString, $"\\b{teamWithSpace}\\b");
 					if (teamIsExist)
 					{
-						list.Add($"{place.Place}\n{game}");
+						list.Add($"{place.Place}\n{game.Match}");
 					}
 
 				}
