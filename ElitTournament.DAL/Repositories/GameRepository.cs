@@ -1,5 +1,5 @@
 ﻿using ElitTournament.DAL.Config;
-using ElitTournament.DAL.Enities;
+using ElitTournament.DAL.Entities;
 using ElitTournament.DAL.Repositories.Interfaces;
 
 namespace ElitTournament.DAL.Repositories

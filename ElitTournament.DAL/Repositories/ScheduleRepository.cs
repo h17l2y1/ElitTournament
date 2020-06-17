@@ -4,6 +4,7 @@ using ElitTournament.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -15,9 +16,13 @@ namespace ElitTournament.DAL.Repositories
 		{
 		}
 
-		public async override Task<IEnumerable<Schedule>> GetAll()
+		public async Task<IEnumerable<Schedule>> GetAll(int version)
 		{
-			IEnumerable<Schedule> schedule = await _dbSet.Include(x => x.Games).AsNoTracking().ToListAsync();
+			IEnumerable<Schedule> schedule = await _dbSet.Include(x => x.Games)
+														 .Where(e => e.DataVersionId == version)
+														 .AsNoTracking()
+														 .ToListAsync();
+
 			return schedule;
 		}
 

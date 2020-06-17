@@ -1,4 +1,4 @@
-﻿using ElitTournament.DAL.Enities;
+﻿using ElitTournament.DAL.Entities;
 
 namespace ElitTournament.DAL.Repositories.Interfaces
 {

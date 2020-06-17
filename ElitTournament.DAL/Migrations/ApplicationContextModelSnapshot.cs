@@ -19,7 +19,18 @@ namespace ElitTournament.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ElitTournament.DAL.Enities.Game", b =>
+            modelBuilder.Entity("ElitTournament.DAL.Entities.DataVersion", b =>
+                {
+                    b.Property<int>("Version")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("Version");
+
+                    b.ToTable("DataVersions");
+                });
+
+            modelBuilder.Entity("ElitTournament.DAL.Entities.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -35,7 +46,7 @@ namespace ElitTournament.DAL.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("Game");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("ElitTournament.DAL.Entities.League", b =>
@@ -46,9 +57,13 @@ namespace ElitTournament.DAL.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
+                    b.Property<int>("DataVersionId");
+
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DataVersionId");
 
                     b.ToTable("Leagues");
                 });
@@ -61,9 +76,13 @@ namespace ElitTournament.DAL.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
+                    b.Property<int>("DataVersionId");
+
                     b.Property<string>("Place");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DataVersionId");
 
                     b.ToTable("Schedules");
                 });
@@ -100,7 +119,7 @@ namespace ElitTournament.DAL.Migrations
 
                     b.HasIndex("LeagueId");
 
-                    b.ToTable("Team");
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("ElitTournament.DAL.Entities.User", b =>
@@ -144,11 +163,27 @@ namespace ElitTournament.DAL.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ElitTournament.DAL.Enities.Game", b =>
+            modelBuilder.Entity("ElitTournament.DAL.Entities.Game", b =>
                 {
                     b.HasOne("ElitTournament.DAL.Entities.Schedule")
                         .WithMany("Games")
                         .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ElitTournament.DAL.Entities.League", b =>
+                {
+                    b.HasOne("ElitTournament.DAL.Entities.DataVersion")
+                        .WithMany("Leagues")
+                        .HasForeignKey("DataVersionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ElitTournament.DAL.Entities.Schedule", b =>
+                {
+                    b.HasOne("ElitTournament.DAL.Entities.DataVersion")
+                        .WithMany("Schedules")
+                        .HasForeignKey("DataVersionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -1,7 +1,6 @@
-﻿using ElitTournament.DAL.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ElitTournament.DAL.Enities
+namespace ElitTournament.DAL.Entities
 {
 	public class Game : BaseEntity
 	{

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ElitTournament.DAL.Repositories.Interfaces;
-using ElitTournament.DAL.Enities;
 
 namespace ElitTournament.Core.Helpers
 {

@@ -7,14 +7,15 @@ namespace ElitTournament.DAL.Entities
 {
     public class BaseEntity : IBaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public DateTime CreationDate { get; set; }
-
         public BaseEntity()
         {
             CreationDate = DateTime.UtcNow;
         }
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public DateTime CreationDate { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ElitTournament.DAL.Config;
+using ElitTournament.DAL.Entities;
 using ElitTournament.DAL.Entities.Interfaces;
 using ElitTournament.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -66,5 +67,10 @@ namespace ElitTournament.DAL.Repositories
 			return _dbSet.AsNoTracking();
 		}
 
+		//public async Task<int> GetLastVersion()
+		//{
+		//	var version = await _context.Set<DataVersion>().LastOrDefaultAsync();
+		//	return version.Version;
+		//}
 	}
 }

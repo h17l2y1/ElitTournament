@@ -4,36 +4,20 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ElitTournament.DAL.Migrations
 {
-    public partial class initt : Migration
+    public partial class addVersions : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Leagues",
+                name: "DataVersions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreationDate = table.Column<DateTime>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    Version = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Leagues", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Schedules",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreationDate = table.Column<DateTime>(nullable: false),
-                    Place = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Schedules", x => x.Id);
+                    table.PrimaryKey("PK_DataVersions", x => x.Version);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,7 +48,49 @@ namespace ElitTournament.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Team",
+                name: "Leagues",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    DataVersionId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Leagues", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Leagues_DataVersions_DataVersionId",
+                        column: x => x.DataVersionId,
+                        principalTable: "DataVersions",
+                        principalColumn: "Version",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Schedules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    Place = table.Column<string>(nullable: true),
+                    DataVersionId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Schedules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Schedules_DataVersions_DataVersionId",
+                        column: x => x.DataVersionId,
+                        principalTable: "DataVersions",
+                        principalColumn: "Version",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Teams",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -83,9 +109,9 @@ namespace ElitTournament.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Team", x => x.Id);
+                    table.PrimaryKey("PK_Teams", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Team_Leagues_LeagueId",
+                        name: "FK_Teams_Leagues_LeagueId",
                         column: x => x.LeagueId,
                         principalTable: "Leagues",
                         principalColumn: "Id",
@@ -93,7 +119,7 @@ namespace ElitTournament.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Game",
+                name: "Games",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -104,9 +130,9 @@ namespace ElitTournament.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Game", x => x.Id);
+                    table.PrimaryKey("PK_Games", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Game_Schedules_ScheduleId",
+                        name: "FK_Games_Schedules_ScheduleId",
                         column: x => x.ScheduleId,
                         principalTable: "Schedules",
                         principalColumn: "Id",
@@ -114,23 +140,33 @@ namespace ElitTournament.DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Game_ScheduleId",
-                table: "Game",
+                name: "IX_Games_ScheduleId",
+                table: "Games",
                 column: "ScheduleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Team_LeagueId",
-                table: "Team",
+                name: "IX_Leagues_DataVersionId",
+                table: "Leagues",
+                column: "DataVersionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Schedules_DataVersionId",
+                table: "Schedules",
+                column: "DataVersionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teams_LeagueId",
+                table: "Teams",
                 column: "LeagueId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Game");
+                name: "Games");
 
             migrationBuilder.DropTable(
-                name: "Team");
+                name: "Teams");
 
             migrationBuilder.DropTable(
                 name: "Users");
@@ -140,6 +176,9 @@ namespace ElitTournament.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Leagues");
+
+            migrationBuilder.DropTable(
+                name: "DataVersions");
         }
     }
 }
