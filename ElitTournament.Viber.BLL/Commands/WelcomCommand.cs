@@ -10,6 +10,10 @@ namespace ElitTournament.Viber.BLL.Commands
 {
 	public class WelcomCommand : Command
 	{
+		public WelcomCommand() : base(0)
+		{
+		}
+		
 		public async override Task<bool> Contains(string text)
 		{
 			return text == null ? true : false;
@@ -21,7 +25,7 @@ namespace ElitTournament.Viber.BLL.Commands
 			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 
-		public KeyboardMessage GetWelcomeMessage(Callback callback)
+		private KeyboardMessage GetWelcomeMessage(Callback callback)
 		{
 			var keyboardMessage = new KeyboardMessage(callback.User.Id, MessageConstant.WELCOME_MESSAGE)
 			{
@@ -33,7 +37,10 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = Enumerable.Range(0, 1).Select(x => new Button(ButtonConstant.START, MessageConstant.START)).ToList()
+					Buttons = Enumerable
+						.Range(0, 1)
+						.Select(x => new Button(ButtonConstant.START, MessageConstant.START))
+						.ToList()
 				},
 			};
 

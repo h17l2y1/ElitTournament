@@ -11,5 +11,7 @@ namespace ElitTournament.Core.Helpers.Interfaces
 		IEnumerable<string> GetLinks(IDocument document);
 
 		List<League> ParseLeagues(IDocument document);
+
+		List<League> ParseTables(IDocument document);
 	}
 }

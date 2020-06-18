@@ -15,7 +15,7 @@ namespace ElitTournament.Viber.BLL.Commands
 	{
 		private readonly ILeagueRepository _leagueRepository;
 
-		public LeaguesCommand(ILeagueRepository leagueRepository)
+		public LeaguesCommand(ILeagueRepository leagueRepository, int lastVersion) : base(lastVersion)
 		{
 			_leagueRepository = leagueRepository;
 		}
@@ -26,10 +26,10 @@ namespace ElitTournament.Viber.BLL.Commands
 			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 
-		public async Task<KeyboardMessage> GetLeagues(Callback callback)
+		private async Task<KeyboardMessage> GetLeagues(Callback callback)
 		{
-			IEnumerable<League> leagues = await _leagueRepository.GetAll();
-
+			IEnumerable<League> leagues = await _leagueRepository.GetAll(version);
+			
 			var keyboardMessage = new KeyboardMessage(callback.Sender.Id, MessageConstant.CHOOSE_LEAGUE)
 			{
 				Sender = new UserBase
@@ -52,6 +52,8 @@ namespace ElitTournament.Viber.BLL.Commands
 
 			keyboardMessage.Keyboard.Buttons.Add(new Button()
 			{
+				Columns = 6,
+				Rows = 1,
 				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
 				ActionType = KeyboardActionType.Reply,
 				ActionBody = ButtonConstant.DEVELOP,

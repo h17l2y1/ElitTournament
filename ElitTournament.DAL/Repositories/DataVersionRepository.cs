@@ -7,13 +7,6 @@ using System.Threading.Tasks;
 
 namespace ElitTournament.DAL.Repositories
 {
-	//public class DataVersionRepository : BaseRepository<DataVersion>, IDataVersionRepository
-	//{
-	//	public DataVersionRepository(ApplicationContext context) : base(context)
-	//	{
-	//	}
-	//}
-
 	public class DataVersionRepository : IDataVersionRepository
 	{
 		private ApplicationContext _context { get; set; }

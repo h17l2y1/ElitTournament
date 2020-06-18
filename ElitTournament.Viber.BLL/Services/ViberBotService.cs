@@ -22,11 +22,12 @@ namespace ElitTournament.Viber.BLL.Services
 		private readonly ITeamRepository _teamRepository;
 		private readonly ILeagueRepository _leagueRepository;
 		private readonly IScheduleRepository _scheduleRepository;
+		private readonly IDataVersionRepository _dataVersionRepository;
 		private readonly string _webHook;
 		private readonly string _viberUrl;
 		private List<Command> _commands;
 
-		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ITeamRepository teamRepository, 
+		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ITeamRepository teamRepository, IDataVersionRepository dataVersionRepository,
 			IUserRepository userRepository, ILeagueRepository leagueRepository, IScheduleRepository scheduleRepository, IMapper mapper)
 		{
 			_mapper = mapper;
@@ -35,6 +36,7 @@ namespace ElitTournament.Viber.BLL.Services
 			_teamRepository = teamRepository;
 			_leagueRepository = leagueRepository;
 			_scheduleRepository = scheduleRepository;
+			_dataVersionRepository = dataVersionRepository;
 			_webHook = configuration["WebHook"];
 			_viberUrl = "/api/viber/update";
 		}
@@ -79,21 +81,23 @@ namespace ElitTournament.Viber.BLL.Services
 			}
 		}
 
-		private void InitCommands()
+		private async Task InitCommands()
 		{
+			int lastVersion = await _dataVersionRepository.GetLastVersion();
+			
 			_commands = new List<Command>
 			{
 				//new ErrorCommand(),
-				new DevelopCommand(_leagueRepository),
-				new TeamsCommand(_leagueRepository),
-				new ScheduleCommand(_scheduleRepository, _leagueRepository),
-				new LeaguesCommand(_leagueRepository),
+				new DevelopCommand(_leagueRepository, lastVersion),
+				new TeamsCommand(_leagueRepository, lastVersion),
+				new ScheduleCommand(_scheduleRepository, _leagueRepository, lastVersion),
+				new LeaguesCommand(_leagueRepository, lastVersion)
 			};
 		}
 
 		private async Task SendMessage(Callback callback)
 		{
-			InitCommands();
+			await InitCommands();
 
 			foreach (Command command in _commands)
 			{

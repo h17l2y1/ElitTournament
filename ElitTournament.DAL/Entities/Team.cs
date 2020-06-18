@@ -27,7 +27,7 @@ namespace ElitTournament.DAL.Entities
 
 		public int Goals { get; set; }
 
-		public string GoalDifference { get; set; }
+		public int GoalDifference { get; set; }
 
 		public int Points { get; set; }
 

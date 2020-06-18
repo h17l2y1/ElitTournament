@@ -15,14 +15,14 @@ namespace ElitTournament.Viber.BLL.Commands
 	{
 		private readonly ILeagueRepository _leagueRepository;
 
-		public TeamsCommand(ILeagueRepository leagueRepository)
+		public TeamsCommand(ILeagueRepository leagueRepository, int lastVersion) : base(lastVersion)
 		{
 			_leagueRepository = leagueRepository;
 		}
 
 		public async override Task<bool> Contains(string command)
 		{
-			IEnumerable<League> teams = await _leagueRepository.GetAll();
+			IEnumerable<League> teams = await _leagueRepository.GetAll(version);
 			IEnumerable<string> teamNames = teams.Select(p => p.Name);
 			return teamNames.Contains(command);
 		}
@@ -35,10 +35,12 @@ namespace ElitTournament.Viber.BLL.Commands
 
 		public async Task <KeyboardMessage> GetTeams(Callback callback)
 		{
-			IEnumerable<League> leagues = await _leagueRepository.GetAll();
+			IEnumerable<League> leagues = await _leagueRepository.GetAll(version);
 
 			League league = leagues.SingleOrDefault(x => x.Name == callback.Message.Text);
-
+			var sortedTeams= league.Teams.OrderByDescending(o => o.Points)
+																 .ThenByDescending(o=>o.GoalDifference);
+			
 			var keyboardMessage = new KeyboardMessage(callback.Sender.Id, MessageConstant.CHOOSE_TEAM)
 			{
 				Sender = new UserBase
@@ -49,10 +51,8 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = league.Teams.Select(p => new Button(p.Name, p.Name)
+					Buttons = sortedTeams.Select(p => new Button(p.Name, p.Name)
 					{
-						Columns = 3,
-						Rows = 1,
 						BackgroundColor = ButtonConstant.DEFAULT_COLOR,
 					}).ToList()
 				},
@@ -60,6 +60,8 @@ namespace ElitTournament.Viber.BLL.Commands
 
 			keyboardMessage.Keyboard.Buttons.Add(new Button()
 			{
+				Columns = 6,
+				Rows = 1,
 				BackgroundColor = ButtonConstant.RED_COLOR,
 				ActionType = KeyboardActionType.Reply,
 				ActionBody = ButtonConstant.BACK,

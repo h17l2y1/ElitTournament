@@ -97,7 +97,7 @@ namespace ElitTournament.DAL.Migrations
 
                     b.Property<int>("Drawn");
 
-                    b.Property<string>("GoalDifference");
+                    b.Property<int>("GoalDifference");
 
                     b.Property<int>("Goals");
 

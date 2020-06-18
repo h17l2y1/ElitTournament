@@ -12,30 +12,31 @@ namespace ElitTournament.Core.Helpers
 	{
 		private readonly IScheduleRepository _scheduleRepository;
 		private readonly IGameRepository _gameRepository;
-		private readonly Regex Pattern;
-		private readonly List<string> Days;
-		private readonly List<string> Places;
+		private readonly Regex _pattern;
+		private readonly List<string> _days;
+		private readonly List<string> _places;
 
 		public List<Schedule> ListSchedule { get; set; }
 		public List<League> Leagues { get; set; }
-
+		public List<League> Tables { get; set; }
+		
 		public GrabberHelper(IScheduleRepository scheduleRepository, IGameRepository gameRepository)
 		{
 			_scheduleRepository = scheduleRepository;
 			_gameRepository = gameRepository;
-
-
-			Pattern = new Regex("[\t\n]");		
+			
+			_pattern = new Regex("[\t\n]");		
 			ListSchedule = new List<Schedule>();
 			Leagues = new List<League>();
+			Tables = new List<League>();
 
-			Days = new List<string>()
+			_days = new List<string>()
 			{
 				"понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье",	// rus
 				"Bторник", "Cреда", "Cуббота", "Воскресенье"										// eng + rus
 			};
 
-			Places = new List<string>()
+			_places = new List<string>()
 			{
 				"хнурэ", "ХИРЭ", "шервуд", "Football Park", "ШВСМ Пионер","ОНСК Локомотив",
 				"СК Звезда", "СК Вирта", "СК Хнувд", "Ск Фарм Академия", "КСК Комунар", "ФармАкадемия"
@@ -55,6 +56,7 @@ namespace ElitTournament.Core.Helpers
 		{
 			IHtmlCollection<IElement> listP = Parse(document);
 
+			// TODO: refactor
 			var test = new List<string>();
 
 			foreach (var item in listP)
@@ -79,6 +81,18 @@ namespace ElitTournament.Core.Helpers
 			return Leagues;
 		}
 
+		public List<League> ParseTables(IDocument document)
+		{
+			IHtmlCollection<IElement> listTables = Parse(document);
+
+			foreach (var item in listTables)
+			{
+				CreateTable(item);
+			}
+
+			return Tables;
+		}
+		
 		private void CreateSchedule(List<string> listP)
 		{
 			foreach (var text in listP)
@@ -87,7 +101,7 @@ namespace ElitTournament.Core.Helpers
 				bool isPlaceExist = false;
 				int index = ListSchedule.Count();
 
-				foreach (var day in Days)
+				foreach (var day in _days)
 				{
 					if (!isDateExist)
 					{
@@ -95,7 +109,7 @@ namespace ElitTournament.Core.Helpers
 					}
 				}
 
-				foreach (var place in Places)
+				foreach (var place in _places)
 				{
 					if (!isPlaceExist)
 					{
@@ -114,8 +128,8 @@ namespace ElitTournament.Core.Helpers
 					if (!text.ToUpper().Contains("ПОЛЕ"))
 					{
 						ListSchedule[index - 1].Games.AddRange(text.ToUpper()
-																	.Split("\n")
-																	.Select(x => new Game(x)));
+													 .Split("\n")
+													 .Select(x => new Game(x)));
 					}
 				}
 
@@ -128,9 +142,8 @@ namespace ElitTournament.Core.Helpers
 
 			IHtmlCollection<IElement> ul = iElementList[0].Children;
 
-			IEnumerable<string> links = Enumerable
-				.Range(0, ul.Count())
-				.Select(i => GetLink(ul[i]));
+			IEnumerable<string> links = Enumerable.Range(0, ul.Count())
+												  .Select(i => GetLink(ul[i]));
 			return links;
 		}
 
@@ -168,13 +181,64 @@ namespace ElitTournament.Core.Helpers
 				{
 					var tdTeam = column.Children[1];
 					string tdName = tdTeam.TextContent;
-					string teamName = Pattern.Replace(tdName, "")
+					string teamName = _pattern.Replace(tdName, "")
 											 .Replace("-", " ")
 											 .ToUpper();
 
 					Leagues[Leagues.Count - 1].Teams.Add(new Team(teamName));
 				}
 				Leagues[Leagues.Count - 1].Teams.RemoveAt(0);
+			}
+		}
+
+		private void CreateTable(IElement element)
+		{
+			if (element.TagName == "P")
+			{
+				var c = element.Children;
+				foreach (var tt in c)
+				{
+					if (tt.TagName == "STRONG")
+					{
+						string leagueName = tt.TextContent.Trim();
+						Tables.Add(new League());
+						Tables[Tables.Count - 1].Name = leagueName.Trim();
+					}
+				}
+			}
+
+			if (element.TagName == "STRONG")
+			{
+				string leagueName = element.TextContent;
+
+				Tables.Add(new League());
+				Tables[Tables.Count - 1].Name = leagueName.Trim();
+			}
+			
+			if (element.TagName == "TABLE")
+			{
+				var tempElement = element.Children;
+				var table = tempElement.FirstOrDefault();
+				
+				List<Team> teams = table.Children.Skip(1)
+												 .Select(tr => new Team
+												 {
+													 Position = int.Parse(tr.Children[0].TextContent),
+													 Name = tr.Children[2].TextContent.Trim(),
+													 Played = int.Parse(tr.Children[3].TextContent),
+													 Won = int.Parse(tr.Children[4].TextContent),
+													 Drawn = int.Parse(tr.Children[5].TextContent),
+													 Lost = int.Parse(tr.Children[6].TextContent),
+													 Goals = int.Parse(tr.Children[7].TextContent),
+													 GoalDifference = int.Parse(tr.Children[8].TextContent),
+													 Points = int.Parse(tr.Children[9].TextContent)
+												 })
+												 .ToList();
+
+				if (Tables.Count > 0)
+				{
+					Tables[Tables.Count - 1].Teams = teams;
+				}
 			}
 		}
 

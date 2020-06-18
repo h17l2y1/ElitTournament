@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ElitTournament.DAL.Migrations
 {
-    public partial class addVersions : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -103,7 +103,7 @@ namespace ElitTournament.DAL.Migrations
                     Drawn = table.Column<int>(nullable: false),
                     Lost = table.Column<int>(nullable: false),
                     Goals = table.Column<int>(nullable: false),
-                    GoalDifference = table.Column<string>(nullable: true),
+                    GoalDifference = table.Column<int>(nullable: false),
                     Points = table.Column<int>(nullable: false),
                     LeagueId = table.Column<int>(nullable: false)
                 },

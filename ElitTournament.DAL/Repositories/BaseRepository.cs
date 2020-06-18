@@ -66,11 +66,5 @@ namespace ElitTournament.DAL.Repositories
 		{
 			return _dbSet.AsNoTracking();
 		}
-
-		//public async Task<int> GetLastVersion()
-		//{
-		//	var version = await _context.Set<DataVersion>().LastOrDefaultAsync();
-		//	return version.Version;
-		//}
 	}
 }

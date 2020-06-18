@@ -11,6 +11,8 @@ namespace ElitTournament.Viber.Core.Models
 			ActionBody = actionBody;
 			Text = text;
 			TextSize = Enums.TextSize.Regular;
+			Columns = 6;
+			Rows = 1;
 		}
 
 		public Button()

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElitTournament.DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200617114208_addVersions")]
-    partial class addVersions
+    [Migration("20200617212503_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -99,7 +99,7 @@ namespace ElitTournament.DAL.Migrations
 
                     b.Property<int>("Drawn");
 
-                    b.Property<string>("GoalDifference");
+                    b.Property<int>("GoalDifference");
 
                     b.Property<int>("Goals");
 

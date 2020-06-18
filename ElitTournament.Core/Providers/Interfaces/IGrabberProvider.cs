@@ -8,6 +8,8 @@ namespace ElitTournament.Core.Providers.Interfaces
 	{
 		Task<List<Schedule>> GetSchedule();
 
+		Task<List<League>> GetScores();
+
 		Task<List<League>> GetLeagues();
 	}
 }

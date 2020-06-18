@@ -16,9 +16,9 @@ namespace ElitTournament.DAL.Repositories
 
 		public async Task<IEnumerable<League>> GetAll(int version)
 		{
-
 			IEnumerable<League> leagues = await _dbSet.Include(x => x.Teams)
 													  .Where(e=>e.DataVersionId == version)
+													  .OrderBy(o => o.CreationDate)
 													  .AsNoTracking()
 													  .ToListAsync();
 			return leagues;

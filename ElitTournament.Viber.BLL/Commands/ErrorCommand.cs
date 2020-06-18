@@ -9,6 +9,10 @@ namespace ElitTournament.Viber.BLL.Commands
 {
 	public class ErrorCommand : Command
 	{
+		public ErrorCommand() : base(0)
+		{
+		}
+		
 		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
 			KeyboardMessage msg = GetErrorMessage(callback);
@@ -27,7 +31,9 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = Enumerable.Range(0, 1).Select(x => new Button(ButtonConstant.REFRESH, MessageConstant.REFRESH)).ToList()
+					Buttons = Enumerable.Range(0, 1)
+										.Select(x => new Button(ButtonConstant.REFRESH, MessageConstant.REFRESH))
+										.ToList()
 				},
 			};
 

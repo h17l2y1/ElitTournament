@@ -26,18 +26,18 @@ namespace ElitTournament.Core.Services
 
 		public async Task GrabbElitTournament()
 		{
+			List<League> tables = await _grabberProvider.GetLeagues();
 			List<Schedule> schedule = await _grabberProvider.GetSchedule();
-			List<League> leagues = await _grabberProvider.GetLeagues();
+			// TODO: implement score
+			//List<League> scores = await _grabberProvider.GetScores();
 
-			var c = new DataVersion
+			DataVersion dataVersion = new DataVersion
 			{
-				Schedules = schedule,
-				Leagues = leagues
+				Leagues = tables,
+				Schedules = schedule
 			};
 
-			await _dataVersionRepository.CreateAsync(c);
-			//await _scheduleRepository.CreateAsync(schedule);
-			//await _leagueRepository.CreateAsync(leagues);
+			await _dataVersionRepository.CreateAsync(dataVersion);
 		}
 
 		public async Task<GrabbElitTournamentView> GetElitTournament()

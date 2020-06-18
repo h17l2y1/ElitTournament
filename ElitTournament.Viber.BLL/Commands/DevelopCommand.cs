@@ -11,7 +11,7 @@ namespace ElitTournament.Viber.BLL.Commands
 	{
 		private readonly ILeagueRepository _leagueRepository;
 
-		public DevelopCommand(ILeagueRepository leagueRepository)
+		public DevelopCommand(ILeagueRepository leagueRepository, int lastVersion) : base(lastVersion)
 		{
 			_leagueRepository = leagueRepository;
 		}
@@ -26,7 +26,7 @@ namespace ElitTournament.Viber.BLL.Commands
 			TextMessage msg = SendShedule(callback);
 			long result = await client.SendTextMessageAsync(msg);
 
-			LeaguesCommand leaguesCommand = new LeaguesCommand(_leagueRepository);
+			LeaguesCommand leaguesCommand = new LeaguesCommand(_leagueRepository, version);
 			await leaguesCommand.Execute(callback, client);
 		}
 

@@ -11,15 +11,15 @@ namespace ElitTournament.Core.Providers
 {
 	public class GrabberProvider : BaseGrabberProvider, IGrabberProvider
 	{
-		protected readonly IGrabberHelper _grabber;
+		private readonly IGrabberHelper _grabber;
 
-		public GrabberProvider(IHtmlLoaderHelper htmlLoaderHelper, IConfiguration сonfiguration, IGrabberHelper schedule)
+		public GrabberProvider(IHtmlLoaderHelper htmlLoaderHelper, IConfiguration сonfiguration, IGrabberHelper grabber)
 			: base(htmlLoaderHelper, сonfiguration)
 		{
 			ScheduleUrl = _сonfiguration.GetSection("ElitTournament:Schedule").Value;
 			ScoreUrl = _сonfiguration.GetSection("ElitTournament:Score").Value;
 			TableUrl = _сonfiguration.GetSection("ElitTournament:Table").Value;
-			_grabber = schedule;
+			_grabber = grabber;
 		}
 
 		public async Task<List<Schedule>> GetSchedule()
@@ -32,13 +32,20 @@ namespace ElitTournament.Core.Providers
 			return result;
 		}
 
-		public async Task<List<League>> GetLeagues()
+		public async Task<List<League>> GetScores()
 		{
 			IDocument document = await GetPage(ScoreUrl);
 			List<League> leagues = _grabber.ParseLeagues(document);
 			return leagues;
 		}
 
+		public async Task<List<League>> GetLeagues()
+		{
+			IDocument document = await GetPage(TableUrl);
+			List<League> result = _grabber.ParseTables(document);
+			return result;
+		}
+		
 		private async Task<IEnumerable<string>> GetLinks()
 		{
 			IDocument document = await GetPage(ScheduleUrl);
