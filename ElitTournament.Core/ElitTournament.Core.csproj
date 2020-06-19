@@ -15,4 +15,10 @@
     <ProjectReference Include="..\ElitTournament.DAL\ElitTournament.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="CoreHtmlToImage, Version=1.0.6.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>dll\CoreHtmlToImage.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

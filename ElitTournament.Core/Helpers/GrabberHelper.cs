@@ -10,21 +10,18 @@ namespace ElitTournament.Core.Helpers
 {
 	public class GrabberHelper : IGrabberHelper
 	{
-		private readonly IScheduleRepository _scheduleRepository;
-		private readonly IGameRepository _gameRepository;
 		private readonly Regex _pattern;
 		private readonly List<string> _days;
 		private readonly List<string> _places;
+		private readonly IImageHelper _imageHelper;
 
 		public List<Schedule> ListSchedule { get; set; }
 		public List<League> Leagues { get; set; }
 		public List<League> Tables { get; set; }
 		
-		public GrabberHelper(IScheduleRepository scheduleRepository, IGameRepository gameRepository)
+		public GrabberHelper(IImageHelper imageHelper)
 		{
-			_scheduleRepository = scheduleRepository;
-			_gameRepository = gameRepository;
-			
+			_imageHelper = imageHelper;
 			_pattern = new Regex("[\t\n]");		
 			ListSchedule = new List<Schedule>();
 			Leagues = new List<League>();
@@ -217,6 +214,12 @@ namespace ElitTournament.Core.Helpers
 			
 			if (element.TagName == "TABLE")
 			{
+				if (Tables.Count > 0)
+				{
+					string tableName = Tables[Tables.Count - 1].Name;
+					_imageHelper.CreateImage(element.OuterHtml, tableName);
+				}
+				
 				var tempElement = element.Children;
 				var table = tempElement.FirstOrDefault();
 				

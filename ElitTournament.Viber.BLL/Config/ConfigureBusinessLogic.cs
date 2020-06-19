@@ -44,24 +44,22 @@ namespace ElitTournament.Viber.BLL.Config
 			services.AddSingleton(mapper);
 		}
 
-		public static void AddDependency(IServiceCollection services)
+		private static void AddDependency(IServiceCollection services)
 		{
 			// Services;
 			services.AddScoped<IGrabberService, GrabberService>();
 			services.AddScoped<IViberBotService, ViberBotService>();
-
-
+			
 			// Providers
 			services.AddScoped<IGrabberProvider, GrabberProvider>();
-
-
+			
 			// Helpers
 			services.AddScoped<IHtmlLoaderHelper, HtmlLoaderHelper>();
 			services.AddScoped<IGrabberHelper, GrabberHelper>();
-
-
+			services.AddScoped<IImageHelper, ImageHelper>();
+			
 			// Singleton
-			services.AddSingleton<ICacheHelper, CacheHelper>();
+			// services.AddSingleton<ICacheHelper, CacheHelper>();
 
 
 			//services.AddHostedService<GrabberBackgroudRefreshService>();

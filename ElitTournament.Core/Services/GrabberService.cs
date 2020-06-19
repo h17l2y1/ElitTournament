@@ -1,10 +1,15 @@
-﻿using ElitTournament.Core.Providers.Interfaces;
+﻿using System;
+using ElitTournament.Core.Providers.Interfaces;
 using ElitTournament.Core.Services.Interfaces;
 using ElitTournament.Core.Views;
 using ElitTournament.DAL.Entities;
 using ElitTournament.DAL.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO;
+using CoreHtmlToImage;
+using ElitTournament.Core.Helpers.Interfaces;
+
 
 namespace ElitTournament.Core.Services
 {
