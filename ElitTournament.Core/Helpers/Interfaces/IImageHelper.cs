@@ -1,7 +1,12 @@
-﻿namespace ElitTournament.Core.Helpers.Interfaces
+﻿using System.Threading.Tasks;
+using Imgur.API.Models;
+
+namespace ElitTournament.Core.Helpers.Interfaces
 {
 	public interface IImageHelper
 	{
-		void CreateImage(string html, string tableName);
+		Task<IImage> CreateImage(string html, string tableName);
+
+		void GetLeagueTable(string leagueName);
 	}
 }

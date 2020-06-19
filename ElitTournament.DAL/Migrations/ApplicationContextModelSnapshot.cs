@@ -59,7 +59,11 @@ namespace ElitTournament.DAL.Migrations
 
                     b.Property<int>("DataVersionId");
 
+                    b.Property<string>("Link");
+
                     b.Property<string>("Name");
+
+                    b.Property<int>("Size");
 
                     b.HasKey("Id");
 

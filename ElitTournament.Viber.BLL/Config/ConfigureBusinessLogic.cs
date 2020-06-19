@@ -10,6 +10,8 @@ using ElitTournament.Viber.BLL.Services;
 using ElitTournament.Viber.BLL.Services.Interfaces;
 using ElitTournament.Viber.Core;
 using ElitTournament.Viber.Core.Models.Interfaces;
+using Imgur.API.Authentication;
+using Imgur.API.Authentication.Impl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +22,7 @@ namespace ElitTournament.Viber.BLL.Config
 		public static void InjectBusinessLogicDependency(this IServiceCollection services, IConfiguration configuration)
 		{
 			InitViberBotClient(services, configuration);
+			InitImgurClient(services, configuration);
 			AddAutoMapper(services);
 			AddDependency(services);
 
@@ -32,6 +35,12 @@ namespace ElitTournament.Viber.BLL.Config
 			services.AddSingleton(viberClient);
 		}
 
+		private static void InitImgurClient(IServiceCollection services, IConfiguration configuration)
+		{
+			IImgurClient imgeurClient = new ImgurClient(configuration["Imgur:Id"], configuration["Imgur:Secret"]);
+			services.AddSingleton(imgeurClient);
+		}
+		
 		private static void AddAutoMapper(IServiceCollection services)
 		{
 			var config = new MapperConfiguration(c =>

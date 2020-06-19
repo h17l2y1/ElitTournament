@@ -33,13 +33,20 @@ namespace ElitTournament.Viber.BLL.Commands
 			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 
-		public async Task <KeyboardMessage> GetTeams(Callback callback)
+		public async Task<KeyboardMessage> GetTeams(Callback callback)
 		{
+			League league;
+			
 			IEnumerable<League> leagues = await _leagueRepository.GetAll(version);
 
-			League league = leagues.SingleOrDefault(x => x.Name == callback.Message.Text);
-			var sortedTeams= league.Teams.OrderByDescending(o => o.Points)
-																 .ThenByDescending(o=>o.GoalDifference);
+			league = leagues.SingleOrDefault(x => x.Name == callback.Message.TrackingData);
+			
+			if (league == null)
+			{
+				league = leagues.SingleOrDefault(x => x.Name == callback.Message.Text);
+			}
+			
+			var sortedTeams= league?.Teams.OrderByDescending(o => o.Position);
 			
 			var keyboardMessage = new KeyboardMessage(callback.Sender.Id, MessageConstant.CHOOSE_TEAM)
 			{
@@ -51,25 +58,45 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = sortedTeams.Select(p => new Button(p.Name, p.Name)
-					{
-						BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-					}).ToList()
+					Buttons = CreateButtons(sortedTeams)
 				},
+				TrackingData = callback.Message.Text
 			};
+			
+			return keyboardMessage;
+		}
+		
+		private ICollection<Button> CreateButtons(IEnumerable<Team> sortedTeams)
+		{
+			List<Button> buttons = new List<Button>();
+			
+			buttons.Add(new Button()
+			{
+				Columns = 6,
+				Rows = 1,
+				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
+				ActionBody = ButtonConstant.TABLE,
+				Text = MessageConstant.TABLE,
+			});
 
-			keyboardMessage.Keyboard.Buttons.Add(new Button()
+			buttons.AddRange(sortedTeams.Select(p => new Button(p.Name, p.Name)
+			{
+				Columns = 3,
+				Rows = 1,
+				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
+			}));
+			
+			buttons.Add(new Button()
 			{
 				Columns = 6,
 				Rows = 1,
 				BackgroundColor = ButtonConstant.RED_COLOR,
-				ActionType = KeyboardActionType.Reply,
 				ActionBody = ButtonConstant.BACK,
 				Text = MessageConstant.BACK,
-				TextSize = TextSize.Regular
 			});
 
-			return keyboardMessage;
+			return buttons;
 		}
+		
 	}
 }

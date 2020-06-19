@@ -4,7 +4,8 @@ using ElitTournament.Core.Helpers.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ElitTournament.DAL.Repositories.Interfaces;
+using System.Threading.Tasks;
+using Imgur.API.Models;
 
 namespace ElitTournament.Core.Helpers
 {
@@ -78,13 +79,13 @@ namespace ElitTournament.Core.Helpers
 			return Leagues;
 		}
 
-		public List<League> ParseTables(IDocument document)
+		public async Task<List<League>> ParseTables(IDocument document)
 		{
 			IHtmlCollection<IElement> listTables = Parse(document);
 
 			foreach (var item in listTables)
 			{
-				CreateTable(item);
+				await CreateTable(item);
 			}
 
 			return Tables;
@@ -158,7 +159,7 @@ namespace ElitTournament.Core.Helpers
 				var c2 = element.Children[0];
 				string leagueName = c2.TextContent;
 
-				Leagues.Add(new League());
+				Leagues.Add(new League(leagueName));
 				Leagues[Leagues.Count - 1].Name = leagueName.Trim();
 			}
 
@@ -166,7 +167,7 @@ namespace ElitTournament.Core.Helpers
 			{
 				string leagueName = element.TextContent;
 
-				Leagues.Add(new League());
+				Leagues.Add(new League(leagueName));
 				Leagues[Leagues.Count - 1].Name = leagueName.Trim();
 			}
 
@@ -188,7 +189,7 @@ namespace ElitTournament.Core.Helpers
 			}
 		}
 
-		private void CreateTable(IElement element)
+		private async Task CreateTable(IElement element)
 		{
 			if (element.TagName == "P")
 			{
@@ -198,49 +199,45 @@ namespace ElitTournament.Core.Helpers
 					if (tt.TagName == "STRONG")
 					{
 						string leagueName = tt.TextContent.Trim();
-						Tables.Add(new League());
-						Tables[Tables.Count - 1].Name = leagueName.Trim();
+						Tables.Add(new League(leagueName));
 					}
 				}
 			}
 
 			if (element.TagName == "STRONG")
 			{
-				string leagueName = element.TextContent;
-
-				Tables.Add(new League());
-				Tables[Tables.Count - 1].Name = leagueName.Trim();
+				string leagueName = element.TextContent.Trim();
+				Tables.Add(new League(leagueName));
 			}
 			
 			if (element.TagName == "TABLE")
 			{
 				if (Tables.Count > 0)
 				{
-					string tableName = Tables[Tables.Count - 1].Name;
-					_imageHelper.CreateImage(element.OuterHtml, tableName);
-				}
-				
-				var tempElement = element.Children;
-				var table = tempElement.FirstOrDefault();
-				
-				List<Team> teams = table.Children.Skip(1)
-												 .Select(tr => new Team
-												 {
-													 Position = int.Parse(tr.Children[0].TextContent),
-													 Name = tr.Children[2].TextContent.Trim(),
-													 Played = int.Parse(tr.Children[3].TextContent),
-													 Won = int.Parse(tr.Children[4].TextContent),
-													 Drawn = int.Parse(tr.Children[5].TextContent),
-													 Lost = int.Parse(tr.Children[6].TextContent),
-													 Goals = int.Parse(tr.Children[7].TextContent),
-													 GoalDifference = int.Parse(tr.Children[8].TextContent),
-													 Points = int.Parse(tr.Children[9].TextContent)
-												 })
-												 .ToList();
+					int lastIndex = Tables.Count - 1;
+					string tableName = Tables[lastIndex].Name;
+					IImage image = await _imageHelper.CreateImage(element.OuterHtml, tableName);
+					IHtmlCollection<IElement> tempElement = element.Children;
+					IElement table = tempElement.FirstOrDefault();
+					
+					List<Team> teams = table?.Children.Skip(1)
+													 .Select(tr => new Team
+													 {
+														 Position = int.Parse(tr.Children[0].TextContent),
+														 Name = tr.Children[2].TextContent.Trim(),
+														 Played = int.Parse(tr.Children[3].TextContent),
+														 Won = int.Parse(tr.Children[4].TextContent),
+														 Drawn = int.Parse(tr.Children[5].TextContent),
+														 Lost = int.Parse(tr.Children[6].TextContent),
+														 Goals = int.Parse(tr.Children[7].TextContent),
+														 GoalDifference = int.Parse(tr.Children[8].TextContent),
+														 Points = int.Parse(tr.Children[9].TextContent)
+													 })
+													 .ToList();
 
-				if (Tables.Count > 0)
-				{
-					Tables[Tables.Count - 1].Teams = teams;
+					Tables[lastIndex].Teams = teams;
+					Tables[lastIndex].Link = image.Link;
+					Tables[lastIndex].Size = image.Size;
 				}
 			}
 		}

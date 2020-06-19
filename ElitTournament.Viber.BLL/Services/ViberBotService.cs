@@ -19,24 +19,24 @@ namespace ElitTournament.Viber.BLL.Services
 		private readonly IMapper _mapper;
 		private readonly IViberBotClient _viberBotClient;
 		private readonly IUserRepository _userRepository;
-		private readonly ITeamRepository _teamRepository;
 		private readonly ILeagueRepository _leagueRepository;
 		private readonly IScheduleRepository _scheduleRepository;
 		private readonly IDataVersionRepository _dataVersionRepository;
+		private readonly IImageHelper _imageHelper;
 		private readonly string _webHook;
 		private readonly string _viberUrl;
 		private List<Command> _commands;
 
-		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ITeamRepository teamRepository, IDataVersionRepository dataVersionRepository,
+		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, IDataVersionRepository dataVersionRepository, IImageHelper imageHelper,
 			IUserRepository userRepository, ILeagueRepository leagueRepository, IScheduleRepository scheduleRepository, IMapper mapper)
 		{
 			_mapper = mapper;
 			_viberBotClient = viberBotClient;
 			_userRepository = userRepository;
-			_teamRepository = teamRepository;
 			_leagueRepository = leagueRepository;
 			_scheduleRepository = scheduleRepository;
 			_dataVersionRepository = dataVersionRepository;
+			_imageHelper = imageHelper;
 			_webHook = configuration["WebHook"];
 			_viberUrl = "/api/viber/update";
 		}
@@ -87,7 +87,9 @@ namespace ElitTournament.Viber.BLL.Services
 			
 			_commands = new List<Command>
 			{
+				// TODO: add validation
 				//new ErrorCommand(),
+				new TableCommand(_leagueRepository, _imageHelper, lastVersion),
 				new DevelopCommand(_leagueRepository, lastVersion),
 				new TeamsCommand(_leagueRepository, lastVersion),
 				new ScheduleCommand(_scheduleRepository, _leagueRepository, lastVersion),

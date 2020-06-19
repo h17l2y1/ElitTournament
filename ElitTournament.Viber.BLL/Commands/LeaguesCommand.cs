@@ -1,7 +1,6 @@
 ﻿using ElitTournament.DAL.Entities;
 using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
-using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
@@ -40,28 +39,34 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = leagues.Select(p => new Button(p.Name, p.Name)
-					{
-						BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-						Columns = 3,
-						Rows = 1,
-					})
-					.ToList()
+					Buttons = CreateButtons(leagues)
 				}
 			};
+			
+			return keyboardMessage;
+		}
 
-			keyboardMessage.Keyboard.Buttons.Add(new Button()
+		private ICollection<Button> CreateButtons(IEnumerable<League> leagues)
+		{
+			List<Button> buttons = new List<Button>();
+			
+			buttons.AddRange(leagues.Select(p => new Button(p.Name, p.Name)
+			{
+				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
+				Columns = 3,
+				Rows = 1,
+			}));
+			
+			buttons.Add(new Button()
 			{
 				Columns = 6,
 				Rows = 1,
 				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-				ActionType = KeyboardActionType.Reply,
 				ActionBody = ButtonConstant.DEVELOP,
 				Text = MessageConstant.DEVELOP,
-				TextSize = TextSize.Regular
 			});
 
-			return keyboardMessage;
+			return buttons;
 		}
 
 	}

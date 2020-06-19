@@ -13,5 +13,6 @@
 		public const string REFRESH = "Обновить";
 		public const string BACK = "Назад";
 		public const string START = "Start";
+		public const string TABLE = "Турнирная таблица 🏆";
 	}
 }

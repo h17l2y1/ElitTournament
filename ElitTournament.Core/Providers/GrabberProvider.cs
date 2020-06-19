@@ -42,7 +42,7 @@ namespace ElitTournament.Core.Providers
 		public async Task<List<League>> GetLeagues()
 		{
 			IDocument document = await GetPage(TableUrl);
-			List<League> result = _grabber.ParseTables(document);
+			List<League> result = await _grabber.ParseTables(document);
 			return result;
 		}
 		

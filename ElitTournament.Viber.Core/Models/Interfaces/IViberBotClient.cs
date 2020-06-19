@@ -18,6 +18,10 @@ namespace ElitTournament.Viber.Core.Models.Interfaces
 
 		Task<long> SendKeyboardMessageAsync(KeyboardMessage message);
 
+		Task<long> SendPictureMessageAsync(PictureMessage message);
+
+		Task<long> SendFileMessageAsync(FileMessage message);
+
 		Task<UserDetails> GetUserDetailsAsync(string userId);
 	}
 }
