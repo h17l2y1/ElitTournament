@@ -1,4 +1,5 @@
-﻿using ElitTournament.Core.Helpers.Interfaces;
+﻿using System.Threading.Tasks;
+using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Telegram.BLL.Constants;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -7,22 +8,22 @@ namespace ElitTournament.Telegram.BLL.Commands
 {
 	public class DevelopCommand : Command
 	{
-		private readonly ICacheHelper _cacheHelper;
+		private readonly ILeagueRepository _leagueRepository;
 
-		public DevelopCommand(ICacheHelper cacheHelper)
+		public DevelopCommand(ILeagueRepository leagueRepository, int lastVersion) : base(lastVersion)
 		{
-			_cacheHelper = cacheHelper;
+			_leagueRepository = leagueRepository;
 		}
 
-		public override bool Contains(string command)
+		public override async Task<bool> Contains(string command)
 		{
 			return command.Contains(MessageConstant.DEVELOP);
 		}
 
-		public override void Execute(Message message, ITelegramBotClient client)
+		public async override Task Execute(Message message, ITelegramBotClient client)
 		{
-			var c = new LeagueCommand(_cacheHelper);
-			c.Execute(message, client);
+			LeagueCommand leaguesCommand = new LeagueCommand(_leagueRepository, version);
+			await leaguesCommand.Execute(message, client);
 		}
 	}
 }

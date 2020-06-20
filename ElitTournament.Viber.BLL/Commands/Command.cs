@@ -14,7 +14,7 @@ namespace ElitTournament.Viber.BLL.Commands
             version = lastVersion;
         }
         
-        public async virtual Task<bool> Contains(string command)
+        public virtual async Task<bool> Contains(string command)
         {
             return true;
         }

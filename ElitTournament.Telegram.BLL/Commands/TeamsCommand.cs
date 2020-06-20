@@ -3,6 +3,8 @@ using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Telegram.BLL.Constants;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using ElitTournament.DAL.Repositories.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -12,40 +14,38 @@ namespace ElitTournament.Telegram.BLL.Commands
 {
     public class TeamsCommand : Command
     {
-        private readonly ICacheHelper _cacheHelper;
+        private readonly ILeagueRepository _leagueRepository;
 
-        public TeamsCommand(ICacheHelper cacheHelper)
+        public TeamsCommand(ILeagueRepository leagueRepository, int lastVersion) : base(lastVersion)
         {
-            _cacheHelper = cacheHelper;
+            _leagueRepository = leagueRepository;
         }
 
-        public override bool Contains(string command)
+        public async override Task<bool> Contains(string command)
         {
-            var leages = _cacheHelper.GetLeagues().Select(p => p.Name).ToList();
-            return leages.Contains(command);
+            IEnumerable<League> teams = await _leagueRepository.GetAll(version);
+            IEnumerable<string> teamNames = teams.Select(p => p.Name);
+            return teamNames.Contains(command);
         }
 
-        public async override void Execute(Message message, ITelegramBotClient client)
+        public override async Task Execute(Message message, ITelegramBotClient client)
         {
-            ReplyKeyboardMarkup replyKeyboardMarkup = GetMenu(message.Text);
+            ReplyKeyboardMarkup replyKeyboardMarkup = await GetMenu(message.Text);
             await client.SendTextMessageAsync(message.Chat.Id, MessageConstant.CHOOSE_TEAM, ParseMode.Html, false, false, 0, replyKeyboardMarkup);
         }
 
-        private ReplyKeyboardMarkup GetMenu(string comand)
+        private async Task<ReplyKeyboardMarkup> GetMenu(string command)
         {
-            List<League> leagues = _cacheHelper.GetLeagues();
-
-            var menu = new ReplyKeyboardMarkup();
-            League currentLeague = leagues.FirstOrDefault(p => p.Name == comand);
-
-            List<List<KeyboardButton>> buttons = CreateButtons(currentLeague);
-
-            menu.Keyboard = buttons;
+            IEnumerable<League> leagues = await _leagueRepository.GetAll(version);
+            League currentLeague = leagues.FirstOrDefault(p => p.Name == command);
+            List<List<KeyboardButton>> buttons = CreateButtons(currentLeague, command);
+            ReplyKeyboardMarkup menu = new ReplyKeyboardMarkup(buttons);
+            // menu.Keyboard = buttons;
 
             return menu;
         }
 
-        private List<List<KeyboardButton>> CreateButtons(League currentLeague)
+        private List<List<KeyboardButton>> CreateButtons(League currentLeague, string command)
         {
             List<List<KeyboardButton>> keyBoard = new List<List<KeyboardButton>>();
 
@@ -74,7 +74,8 @@ namespace ElitTournament.Telegram.BLL.Commands
 
                 keyBoard.Add(teams);
             }
-
+            
+            keyBoard.Insert(0,new List<KeyboardButton> { new KeyboardButton($"Турирная таблица {command}") });
             keyBoard.Add(new List<KeyboardButton> { new KeyboardButton("Назад") });
             return keyBoard;
         }

@@ -1,7 +1,9 @@
 ﻿using ElitTournament.DAL.Entities;
-using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.Telegram.BLL.Constants;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ElitTournament.DAL.Repositories.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -11,56 +13,56 @@ namespace ElitTournament.Telegram.BLL.Commands
 {
     public class LeagueCommand : Command
     {
-        private readonly ICacheHelper _cacheHelper;
+        private readonly ILeagueRepository _leagueRepository;
 
-        public LeagueCommand(ICacheHelper cacheHelper)
+        public LeagueCommand(ILeagueRepository leagueRepository, int lastVersion) : base(lastVersion)
         {
-            _cacheHelper = cacheHelper;
+            _leagueRepository = leagueRepository;
         }
-
-        public override bool Contains(string command)
-        {
-            return true;
-        }
-
-        public async override void Execute(Message message, ITelegramBotClient client)
+        
+        public async override Task Execute(Message message, ITelegramBotClient client)
         {
             string text = MessageConstant.CHOOSE_LEAGUE;
             if (message.Text == MessageConstant.DEVELOP)
             {
-                text = "В разработке: \n1. Турнирные таблицы \n2. Бот будет сам уведомлять когда игра\n\nСвязь с разработчиком\n0955923228";
+                text = "В разработке:\n1. Бот будет сам уведомлять когда игра\n\nСвязь с разработчиком\n0955923228";
             }
 
-            await client.SendTextMessageAsync(message.Chat.Id, text, ParseMode.Html, false, false, 0, GetMenu());
+            ReplyKeyboardMarkup keyboard = await GetMenu();
+            
+            await client.SendTextMessageAsync(message.Chat.Id, text, ParseMode.Html, false, false, 0, keyboard);
         }
 
-        private ReplyKeyboardMarkup GetMenu()
+        private async Task<ReplyKeyboardMarkup> GetMenu()
         {
-            List<League> leagues = _cacheHelper.GetLeagues();
-
+            IEnumerable<League> leagues = await _leagueRepository.GetAll(version);
+            
             var menu = new ReplyKeyboardMarkup();
             List<List<KeyboardButton>> list = new List<List<KeyboardButton>>();
 
             if (leagues != null)
             {
-                var isEven = leagues.Count % 2;
-
-                for (int i = 0; i < leagues.Count; i++)
+                List<League> leaguesList = leagues.ToList();
+                int leaguesCount = leaguesList.Count();
+                bool isEven = leaguesCount % 2 == 0 ? true : false;
+                
+                // TODO: refactor this
+                for (int i = 0; i < leaguesCount; i++)
                 {
                     List<KeyboardButton> test = new List<KeyboardButton>();
-                    if (isEven == 0)
+                    if (isEven)
                     {
-                        test.Add(new KeyboardButton(leagues[i].Name));
+                        test.Add(new KeyboardButton(leaguesList[i].Name));
                         i++;
-                        test.Add(new KeyboardButton(leagues[i].Name));
+                        test.Add(new KeyboardButton(leaguesList[i].Name));
                     }
                     else
                     {
-                        test.Add(new KeyboardButton(leagues[i].Name));
+                        test.Add(new KeyboardButton(leaguesList[i].Name));
                         i++;
-                        if (i != leagues.Count)
+                        if (i != leaguesCount)
                         {
-                            test.Add(new KeyboardButton(leagues[i].Name));
+                            test.Add(new KeyboardButton(leaguesList[i].Name));
                         }
                     }
 
