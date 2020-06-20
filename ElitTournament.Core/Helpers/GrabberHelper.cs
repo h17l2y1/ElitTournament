@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Imgur.API.Models;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace ElitTournament.Core.Helpers
 {
@@ -18,9 +20,11 @@ namespace ElitTournament.Core.Helpers
 		public List<Schedule> ListSchedule { get; set; }
 		public List<League> Leagues { get; set; }
 		public List<League> Tables { get; set; }
-		
-		public GrabberHelper(IImageHelper imageHelper)
+		private ILogger<GrabberHelper> _logger;
+
+		public GrabberHelper(IImageHelper imageHelper,ILoggerFactory loggerFactory)
 		{
+			_logger = loggerFactory?.CreateLogger<GrabberHelper>() ?? throw new ArgumentNullException(nameof(loggerFactory));
 			_imageHelper = imageHelper;
 			//_pattern = new Regex("[\t\n]");		
 			ListSchedule = new List<Schedule>();
@@ -211,7 +215,8 @@ namespace ElitTournament.Core.Helpers
 				{
 					int lastIndex = Tables.Count - 1;
 					string tableName = Tables[lastIndex].Name;
-					IImage image = await _imageHelper.CreateImage(element.OuterHtml, tableName);
+					_logger.LogInformation(element.OuterHtml + "--------------Markup for Table--------------------");
+					IImage image = await _imageHelper.CreateImage(element.OuterHtml, tableName);					
 					IHtmlCollection<IElement> tempElement = element.Children;
 					IElement table = tempElement.FirstOrDefault();
 					

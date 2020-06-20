@@ -38,7 +38,7 @@ namespace ElitTournament.Telegram.Api
 				app.UseHsts();
 			}
 
-			//loggerFactory.AddFile(Configuration.GetSection("Logging"));
+			loggerFactory.AddFile(Configuration.GetSection("Logging"));
 			app.UseHttpStatusCodeExceptionMiddleware();
 			app.UseMiddleware<ErrorHandlingMiddleware>();
 
