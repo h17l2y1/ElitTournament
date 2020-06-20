@@ -16,5 +16,7 @@ namespace ElitTournament.Viber.BLL.Services.Interfaces
 		Task Update(Callback view);
 
 		Task<IEnumerable<User>> GetAllUsers();
+
+		Task SendBroadcastMessage();
 	}
 }

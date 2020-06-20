@@ -10,7 +10,10 @@ using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.View;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using ElitTournament.Viber.BLL.Constants;
+using ElitTournament.Viber.Core.Models.Message;
 
 namespace ElitTournament.Viber.BLL.Services
 {
@@ -60,6 +63,35 @@ namespace ElitTournament.Viber.BLL.Services
 			return users;
 		}
 
+		public async Task SendBroadcastMessage()
+		{
+			IEnumerable<User> users = await _userRepository.GetAll();
+			IEnumerable<string> viberUserIds = users.Where(w=>w.IsViber).Select(x => x.ClientId).ToList();
+			int lastVersion = await _dataVersionRepository.GetLastVersion();
+
+			BroadcastMessage broadcastMessage = new BroadcastMessage("oFKwijuinRXIqIUwBvbpEw==");
+			broadcastMessage.Sender = new UserBase
+			{
+				Name = MessageConstant.BOT_NAME, Avatar = MessageConstant.BOT_AVATAR
+			};
+			broadcastMessage.BroadcastList = viberUserIds;
+			broadcastMessage.MinApiVersion = 2;
+			broadcastMessage.Text = MessageConstant.UPDATE;
+
+			await _viberBotClient.SendBroadcastMessageAsync(broadcastMessage);
+
+			LeaguesCommand leaguesCommand = new LeaguesCommand(_leagueRepository, lastVersion);
+
+			foreach (var id in viberUserIds)
+			{
+				var callback = new Callback();
+				callback.Sender = new UserModel();
+				callback.Sender.Id = id;
+				await leaguesCommand.Execute(callback, _viberBotClient);
+			}
+			
+		}
+		
 		public async Task Update(Callback callback)
 		{
 			if (callback.Event == EventType.Webhook)
@@ -77,7 +109,6 @@ namespace ElitTournament.Viber.BLL.Services
 			{
 				await GetUserDetails(callback);
 				await SendMessage(callback);
-				return;
 			}
 		}
 
@@ -123,14 +154,9 @@ namespace ElitTournament.Viber.BLL.Services
 			bool userIsExist = await _userRepository.IsExist(callback.Sender.Id);
 			if (!userIsExist)
 			{
-				//var jsonString = "{\"primary_device_os\":\"Android 6.0\",\"viber_version\":\"12.9.5.2\",\"mcc\":0,\"mnc\":0,\"device_type\":\"M5s\",\"id\":\"+sTRbtkHmuy5QsK+vr/FkQ==\",\"country\":\"UA\",\"language\":\"en\",\"api_version\":8.0,\"name\":\"Suzanna Rybtsova\",\"avatar\":\"https://media-direct.cdn.viber.com/download_photo?dlid=EhLSmQPRZ4hwe6ZLBa-ydQ8XxzK_bSBVBBNS2QZ0y1LGqFcBXIIqR_vAwsjqlu2TRnu-MQjGq3ZZZwNJe2pX3UcZhKyqhXXZ_3weOShaY8DRvrSQ6zMtcB6AJet36e4Cl9AXyg&fltp=jpg&imsz=0000\"}";
-				//UserDetails viberUser = Newtonsoft.Json.JsonConvert.DeserializeObject<UserDetails>(jsonString);
-
 				UserDetails viberUser = await _viberBotClient.GetUserDetailsAsync(callback.Sender.Id);
 				User newUser = _mapper.Map<User>(viberUser);
 				await _userRepository.CreateAsync(newUser);
-
-
 			}
 		}
 

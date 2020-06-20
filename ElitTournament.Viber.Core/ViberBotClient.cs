@@ -76,7 +76,7 @@ namespace ElitTournament.Viber.Core
 
 		public Task<long> SendPictureMessageAsync(PictureMessage message) => SendMessageAsync(message);
 		
-		public Task<long> SendFileMessageAsync(FileMessage message) => SendMessageAsync(message);
+		public Task<long> SendBroadcastMessageAsync(BroadcastMessage message) => SendMessageAsync(message, true);
 
 		private async Task<long> SendMessageAsync(MessageBase message, bool isBroadcast = false)
 		{

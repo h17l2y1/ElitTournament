@@ -43,6 +43,13 @@ namespace ElitTournament.Viber.Api.Controllers
 			var result = await _service.GetAllUsers();
 			return Ok(result);
 		}
+		
+		[HttpGet]
+		public async Task<IActionResult> SendBroadcastMessage()
+		{
+			await _service.SendBroadcastMessage();
+			return Ok();
+		}
 
 	}
 }

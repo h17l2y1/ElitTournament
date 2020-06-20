@@ -20,7 +20,7 @@ namespace ElitTournament.Viber.Core.Models.Interfaces
 
 		Task<long> SendPictureMessageAsync(PictureMessage message);
 
-		Task<long> SendFileMessageAsync(FileMessage message);
+		Task<long> SendBroadcastMessageAsync(BroadcastMessage message);
 
 		Task<UserDetails> GetUserDetailsAsync(string userId);
 	}
