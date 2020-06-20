@@ -29,7 +29,7 @@ namespace ElitTournament.Telegram.BLL.Commands
 
 		public override async Task Execute(Message message, ITelegramBotClient client)
 		{
-			string shedule = await _scheduleRepository.FindGame(message.Text) ?? $"Игры команды \"{message.Text}\" не найдено";
+			string shedule = await _scheduleRepository.FindGame(message.Text, version) ?? $"Игры команды \"{message.Text}\" не найдено";
 			await client.SendTextMessageAsync(message.Chat.Id, shedule);
 		}
 	}

@@ -26,9 +26,13 @@ namespace ElitTournament.DAL.Repositories
 			return schedule;
 		}
 
-		public async Task<string> FindGame(string teamName)
+		public async Task<string> FindGame(string teamName, int version)
 		{
-			ICollection<Schedule> schedule = await _dbSet.Include(x => x.Games).AsNoTracking().ToListAsync();
+			ICollection<Schedule> schedule = await _dbSet
+				.Include(x => x.Games)
+				.Where(e=>e.DataVersionId == version)
+				.AsNoTracking()
+				.ToListAsync();
 
 			List<string> list = new List<string>();
 			string teamWithSpace = teamName.Replace("-", " ").Trim().ToUpper();

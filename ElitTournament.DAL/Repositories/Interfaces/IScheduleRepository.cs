@@ -8,6 +8,6 @@ namespace ElitTournament.DAL.Repositories.Interfaces
 	{
 		Task<IEnumerable<Schedule>> GetAll(int version);
 
-		Task<string> FindGame(string teamName);
+		Task<string> FindGame(string teamName, int version);
 	}
 }

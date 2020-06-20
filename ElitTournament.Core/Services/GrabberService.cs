@@ -53,7 +53,7 @@ namespace ElitTournament.Core.Services
 
 		public async Task<string> FindGame(string team)
 		{
-			string result = await _scheduleRepository.FindGame(team);
+			string result = await _scheduleRepository.FindGame(team, 0);
 			return result;
 		}
 

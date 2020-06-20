@@ -41,7 +41,7 @@ namespace ElitTournament.Viber.BLL.Commands
 
 		public async Task<TextMessage> GetSchedule(Callback callback)
 		{
-			string shedule = await _scheduleRepository.FindGame(callback.Message.Text) ?? $"Игры команды \"{callback.Message.Text}\" не найдено";
+			string shedule = await _scheduleRepository.FindGame(callback.Message.Text, version) ?? $"Игры команды \"{callback.Message.Text}\" не найдено";
 		
 			var textMessage = new TextMessage(callback.Sender.Id, shedule)
 			{
