@@ -24,9 +24,10 @@ namespace ElitTournament.DAL.Repositories
 			return leagues;
 		}
 		
-		public async Task<string> GetTableLink(string teamName)
+		public async Task<string> GetTableLink(string teamName,int version)
 		{
-			League league = await _dbSet.SingleOrDefaultAsync(w=>w.Name == teamName);
+			League league = await _dbSet.Where(e=>e.DataVersionId == version)
+										.SingleOrDefaultAsync(w=>w.Name == teamName);
 			return league?.Link;
 		}
 	}

@@ -32,7 +32,7 @@ namespace ElitTournament.Telegram.BLL.Commands
 		public async Task<string> GetImage(Message message)
 		{
 			string leagueName = message.Text.Remove(0, 17);
-			string link = await  _leagueRepository.GetTableLink(leagueName);
+			string link = await  _leagueRepository.GetTableLink(leagueName, version);
 			return link;
 		}
 	}

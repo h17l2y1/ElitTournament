@@ -39,7 +39,7 @@ namespace ElitTournament.Viber.BLL.Commands
 		
 		public async Task<PictureMessage> GetImage(Callback callback)
 		{
-			string link = await  _leagueRepository.GetTableLink(callback.Message.TrackingData);
+			string link = await  _leagueRepository.GetTableLink(callback.Message.TrackingData, version);
 		
 			var pictureMessage = new PictureMessage(callback.Sender.Id)
 			{

@@ -8,6 +8,6 @@ namespace ElitTournament.DAL.Repositories.Interfaces
 	{
 		Task<IEnumerable<League>> GetAll(int version);
 
-		Task<string> GetTableLink(string teamName);
+		Task<string> GetTableLink(string teamName,int version);
 	}
 }
