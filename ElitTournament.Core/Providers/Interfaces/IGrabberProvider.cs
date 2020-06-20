@@ -6,10 +6,10 @@ namespace ElitTournament.Core.Providers.Interfaces
 {
 	public interface IGrabberProvider
 	{
-		Task<List<Schedule>> GetSchedule();
+		Task<IEnumerable<Schedule>> GetSchedule();
 
-		Task<List<League>> GetScores();
+		Task<IEnumerable<League>> GetScores();
 
-		Task<List<League>> GetLeagues();
+		Task<IEnumerable<League>> GetLeagues();
 	}
 }

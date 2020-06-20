@@ -3,7 +3,6 @@ using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Imgur.API.Models;
 
@@ -11,7 +10,7 @@ namespace ElitTournament.Core.Helpers
 {
 	public class GrabberHelper : IGrabberHelper
 	{
-		private readonly Regex _pattern;
+		//private readonly Regex _pattern;
 		private readonly List<string> _days;
 		private readonly List<string> _places;
 		private readonly IImageHelper _imageHelper;
@@ -23,7 +22,7 @@ namespace ElitTournament.Core.Helpers
 		public GrabberHelper(IImageHelper imageHelper)
 		{
 			_imageHelper = imageHelper;
-			_pattern = new Regex("[\t\n]");		
+			//_pattern = new Regex("[\t\n]");		
 			ListSchedule = new List<Schedule>();
 			Leagues = new List<League>();
 			Tables = new List<League>();
@@ -50,36 +49,32 @@ namespace ElitTournament.Core.Helpers
 			return result;
 		}
 
-		public List<Schedule> ParseSchedule(IDocument document)
+		public IEnumerable<Schedule> ParseSchedule(IDocument document)
 		{
 			IHtmlCollection<IElement> listP = Parse(document);
+			IEnumerable<string> listBR = listP.Select(ielement => ielement.TextContent.ToUpper());
 
-			// TODO: refactor
-			var test = new List<string>();
-
-			foreach (var item in listP)
-			{
-				test.Add(item.TextContent.ToUpper());
-			}
-
-			CreateSchedule(test);
+			CreateSchedule(listBR);
 
 			return ListSchedule;
 		}
 
-		public List<League> ParseLeagues(IDocument document)
+		public IEnumerable<League> ParseLeagues(IDocument document)
 		{
-			IHtmlCollection<IElement> listTables = Parse(document);
+			// IHtmlCollection<IElement> listTables = Parse(document);
+			//
+			// foreach (var item in listTables)
+			// {
+			// 	CreateLeague(item);
+			// }
+			//
+			// return Leagues;
+			//
+			throw new System.NotImplementedException();
 
-			foreach (var item in listTables)
-			{
-				CreateLeague(item);
-			}
-
-			return Leagues;
 		}
 
-		public async Task<List<League>> ParseTables(IDocument document)
+		public async Task<IEnumerable<League>> ParseTables(IDocument document)
 		{
 			IHtmlCollection<IElement> listTables = Parse(document);
 
@@ -91,7 +86,7 @@ namespace ElitTournament.Core.Helpers
 			return Tables;
 		}
 		
-		private void CreateSchedule(List<string> listP)
+		private void CreateSchedule(IEnumerable<string> listP)
 		{
 			foreach (var text in listP)
 			{
@@ -152,53 +147,53 @@ namespace ElitTournament.Core.Helpers
 			return link;
 		}
 
-		private void CreateLeague(IElement element)
-		{
-			if (element.ChildElementCount > 0 && element.Children[0].LocalName == "strong")
-			{
-				var c2 = element.Children[0];
-				string leagueName = c2.TextContent;
-
-				Leagues.Add(new League(leagueName));
-				Leagues[Leagues.Count - 1].Name = leagueName.Trim();
-			}
-
-			if (element.LocalName == "strong")
-			{
-				string leagueName = element.TextContent;
-
-				Leagues.Add(new League(leagueName));
-				Leagues[Leagues.Count - 1].Name = leagueName.Trim();
-			}
-
-			if (element.LocalName == "table")
-			{
-				IElement table = element.Children[0];
-
-				foreach (var column in table.Children)
-				{
-					var tdTeam = column.Children[1];
-					string tdName = tdTeam.TextContent;
-					string teamName = _pattern.Replace(tdName, "")
-											 .Replace("-", " ")
-											 .ToUpper();
-
-					Leagues[Leagues.Count - 1].Teams.Add(new Team(teamName));
-				}
-				Leagues[Leagues.Count - 1].Teams.RemoveAt(0);
-			}
-		}
+		// private void CreateLeague(IElement element)
+		// {
+		// 	if (element.ChildElementCount > 0 && element.Children[0].LocalName == "strong")
+		// 	{
+		// 		IElement br = element.Children[0];
+		// 		string leagueName = br.TextContent.Trim();
+		//
+		// 		Leagues.Add(new League(leagueName));
+		// 		Leagues[Leagues.Count - 1].Name = leagueName;
+		// 	}
+		//
+		// 	if (element.LocalName == "strong")
+		// 	{
+		// 		string leagueName = element.TextContent.Trim();
+		//
+		// 		Leagues.Add(new League(leagueName));
+		// 		Leagues[Leagues.Count - 1].Name = leagueName;
+		// 	}
+		//
+		// 	if (element.LocalName == "table")
+		// 	{
+		// 		IElement table = element.Children[0];
+		//
+		// 		foreach (IElement column in table.Children)
+		// 		{
+		// 			IElement tdTeam = column.Children[1];
+		// 			string tdName = tdTeam.TextContent;
+		// 			string teamName = _pattern.Replace(tdName, "")
+		// 									 .Replace("-", " ")
+		// 									 .ToUpper();
+		//
+		// 			Leagues[Leagues.Count - 1].Teams.Add(new Team(teamName));
+		// 		}
+		// 		Leagues[Leagues.Count - 1].Teams.RemoveAt(0);
+		// 	}
+		// }
 
 		private async Task CreateTable(IElement element)
 		{
 			if (element.TagName == "P")
 			{
-				var c = element.Children;
-				foreach (var tt in c)
+				IHtmlCollection<IElement> tagP = element.Children;
+				foreach (IElement someTag in tagP)
 				{
-					if (tt.TagName == "STRONG")
+					if (someTag.TagName == "STRONG")
 					{
-						string leagueName = tt.TextContent.Trim();
+						string leagueName = someTag.TextContent.Trim();
 						Tables.Add(new League(leagueName));
 					}
 				}

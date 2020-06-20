@@ -93,7 +93,6 @@ namespace ElitTournament.Telegram.BLL.Services
                 await _userRepository.CreateAsync(newUser);
             }
         }
-
-
+        
     }
 }

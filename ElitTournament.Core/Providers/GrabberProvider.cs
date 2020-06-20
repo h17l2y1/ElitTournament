@@ -22,27 +22,28 @@ namespace ElitTournament.Core.Providers
 			_grabber = grabber;
 		}
 
-		public async Task<List<Schedule>> GetSchedule()
+		public async Task<IEnumerable<Schedule>> GetSchedule()
 		{
 			IEnumerable<string> links = await GetLinks();
 			string lastStageLink = links.FirstOrDefault(x=>x.Contains("raspisanie"));
 			IDocument document = await GetPage(lastStageLink);
-			List<Schedule> result = _grabber.ParseSchedule(document);
+			IEnumerable<Schedule> result = _grabber.ParseSchedule(document);
 
 			return result;
 		}
 
-		public async Task<List<League>> GetScores()
+		public Task<IEnumerable<League>> GetScores()
 		{
-			IDocument document = await GetPage(ScoreUrl);
-			List<League> leagues = _grabber.ParseLeagues(document);
-			return leagues;
+			// 	IDocument document = await GetPage(ScoreUrl);
+			// 	List<League> leagues = _grabber.ParseLeagues(document);
+			// 	return leagues;
+			throw new System.NotImplementedException();
 		}
 
-		public async Task<List<League>> GetLeagues()
+		public async Task<IEnumerable<League>> GetLeagues()
 		{
 			IDocument document = await GetPage(TableUrl);
-			List<League> result = await _grabber.ParseTables(document);
+			IEnumerable<League> result = await _grabber.ParseTables(document);
 			return result;
 		}
 		
