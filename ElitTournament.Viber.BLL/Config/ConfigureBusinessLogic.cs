@@ -67,11 +67,7 @@ namespace ElitTournament.Viber.BLL.Config
 			services.AddScoped<IGrabberHelper, GrabberHelper>();
 			services.AddScoped<IImageHelper, ImageHelper>();
 			
-			// Singleton
-			// services.AddSingleton<ICacheHelper, CacheHelper>();
-
-
-			//services.AddHostedService<GrabberBackgroudRefreshService>();
+			services.AddHostedService<GrabberBackgroudRefreshService>();
 		}
 
 	}
