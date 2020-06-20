@@ -1,16 +1,24 @@
-﻿using Telegram.Bot;
+﻿using System.Threading.Tasks;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace ElitTournament.Telegram.BLL.Commands
 {
     public abstract class Command
     {
-        public virtual bool Contains(string command)
+        protected int version;
+
+        public Command(int lastVersion)
+        {
+            version = lastVersion;
+        }
+        
+        public virtual async Task<bool> Contains(string command)
         {
             return true;
         }
 
-        public abstract void Execute(Message message, ITelegramBotClient client);
+        public abstract Task Execute(Message message, ITelegramBotClient client);
 
     }
 }

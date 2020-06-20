@@ -28,6 +28,11 @@ namespace ElitTournament.DAL.Config
 		public static void AddDependecies(IServiceCollection services)
 		{
 			services.AddTransient<IUserRepository, UserRepository>();
+			services.AddTransient<IScheduleRepository, ScheduleRepository>();
+			services.AddTransient<ILeagueRepository, LeagueRepository>();
+			services.AddTransient<ITeamRepository, TeamRepository>();
+			services.AddTransient<IGameRepository, GameRepository>();
+			services.AddTransient<IDataVersionRepository, DataVersionRepository>();
 		}
 	}
 }

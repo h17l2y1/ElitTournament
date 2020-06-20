@@ -7,7 +7,7 @@ namespace ElitTournament.Telegram.BLL.Config
 	{
 		public MapperProfile()
 		{
-			CreateMap<User, Core.Entities.User>()
+			CreateMap<User, DAL.Entities.User>()
 				.ForMember(to => to.Id, from => from.Ignore())
 				.ForMember(to => to.ClientId, from => from.MapFrom(source => source.Id.ToString()))
 				.ForMember(to => to.Name, from => from.MapFrom(source => $"{source.FirstName} {source.LastName}"))

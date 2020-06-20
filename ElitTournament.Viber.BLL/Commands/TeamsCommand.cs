@@ -1,5 +1,4 @@
-﻿using ElitTournament.Core.Entities;
-using ElitTournament.Core.Helpers.Interfaces;
+﻿using ElitTournament.DAL.Entities;
 using ElitTournament.Viber.BLL.Constants;
 using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
@@ -7,36 +6,48 @@ using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using ElitTournament.DAL.Repositories.Interfaces;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
 	public class TeamsCommand : Command
 	{
-		private readonly ICacheHelper _cacheHelper;
+		private readonly ILeagueRepository _leagueRepository;
 
-		public TeamsCommand(ICacheHelper cacheHelper)
+		public TeamsCommand(ILeagueRepository leagueRepository, int lastVersion) : base(lastVersion)
 		{
-			_cacheHelper = cacheHelper;
+			_leagueRepository = leagueRepository;
 		}
 
-		public override bool Contains(string command)
+		public async override Task<bool> Contains(string command)
 		{
-			ICollection<string> leages = _cacheHelper.GetLeagues().Select(p => p.Name).ToList();
-			return leages.Contains(command);
+			IEnumerable<League> teams = await _leagueRepository.GetAll(version);
+			IEnumerable<string> teamNames = teams.Select(p => p.Name);
+			return teamNames.Contains(command);
 		}
 
-		public async override void Execute(Callback callback, IViberBotClient client)
+		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
-			KeyboardMessage msg = GetTeams(callback);
+			KeyboardMessage msg = await GetTeams(callback);
 			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 
-		public KeyboardMessage GetTeams(Callback callback)
+		public async Task<KeyboardMessage> GetTeams(Callback callback)
 		{
-			List<League> leagues = _cacheHelper.GetLeagues();
+			League league;
+			
+			IEnumerable<League> leagues = await _leagueRepository.GetAll(version);
 
-			League league = leagues.SingleOrDefault(x => x.Name == callback.Message.Text);
-
+			league = leagues.SingleOrDefault(x => x.Name == callback.Message.TrackingData);
+			
+			if (league == null)
+			{
+				league = leagues.SingleOrDefault(x => x.Name == callback.Message.Text);
+			}
+			
+			var sortedTeams= league?.Teams.OrderByDescending(o => o.Position);
+			
 			var keyboardMessage = new KeyboardMessage(callback.Sender.Id, MessageConstant.CHOOSE_TEAM)
 			{
 				Sender = new UserBase
@@ -47,25 +58,45 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = league.Teams.Select(p => new Button(p, p)
-					{
-						Columns = 3,
-						Rows = 1,
-						BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-					}).ToList()
+					Buttons = CreateButtons(sortedTeams)
 				},
+				TrackingData = callback.Message.Text
 			};
-
-			keyboardMessage.Keyboard.Buttons.Add(new Button()
-			{
-				BackgroundColor = ButtonConstant.RED_COLOR,
-				ActionType = KeyboardActionType.Reply,
-				ActionBody = ButtonConstant.BACK,
-				Text = MessageConstant.BACK,
-				TextSize = TextSize.Regular
-			});
-
+			
 			return keyboardMessage;
 		}
+		
+		private ICollection<Button> CreateButtons(IEnumerable<Team> sortedTeams)
+		{
+			List<Button> buttons = new List<Button>();
+			
+			buttons.Add(new Button()
+			{
+				Columns = 6,
+				Rows = 1,
+				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
+				ActionBody = ButtonConstant.TABLE,
+				Text = MessageConstant.TABLE,
+			});
+
+			buttons.AddRange(sortedTeams.Select(p => new Button(p.Name, p.Name)
+			{
+				Columns = 3,
+				Rows = 1,
+				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
+			}));
+			
+			buttons.Add(new Button()
+			{
+				Columns = 6,
+				Rows = 1,
+				BackgroundColor = ButtonConstant.RED_COLOR,
+				ActionBody = ButtonConstant.BACK,
+				Text = MessageConstant.BACK,
+			});
+
+			return buttons;
+		}
+		
 	}
 }

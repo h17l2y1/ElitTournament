@@ -1,16 +1,24 @@
 ﻿using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
+using System.Threading.Tasks;
+using ElitTournament.DAL.Repositories.Interfaces;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
     public abstract class Command
     {
-        public virtual bool Contains(string command)
+        protected int version;
+
+        public Command(int lastVersion)
+        {
+            version = lastVersion;
+        }
+        
+        public virtual async Task<bool> Contains(string command)
         {
             return true;
         }
 
-        public abstract void Execute(Callback callback, IViberBotClient client);
-
+        public abstract Task Execute(Callback callback, IViberBotClient client);
     }
 }

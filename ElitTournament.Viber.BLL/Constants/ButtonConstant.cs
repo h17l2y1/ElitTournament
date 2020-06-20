@@ -10,5 +10,6 @@
 		public const string BACK = "back";
 		public const string REFRESH = "refresh";
 		public const string DEVELOP = "develop";
+		public const string TABLE = "table";
 	}
 }

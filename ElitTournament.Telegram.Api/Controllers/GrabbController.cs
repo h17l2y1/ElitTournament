@@ -26,14 +26,14 @@ namespace ElitTournament.Telegram.Api.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetElitTournament()
 		{
-			GrabbElitTournamentView result = _service.GetElitTournament();
+			GrabbElitTournamentView result = await _service.GetElitTournament();
 			return Ok(result);
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> FindGame(string team)
 		{
-			string result = _service.FindGame(team);
+			string result = await _service.FindGame(team);
 			return Ok(result);
 		}
 

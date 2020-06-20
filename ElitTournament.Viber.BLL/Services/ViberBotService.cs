@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ElitTournament.Core.Entities;
+using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Viber.BLL.Commands;
@@ -10,27 +10,36 @@ using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.View;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using ElitTournament.Viber.BLL.Constants;
+using ElitTournament.Viber.Core.Models.Message;
 
 namespace ElitTournament.Viber.BLL.Services
 {
 	public class ViberBotService : IViberBotService
 	{
 		private readonly IMapper _mapper;
-		private readonly IUserRepository _userRepository;
 		private readonly IViberBotClient _viberBotClient;
-		private readonly ICacheHelper _cacheHelper;
+		private readonly IUserRepository _userRepository;
+		private readonly ILeagueRepository _leagueRepository;
+		private readonly IScheduleRepository _scheduleRepository;
+		private readonly IDataVersionRepository _dataVersionRepository;
+		private readonly IImageHelper _imageHelper;
 		private readonly string _webHook;
 		private readonly string _viberUrl;
 		private List<Command> _commands;
 
-		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, ICacheHelper cacheHelper,
-			IUserRepository userRepository, IMapper mapper)
+		public ViberBotService(IConfiguration configuration, IViberBotClient viberBotClient, IDataVersionRepository dataVersionRepository, IImageHelper imageHelper,
+			IUserRepository userRepository, ILeagueRepository leagueRepository, IScheduleRepository scheduleRepository, IMapper mapper)
 		{
 			_mapper = mapper;
-			_userRepository = userRepository;
 			_viberBotClient = viberBotClient;
-			_cacheHelper = cacheHelper;
+			_userRepository = userRepository;
+			_leagueRepository = leagueRepository;
+			_scheduleRepository = scheduleRepository;
+			_dataVersionRepository = dataVersionRepository;
+			_imageHelper = imageHelper;
 			_webHook = configuration["WebHook"];
 			_viberUrl = "/api/viber/update";
 		}
@@ -54,6 +63,35 @@ namespace ElitTournament.Viber.BLL.Services
 			return users;
 		}
 
+		public async Task SendBroadcastMessage()
+		{
+			IEnumerable<User> users = await _userRepository.GetAll();
+			IEnumerable<string> viberUserIds = users.Where(w=>w.IsViber).Select(x => x.ClientId).ToList();
+			int lastVersion = await _dataVersionRepository.GetLastVersion();
+
+			BroadcastMessage broadcastMessage = new BroadcastMessage("oFKwijuinRXIqIUwBvbpEw==");
+			broadcastMessage.Sender = new UserBase
+			{
+				Name = MessageConstant.BOT_NAME, Avatar = MessageConstant.BOT_AVATAR
+			};
+			broadcastMessage.BroadcastList = viberUserIds;
+			broadcastMessage.MinApiVersion = 2;
+			broadcastMessage.Text = MessageConstant.UPDATE;
+
+			await _viberBotClient.SendBroadcastMessageAsync(broadcastMessage);
+
+			LeaguesCommand leaguesCommand = new LeaguesCommand(_leagueRepository, lastVersion);
+
+			foreach (var id in viberUserIds)
+			{
+				var callback = new Callback();
+				callback.Sender = new UserModel();
+				callback.Sender.Id = id;
+				await leaguesCommand.Execute(callback, _viberBotClient);
+			}
+			
+		}
+		
 		public async Task Update(Callback callback)
 		{
 			if (callback.Event == EventType.Webhook)
@@ -63,7 +101,7 @@ namespace ElitTournament.Viber.BLL.Services
 
 			if (callback.Event == EventType.ConversationStarted)
 			{
-				ConversationStarted(callback);
+				await ConversationStarted(callback);
 				return;
 			}
 
@@ -71,46 +109,44 @@ namespace ElitTournament.Viber.BLL.Services
 			{
 				await GetUserDetails(callback);
 				await SendMessage(callback);
-				return;
 			}
 		}
 
-		private void InitCommands()
+		private async Task InitCommands()
 		{
+			int lastVersion = await _dataVersionRepository.GetLastVersion();
+			
 			_commands = new List<Command>
 			{
-				new ErrorCommand(),
-				new DevelopCommand(_cacheHelper),
-				new TeamsCommand(_cacheHelper),
-				new ScheduleCommand(_cacheHelper),
-				new LeaguesCommand(_cacheHelper),
+				// TODO: add validation
+				//new ErrorCommand(),
+				new TableCommand(_leagueRepository, _imageHelper, lastVersion),
+				new DevelopCommand(_leagueRepository, lastVersion),
+				new TeamsCommand(_leagueRepository, lastVersion),
+				new ScheduleCommand(_scheduleRepository, _leagueRepository, lastVersion),
+				new LeaguesCommand(_leagueRepository, lastVersion)
 			};
-
-			if (_cacheHelper.IsCacheExist)
-			{
-				_commands.RemoveAt(0);
-			}
 		}
 
 		private async Task SendMessage(Callback callback)
 		{
-			InitCommands();
+			await InitCommands();
 
 			foreach (Command command in _commands)
 			{
-				bool isTeamExist = command.Contains(callback?.Message?.Text.Trim());
+				bool isTeamExist = await command.Contains(callback?.Message?.Text.Trim());
 				if (isTeamExist)
 				{
-					command.Execute(callback, _viberBotClient);
+					await command.Execute(callback, _viberBotClient);
 					break;
 				}
 			}
 		}
 
-		private void ConversationStarted(Callback callback)
+		private async Task ConversationStarted(Callback callback)
 		{
-			var command = new WelcomCommand(_cacheHelper);
-			command.Execute(callback, _viberBotClient);
+			var command = new WelcomCommand();
+			await command.Execute(callback, _viberBotClient);
 		}
 
 		private async Task GetUserDetails(Callback callback)
@@ -118,14 +154,9 @@ namespace ElitTournament.Viber.BLL.Services
 			bool userIsExist = await _userRepository.IsExist(callback.Sender.Id);
 			if (!userIsExist)
 			{
-				//var jsonString = "{\"primary_device_os\":\"Android 6.0\",\"viber_version\":\"12.9.5.2\",\"mcc\":0,\"mnc\":0,\"device_type\":\"M5s\",\"id\":\"+sTRbtkHmuy5QsK+vr/FkQ==\",\"country\":\"UA\",\"language\":\"en\",\"api_version\":8.0,\"name\":\"Suzanna Rybtsova\",\"avatar\":\"https://media-direct.cdn.viber.com/download_photo?dlid=EhLSmQPRZ4hwe6ZLBa-ydQ8XxzK_bSBVBBNS2QZ0y1LGqFcBXIIqR_vAwsjqlu2TRnu-MQjGq3ZZZwNJe2pX3UcZhKyqhXXZ_3weOShaY8DRvrSQ6zMtcB6AJet36e4Cl9AXyg&fltp=jpg&imsz=0000\"}";
-				//UserDetails viberUser = Newtonsoft.Json.JsonConvert.DeserializeObject<UserDetails>(jsonString);
-
 				UserDetails viberUser = await _viberBotClient.GetUserDetailsAsync(callback.Sender.Id);
 				User newUser = _mapper.Map<User>(viberUser);
-				await _userRepository.Add(newUser);
-
-
+				await _userRepository.CreateAsync(newUser);
 			}
 		}
 

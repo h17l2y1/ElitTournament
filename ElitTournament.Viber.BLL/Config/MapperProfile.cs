@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ElitTournament.Core.Entities;
+using ElitTournament.DAL.Entities;
 using ElitTournament.Viber.Core.Models;
 
 namespace ElitTournament.Viber.BLL.Config

@@ -1,4 +1,4 @@
-﻿using ElitTournament.Core.Entities;
+﻿using ElitTournament.DAL.Entities;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.View;
@@ -16,5 +16,7 @@ namespace ElitTournament.Viber.BLL.Services.Interfaces
 		Task Update(Callback view);
 
 		Task<IEnumerable<User>> GetAllUsers();
+
+		Task SendBroadcastMessage();
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using ElitTournament.Telegram.BLL.Constants;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -9,12 +10,11 @@ namespace ElitTournament.Telegram.BLL.Commands
 {
 	public class ErrorCommand : Command
 	{
-		public override bool Contains(string text)
+		public ErrorCommand() : base(0)
 		{
-			return true;
 		}
 
-		public async override void Execute(Message message, ITelegramBotClient client)
+		public async override Task Execute(Message message, ITelegramBotClient client)
 		{       
 			await client.SendTextMessageAsync(message.Chat.Id, MessageConstant.CACHE_EMPTY, ParseMode.Html, false, false, 0, GetMenu());
 		}

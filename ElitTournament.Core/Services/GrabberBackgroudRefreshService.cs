@@ -29,7 +29,7 @@ namespace ElitTournament.Core.Services
                     await scopedProcessingService.GrabbElitTournament();
                 }
                 int hour = 60000;
-                int day = 1440000;
+                //int day = 1440000;
                 await Task.Delay(hour, cancellationToken);
             }
         }

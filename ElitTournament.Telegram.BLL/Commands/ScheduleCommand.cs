@@ -1,4 +1,6 @@
-﻿using ElitTournament.Core.Helpers.Interfaces;
+﻿using System.Threading.Tasks;
+using ElitTournament.Core.Helpers.Interfaces;
+using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Telegram.BLL.Constants;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -7,14 +9,14 @@ namespace ElitTournament.Telegram.BLL.Commands
 {
 	public class ScheduleCommand : Command
 	{
-		private ICacheHelper _cacheHelper;
+		private readonly IScheduleRepository _scheduleRepository;
 
-		public ScheduleCommand(ICacheHelper cacheHelper)
+		public ScheduleCommand(IScheduleRepository scheduleRepository, int lastVersion) : base(lastVersion)
 		{
-			_cacheHelper = cacheHelper;
+			_scheduleRepository = scheduleRepository;
 		}
 
-		public override bool Contains(string text)
+		public override async Task<bool> Contains(string text)
 		{
 			if (text.Contains(ButtonConstant.BACK) || text.Contains(ButtonConstant.REFRESH) ||
 				text.Contains(ButtonConstant.DEVELOP) || text.Contains(ButtonConstant.START) || text.Contains(MessageConstant.START))
@@ -25,9 +27,9 @@ namespace ElitTournament.Telegram.BLL.Commands
 			return true;
 		}
 
-		public async override void Execute(Message message, ITelegramBotClient client)
+		public override async Task Execute(Message message, ITelegramBotClient client)
 		{
-			string shedule = _cacheHelper.FindGame(message.Text) ?? $"Игры команды \"{message.Text}\" не найдено";
+			string shedule = await _scheduleRepository.FindGame(message.Text) ?? $"Игры команды \"{message.Text}\" не найдено";
 			await client.SendTextMessageAsync(message.Chat.Id, shedule);
 		}
 	}

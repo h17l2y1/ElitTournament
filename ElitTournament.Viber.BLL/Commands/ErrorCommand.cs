@@ -1,15 +1,19 @@
 ﻿using ElitTournament.Viber.BLL.Constants;
-using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
 	public class ErrorCommand : Command
 	{
-		public async override void Execute(Callback callback, IViberBotClient client)
+		public ErrorCommand() : base(0)
+		{
+		}
+		
+		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
 			KeyboardMessage msg = GetErrorMessage(callback);
 			long result = await client.SendKeyboardMessageAsync(msg);
@@ -27,7 +31,9 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = Enumerable.Range(0, 1).Select(x => new Button(ButtonConstant.REFRESH, MessageConstant.REFRESH)).ToList()
+					Buttons = Enumerable.Range(0, 1)
+										.Select(x => new Button(ButtonConstant.REFRESH, MessageConstant.REFRESH))
+										.ToList()
 				},
 			};
 

@@ -6,5 +6,6 @@
 		public const string BACK = "Назад";
 		public const string REFRESH = "Обновить";
 		public const string DEVELOP = "В разработке";
+		public const string TABLE = "Турирная таблица";
 	}
 }

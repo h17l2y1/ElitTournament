@@ -1,9 +1,9 @@
-﻿using ElitTournament.Viber.BLL.Services.Interfaces;
+﻿using System.Threading.Tasks;
+using ElitTournament.Viber.BLL.Services.Interfaces;
 using ElitTournament.Viber.Core.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace ElitTournament.Api.Controllers
+namespace ElitTournament.Viber.Api.Controllers
 {
 	[Route("api/[controller]/[action]")]
 	[ApiController]
@@ -42,6 +42,13 @@ namespace ElitTournament.Api.Controllers
 		{
 			var result = await _service.GetAllUsers();
 			return Ok(result);
+		}
+		
+		[HttpGet]
+		public async Task<IActionResult> SendBroadcastMessage()
+		{
+			await _service.SendBroadcastMessage();
+			return Ok();
 		}
 
 	}

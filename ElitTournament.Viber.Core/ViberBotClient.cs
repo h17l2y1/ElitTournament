@@ -74,6 +74,10 @@ namespace ElitTournament.Viber.Core
 
 		public Task<long> SendKeyboardMessageAsync(KeyboardMessage message) => SendMessageAsync(message);
 
+		public Task<long> SendPictureMessageAsync(PictureMessage message) => SendMessageAsync(message);
+		
+		public Task<long> SendBroadcastMessageAsync(BroadcastMessage message) => SendMessageAsync(message, true);
+
 		private async Task<long> SendMessageAsync(MessageBase message, bool isBroadcast = false)
 		{
 			var result = await RequestApiAsync<SendMessageResponse>(isBroadcast ? "broadcast_message" : "send_message", message);

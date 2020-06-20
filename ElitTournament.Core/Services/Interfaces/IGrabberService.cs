@@ -7,8 +7,8 @@ namespace ElitTournament.Core.Services.Interfaces
 	{
 		Task GrabbElitTournament();
 
-		GrabbElitTournamentView GetElitTournament();
+		Task<GrabbElitTournamentView> GetElitTournament();
 
-		string FindGame(string team);
+		Task<string> FindGame(string team);
 	}
 }

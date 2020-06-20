@@ -1,8 +1,8 @@
-﻿using ElitTournament.Core.Services.Interfaces;
-using ElitTournament.Core.Entities;
-using ElitTournament.Core.Helpers.Interfaces;
-using ElitTournament.Core.Providers.Interfaces;
+﻿using ElitTournament.Core.Providers.Interfaces;
+using ElitTournament.Core.Services.Interfaces;
 using ElitTournament.Core.Views;
+using ElitTournament.DAL.Entities;
+using ElitTournament.DAL.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,38 +10,52 @@ namespace ElitTournament.Core.Services
 {
 	public class GrabberService : IGrabberService
 	{
+		private readonly IScheduleRepository _scheduleRepository;
+		private readonly ILeagueRepository _leagueRepository;
 		private readonly IGrabberProvider _grabberProvider;
-		private readonly ICacheHelper _сacheHelper;
+		private readonly IDataVersionRepository _dataVersionRepository;
 
-		public GrabberService(IGrabberProvider scheduleProvider, ICacheHelper сacheHelper)
+		public GrabberService(IGrabberProvider scheduleProvider, IScheduleRepository scheduleRepository, ILeagueRepository leagueRepository,
+			IDataVersionRepository dataVersionRepository)
 		{
+			_scheduleRepository = scheduleRepository;
+			_leagueRepository = leagueRepository;
 			_grabberProvider = scheduleProvider;
-			_сacheHelper = сacheHelper;
+			_dataVersionRepository = dataVersionRepository;
 		}
 
 		public async Task GrabbElitTournament()
 		{
-			List<Schedule> schedule = await _grabberProvider.GetSchedule();
-			List<League> leagues = await _grabberProvider.GetLeagues();
+			IEnumerable<League> tables = await _grabberProvider.GetLeagues();
+			IEnumerable<Schedule> schedule = await _grabberProvider.GetSchedule();
+			// TODO: implement score
+			//List<League> scores = await _grabberProvider.GetScores();
 
-			_сacheHelper.Update(schedule, leagues);
+			DataVersion dataVersion = new DataVersion
+			{
+				Leagues = tables,
+				Schedules = schedule
+			};
+
+			await _dataVersionRepository.CreateAsync(dataVersion);
 		}
 
-
-		public GrabbElitTournamentView GetElitTournament()
+		public async Task<GrabbElitTournamentView> GetElitTournament()
 		{
-			List<Schedule> schedule = _сacheHelper.GetSchedule();
-			List<League> leagues = _сacheHelper.GetLeagues();
+			int version = await _dataVersionRepository.GetLastVersion();
+			IEnumerable<Schedule> schedule = await _scheduleRepository.GetAll(version);
+			IEnumerable<League> leagues = await _leagueRepository.GetAll(version);
 
 			GrabbElitTournamentView result = new GrabbElitTournamentView(schedule, leagues);
 
 			return result;
 		}
 
-		public string FindGame(string team)
+		public async Task<string> FindGame(string team)
 		{
-			var result = _сacheHelper.FindGame(team);
+			string result = await _scheduleRepository.FindGame(team);
 			return result;
 		}
+
 	}
 }

@@ -25,6 +25,8 @@ namespace ElitTournament.Core.Providers
 		public string ScheduleUrl { get; set; }
 
 		public string ScoreUrl { get; set; }
+		
+		public string TableUrl { get; set; }
 
 		public async Task<IDocument> GetPage(string url)
 		{

@@ -1,4 +1,4 @@
-﻿using ElitTournament.Core.Entities;
+﻿using ElitTournament.DAL.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,8 +6,10 @@ namespace ElitTournament.Core.Providers.Interfaces
 {
 	public interface IGrabberProvider
 	{
-		Task<List<Schedule>> GetSchedule();
+		Task<IEnumerable<Schedule>> GetSchedule();
 
-		Task<List<League>> GetLeagues();
+		Task<IEnumerable<League>> GetScores();
+
+		Task<IEnumerable<League>> GetLeagues();
 	}
 }

@@ -1,32 +1,33 @@
-﻿using ElitTournament.Core.Helpers.Interfaces;
+﻿using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
+using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
 	public class DevelopCommand : Command
 	{
-		private readonly ICacheHelper _cacheHelper;
+		private readonly ILeagueRepository _leagueRepository;
 
-		public DevelopCommand(ICacheHelper cacheHelper)
+		public DevelopCommand(ILeagueRepository leagueRepository, int lastVersion) : base(lastVersion)
 		{
-			_cacheHelper = cacheHelper;
+			_leagueRepository = leagueRepository;
 		}
 
-		public override bool Contains(string command)
+		public async override Task<bool> Contains(string command)
 		{
 			return command.Contains(ButtonConstant.DEVELOP);
 		}
 
-		public async override void Execute(Callback callback, IViberBotClient client)
+		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
 			TextMessage msg = SendShedule(callback);
 			long result = await client.SendTextMessageAsync(msg);
 
-			LeaguesCommand leaguesCommand = new LeaguesCommand(_cacheHelper);
-			leaguesCommand.Execute(callback, client);
+			LeaguesCommand leaguesCommand = new LeaguesCommand(_leagueRepository, version);
+			await leaguesCommand.Execute(callback, client);
 		}
 
 		public TextMessage SendShedule(Callback callback)

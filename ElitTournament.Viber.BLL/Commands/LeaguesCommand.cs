@@ -1,34 +1,34 @@
-﻿using ElitTournament.Core.Entities;
-using ElitTournament.Core.Helpers.Interfaces;
+﻿using ElitTournament.DAL.Entities;
+using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Viber.BLL.Constants;
-using ElitTournament.Viber.Core.Enums;
 using ElitTournament.Viber.Core.Models;
 using ElitTournament.Viber.Core.Models.Interfaces;
 using ElitTournament.Viber.Core.Models.Message;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ElitTournament.Viber.BLL.Commands
 {
 	public class LeaguesCommand : Command
 	{
-		private readonly ICacheHelper _cacheHelper;
+		private readonly ILeagueRepository _leagueRepository;
 
-		public LeaguesCommand(ICacheHelper cacheHelper)
+		public LeaguesCommand(ILeagueRepository leagueRepository, int lastVersion) : base(lastVersion)
 		{
-			_cacheHelper = cacheHelper;
+			_leagueRepository = leagueRepository;
 		}
 
-		public async override void Execute(Callback callback, IViberBotClient client)
+		public async override Task Execute(Callback callback, IViberBotClient client)
 		{
-			KeyboardMessage msg = GetLeagues(callback);
+			KeyboardMessage msg = await GetLeagues(callback);
 			long result = await client.SendKeyboardMessageAsync(msg);
 		}
 
-		public KeyboardMessage GetLeagues(Callback callback)
+		private async Task<KeyboardMessage> GetLeagues(Callback callback)
 		{
-			List<League> leagues = _cacheHelper.GetLeagues();
-
+			IEnumerable<League> leagues = await _leagueRepository.GetAll(version);
+			
 			var keyboardMessage = new KeyboardMessage(callback.Sender.Id, MessageConstant.CHOOSE_LEAGUE)
 			{
 				Sender = new UserBase
@@ -39,26 +39,34 @@ namespace ElitTournament.Viber.BLL.Commands
 				Keyboard = new Keyboard
 				{
 					DefaultHeight = true,
-					Buttons = leagues.Select(p => new Button(p.Name, p.Name)
-					{
-						BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-						Columns = 3,
-						Rows = 1,
-					})
-					.ToList()
+					Buttons = CreateButtons(leagues)
 				}
 			};
+			
+			return keyboardMessage;
+		}
 
-			keyboardMessage.Keyboard.Buttons.Add(new Button()
+		private ICollection<Button> CreateButtons(IEnumerable<League> leagues)
+		{
+			List<Button> buttons = new List<Button>();
+			
+			buttons.AddRange(leagues.Select(p => new Button(p.Name, p.Name)
 			{
 				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-				ActionType = KeyboardActionType.Reply,
+				Columns = 3,
+				Rows = 1,
+			}));
+			
+			buttons.Add(new Button()
+			{
+				Columns = 6,
+				Rows = 1,
+				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
 				ActionBody = ButtonConstant.DEVELOP,
 				Text = MessageConstant.DEVELOP,
-				TextSize = TextSize.Regular
 			});
 
-			return keyboardMessage;
+			return buttons;
 		}
 
 	}

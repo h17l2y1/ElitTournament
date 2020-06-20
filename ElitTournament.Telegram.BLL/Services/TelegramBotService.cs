@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ElitTournament.Core.Entities;
+using ElitTournament.DAL.Entities;
 using ElitTournament.Core.Helpers.Interfaces;
 using ElitTournament.DAL.Repositories.Interfaces;
 using ElitTournament.Telegram.BLL.Commands;
@@ -16,72 +16,68 @@ namespace ElitTournament.Telegram.BLL.Services
     public class TelegramBotService : ITelegramBotService
     {
         private readonly IMapper _mapper;
-        private readonly IUserRepository _userRepository;
         private readonly ITelegramBotClient _telegramClient;
-        private readonly ICacheHelper _cacheHelper;
+        private readonly IUserRepository _userRepository;
+        private readonly ILeagueRepository _leagueRepository;
+        private readonly IScheduleRepository _scheduleRepository;
+        private readonly IDataVersionRepository _dataVersionRepository;
         private readonly string _webHook;
         private readonly string _telegramUrl;
         private List<Command> _commands;
-
-        public TelegramBotService(IConfiguration configuration, ITelegramBotClient telegramClient, ICacheHelper cacheHelper,
-            IUserRepository userRepository, IMapper mapper)
+        
+        public TelegramBotService(IConfiguration configuration, ITelegramBotClient telegramClient, IDataVersionRepository dataVersionRepository,
+            IUserRepository userRepository, ILeagueRepository leagueRepository, IScheduleRepository scheduleRepository, IMapper mapper)
         {
             _mapper = mapper;
-            _userRepository = userRepository;
             _telegramClient = telegramClient;
-            _cacheHelper = cacheHelper;
+            _userRepository = userRepository;
+            _leagueRepository = leagueRepository;
+            _scheduleRepository = scheduleRepository;
+            _dataVersionRepository = dataVersionRepository;
             _webHook = configuration["WebHook"];
             _telegramUrl = "/api/telegram/update";
         }
-
+        
         public async Task SetWebhookAsync()
         {
             var telegramWebHook = $"{_webHook}{_telegramUrl}";
             await _telegramClient.SetWebhookAsync(telegramWebHook);
         }
 
-        public async Task<IEnumerable<Core.Entities.User>> GetAllUsers()
+        public async Task<IEnumerable<DAL.Entities.User>> GetAllUsers()
         {
-            IEnumerable<Core.Entities.User> users = await _userRepository.GetAll();
+            IEnumerable<DAL.Entities.User> users = await _userRepository.GetAll();
             return users;
         }
 
-        private void InitCommands()
+        private async Task InitCommands()
         {
+            int lastVersion = await _dataVersionRepository.GetLastVersion();
+
             _commands = new List<Command>
             {
-                new ErrorCommand(),
-                new DevelopCommand(_cacheHelper),
-                new TeamsCommand(_cacheHelper),
-                new ScheduleCommand(_cacheHelper),
-                new LeagueCommand(_cacheHelper),
+                // TODO: add validation
+                //new ErrorCommand(),
+                new WelcomCommand(lastVersion),
+                new TableCommand(_leagueRepository, lastVersion),
+                new DevelopCommand(_leagueRepository, lastVersion),
+                new TeamsCommand(_leagueRepository, lastVersion),
+                new ScheduleCommand(_scheduleRepository, lastVersion),
+                new LeagueCommand(_leagueRepository, lastVersion)
             };
-
-            if (_cacheHelper.IsCacheExist)
-            {
-                _commands.RemoveAt(0);
-            }
         }
 
         public async Task Update(Update update)
         {
             await GetUserDetails(update);
-
-            if (update.Message.Text == ButtonConstant.START)
-            {
-                var c = new WelcomCommand();
-                c.Execute(update?.Message, _telegramClient);
-                return;
-            }
-
-            InitCommands();
+            await InitCommands();
 
             foreach (Command command in _commands)
             {
-                bool isTeamExist = command.Contains(update?.Message?.Text);
+                bool isTeamExist = await command.Contains(update.Message.Text);
                 if (isTeamExist)
                 {
-                    command.Execute(update?.Message, _telegramClient);
+                    await command.Execute(update?.Message, _telegramClient);
                     break;
                 }
             }
@@ -93,11 +89,10 @@ namespace ElitTournament.Telegram.BLL.Services
             if (!userIsExist)
             {
                 var telegramUser = update.Message.From;
-                var newUser = _mapper.Map<Core.Entities.User>(telegramUser);
-                await _userRepository.Add(newUser);
+                var newUser = _mapper.Map<DAL.Entities.User>(telegramUser);
+                await _userRepository.CreateAsync(newUser);
             }
         }
-
-
+        
     }
 }
