@@ -75,7 +75,7 @@ namespace ElitTournament.Telegram.BLL.Commands
                 keyBoard.Add(teams);
             }
             
-            keyBoard.Insert(0,new List<KeyboardButton> { new KeyboardButton($"Турирная таблица {command}") });
+            //keyBoard.Insert(0,new List<KeyboardButton> { new KeyboardButton($"Турирная таблица {command}") });
             keyBoard.Add(new List<KeyboardButton> { new KeyboardButton("Назад") });
             return keyBoard;
         }

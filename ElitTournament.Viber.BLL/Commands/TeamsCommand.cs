@@ -70,14 +70,14 @@ namespace ElitTournament.Viber.BLL.Commands
 		{
 			List<Button> buttons = new List<Button>();
 			
-			buttons.Add(new Button()
-			{
-				Columns = 6,
-				Rows = 1,
-				BackgroundColor = ButtonConstant.DEFAULT_COLOR,
-				ActionBody = ButtonConstant.TABLE,
-				Text = MessageConstant.TABLE,
-			});
+			// buttons.Add(new Button()
+			// {
+			// 	Columns = 6,
+			// 	Rows = 1,
+			// 	BackgroundColor = ButtonConstant.DEFAULT_COLOR,
+			// 	ActionBody = ButtonConstant.TABLE,
+			// 	Text = MessageConstant.TABLE,
+			// });
 
 			buttons.AddRange(sortedTeams.Select(p => new Button(p.Name, p.Name)
 			{
