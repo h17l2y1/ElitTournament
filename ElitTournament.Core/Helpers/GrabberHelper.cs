@@ -211,7 +211,7 @@ namespace ElitTournament.Core.Helpers
 				{
 					int lastIndex = Tables.Count - 1;
 					string tableName = Tables[lastIndex].Name;
-					//IImage image = await _imageHelper.CreateImage(element.OuterHtml, tableName);
+					IImage image = await _imageHelper.CreateImage(element.OuterHtml, tableName);
 					IHtmlCollection<IElement> tempElement = element.Children;
 					IElement table = tempElement.FirstOrDefault();
 					
@@ -231,8 +231,8 @@ namespace ElitTournament.Core.Helpers
 													 .ToList();
 
 					Tables[lastIndex].Teams = teams;
-					Tables[lastIndex].Link = null;
-					Tables[lastIndex].Size = 0;
+					Tables[lastIndex].Link = image.Link;
+					Tables[lastIndex].Size = image.Size;
 				}
 			}
 		}
